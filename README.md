@@ -6,6 +6,7 @@ Repository for group project for CS361
  Travis Seevers
  David Eaton
  Jeffrey Ngo
+ Doug Hughes
 
 ![](img/Battleship_Architecture.png)
 
