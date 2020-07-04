@@ -5,6 +5,7 @@ Repository for group project for CS361
  Neranjan Kuppuswamy
  Travis Seevers
  David Eaton
+ Jeffrey Ngo
 
 ![](img/Battleship_Architecture.png)
 
