@@ -40,10 +40,10 @@ int main(int argc, char *argv[]){
     struct Clunky_Button *mainmenu = malloc(sizeof(struct Clunky_Button) * 4);
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
-    clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, "start\0");
-    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, "options\0");
-    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, "credits\0");
-    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, "quit\0");
+    clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0");
+    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 0, "options\0");
+    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 0, "credits\0");
+    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 0, "quit\0");
 
     //finally we need to create our event handler!
     struct Clunky_Event event;
@@ -102,10 +102,10 @@ int main(int argc, char *argv[]){
         }
 
         //alright, now we need to render the buttons!
-        clunky_render_sprite(mainmenu[0].x, mainmenu[0].y, 0, 0, mainmenu[0].s, &window);
-        clunky_render_sprite(mainmenu[1].x, mainmenu[1].y, 0, 0, mainmenu[1].s, &window);
-        clunky_render_sprite(mainmenu[2].x, mainmenu[2].y, 0, 0, mainmenu[2].s, &window);
-        clunky_render_sprite(mainmenu[3].x, mainmenu[3].y, 0, 0, mainmenu[3].s, &window);
+        clunky_button_render(&(mainmenu[0]), &window);
+        clunky_button_render(&(mainmenu[1]), &window);
+        clunky_button_render(&(mainmenu[2]), &window);
+        clunky_button_render(&(mainmenu[3]), &window);
 
         //finally, we need to update and present the window
         clunky_present_window(&window);
