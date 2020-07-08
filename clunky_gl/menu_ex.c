@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
     struct Clunky_Sprite mmb;
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(1, 2, &main_menu_texture, &mmb);
+    clunky_init_sprite(4, 2, &main_menu_texture, &mmb);
 
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
@@ -41,9 +41,9 @@ int main(int argc, char *argv[]){
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
     clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0");
-    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 0, "options\0");
-    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 0, "credits\0");
-    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 0, "quit\0");
+    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0");
+    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0");
+    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0");
 
     //finally we need to create our event handler!
     struct Clunky_Event event;
