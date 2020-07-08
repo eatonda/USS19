@@ -23,7 +23,7 @@ int main( int argc, char* args[] ) {
 
 	struct Clunky_Sprite sprite;
 
-	clunky_init_sprite(165, 40, &bt, &sprite);
+	clunky_init_sprite(1, 2, &bt, &sprite);
 	sprite.sprite_row = 0;
 	sprite.sprite_column = -1;
 
@@ -36,15 +36,14 @@ int main( int argc, char* args[] ) {
     int k;
     int cont = 1;
 	while(cont){
-                clunky_event(&event);
-                if (event.num_input != 0 || event.lc || event.rc){
-                    printf("(%d, %d) %d %d\n", event.mx,event.my, event.lc, event.rc);
-                    for(k = 0; k < event.num_input; k++){
-                        printf(">>%c\n", event.input[k]);
-                        if (event.input[k] == 'q') cont = 0;
-                    }
-                        
-                }
+        clunky_event(&event);
+        if (event.num_input != 0 || event.lc || event.rc){
+            printf("(%d, %d) %d %d\n", event.mx,event.my, event.lc, event.rc);
+            for(k = 0; k < event.num_input; k++){
+                printf(">>%c\n", event.input[k]);
+                if (event.input[k] == 'q') cont = 0;
+            }
+        }
 
         if (bid == clunky_button_check(&button, 1, &event)){
             printf("CLICKED THE BUTTON\n");
@@ -55,8 +54,8 @@ int main( int argc, char* args[] ) {
 		clunky_present_window(&window);
 		clunky_update_renderer(&window);
 
-                SDL_Delay(10);
-        }
+        SDL_Delay(10);
+    }
 
 
 	

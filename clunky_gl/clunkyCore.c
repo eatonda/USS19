@@ -175,15 +175,15 @@ int clunky_free_texture(struct Clunky_Texture *texture){
 	return 0;
 }
 
-int clunky_init_sprite(int width, int height, struct Clunky_Texture *texture, struct Clunky_Sprite *sprite){
+int clunky_init_sprite(int rows, int cols, struct Clunky_Texture *texture, struct Clunky_Sprite *sprite){
 	//link the textures memory
 	sprite->texture = texture;
 
 	//setup the sprite rendering rect
 	sprite->cell.x = 0;
 	sprite->cell.y = 0;
-	sprite->cell.w = width;
-	sprite->cell.h = height;
+	sprite->cell.w = texture->width/cols;
+	sprite->cell.h = texture->height/rows;
 
 	return 0;
 }
