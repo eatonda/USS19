@@ -81,20 +81,23 @@ int main(int argc, char *argv[]){
             //check once per loop
             bid = clunky_button_check(mainmenu, 4, &event);
 
-
-            //check to see if the start button was pressed
-            if (bid == clunky_hash_gen("start\0")){
-                printf("CLICKED THE START BUTTON\n");
-            }
-            else if (bid == clunky_hash_gen("options\0")){
-                printf("CLICKED THE OPTIONS BUTTON\n");
-            }
-            else if (bid == clunky_hash_gen("credits\0")){
-                printf("CLICKED THE CREDITS BUTTON\n");
-            }
-            else if (bid == clunky_hash_gen("quit\0")){
-                printf("CLICKED THE QUIT BUTTON\n");
-                cont = 0;
+            //if bid == 0, there was no button press
+            //therefore, we dont need to check
+            if (bid){
+                //check to see if the start button was pressed
+                if (bid == clunky_hash_gen("start\0")){
+                    printf("CLICKED THE START BUTTON\n");
+                }
+                else if (bid == clunky_hash_gen("options\0")){
+                    printf("CLICKED THE OPTIONS BUTTON\n");
+                }
+                else if (bid == clunky_hash_gen("credits\0")){
+                    printf("CLICKED THE CREDITS BUTTON\n");
+                }
+                else if (bid == clunky_hash_gen("quit\0")){
+                    printf("CLICKED THE QUIT BUTTON\n");
+                    cont = 0;
+                }
             }
         }
 
