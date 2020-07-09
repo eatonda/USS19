@@ -1,0 +1,10 @@
+cow	20
+Nate	17
+monkey	17
+afs32	14
+doug	12
+ship	12
+bill	10
+redblue	8
+player3	7
+ls67	5

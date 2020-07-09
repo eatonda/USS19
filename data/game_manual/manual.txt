@@ -1,0 +1,33 @@
+At the start of the game, you will place your ships onto locations of your
+choice on a grid that you are presented with. You can arrange the ships you
+place on the grid either horizontally or vertically. 
+
+Each ship occupies a number of squares on the grid, and all ships must occupy
+distinct squares (i.e. no two ships can occupy the same square). 
+
+Once all of your ships have been placed on the grid, the game begins and
+progresses in a series of rounds.
+
+The game interface presents you both with a view of your own grid (i.e. the
+grid on which you placed your ships) and a tracking grid. The tracking grid
+will track which squares you have attacked on the opponent's grid. You are not
+able to directly view the grid on which your opponent has placed their ships
+(and likewise your opponent cannot see your grid).
+
+In each round the following takes place:
+	- you select a square on your tracking grid that you have not
+	previously selected to attack.
+	- your AI opponent likewise selects a square to attack on your grid.
+	- the square you targeted on your tracking grid is updated. If the 
+	square attacked contained a ship, the square is updated to be colored 
+	red. Otherwise, the square is updated to be colored white. 
+	- the square that was targeted by your opponent is likewise updated
+	on your grid. If the square contained a ship, that square is updated
+	to be colored red. Otherwise the square is updated to be colored 
+	white.
+	- if all of the squares occupied by a ship are attacked, then the ship
+	  sinks (and the sinking of the ship is announced to both players).
+	- once all ships of either or both players are sunk, the game ends.
+	- the player whose ships have sunk loses and the other player wins.
+	- if both players lose all of their ships in the same round, then the
+	  game is a draw. 
