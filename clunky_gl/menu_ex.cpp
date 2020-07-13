@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
     //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Button *mainmenu = malloc(sizeof(struct Clunky_Button) * 4);
+    struct Clunky_Button *mainmenu = (struct Clunky_Button *)malloc(sizeof(struct Clunky_Button) * 4);
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
     clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0");

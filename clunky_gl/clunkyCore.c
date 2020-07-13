@@ -245,7 +245,7 @@ int clunky_entity_init(int UID, int width, int height, int solid, int flamible, 
 	entity->flamible = flamible;
 	entity->sprite = sprite;
 
-	entity->hb = malloc(sizeof(struct Clunky_HitBox));
+	entity->hb = (struct Clunky_HitBox *)malloc(sizeof(struct Clunky_HitBox));
 	clunky_hitbox_init(width, height, 0, 0, 0, entity->hb);
 
 	return 0;
