@@ -30,7 +30,7 @@ int main(int argc, char *argv[]){
 
     //Now we will load the texture that contains all of our main menu buttons
     struct Clunky_Texture main_menu_texture;
-    clunky_load_texture(toC_String("./buttons.bmp"), &main_menu_texture, &window);
+    clunky_load_texture(toC_String("./mainMenuButtons.bmp"), &main_menu_texture, &window);
 
     //From the trexture we can create a sprite. 
     //Clunky Sprites allow for the rendering of partial sections of
