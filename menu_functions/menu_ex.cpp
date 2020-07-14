@@ -7,17 +7,15 @@
 
 
 
-int windowWidth = 540;
-int windowHeight = 480;
+
 
 int main(int argc, char *argv[]){
 
     std::string menu1_desc [4] = {"start", "leaderboard", "help", "quit"};
-
-    int x = windowWidth/3;	// For testing, all buttons are going to placed starting at the 1/3 of the window 
-    int y = 140;	// Starting button height	
-    int xCoordinates [4] = {x,x,x,x};
-    int yCoordinates [4] = {y, y+80, y+160, y+240};	   		    
+    
+    //dec common use variables
+    int i, j, k;
+    int cont;
 
     //create a clunky window object.
     //this will be the window that we will render to
@@ -26,7 +24,7 @@ int main(int argc, char *argv[]){
     //now we will init the window, this will set the width and height of the
     //window, as well as call the nessisary SDL2 function calls for us
     //this has to be done first, as it inits SDL2 functions
-    clunky_init(&window, windowWidth, windowHeight);
+    clunky_init(&window, 640, 480);
 
     //Now we will load the texture that contains all of our main menu buttons
     struct Clunky_Texture main_menu_texture;
@@ -43,7 +41,7 @@ int main(int argc, char *argv[]){
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
     //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Button *mainmenu = buttonSetup(4, menu1_desc, &mmb, xCoordinates, yCoordinates);
+    struct Clunky_Button *mainmenu = buttonSetup(4, menu1_desc, &mmb, 100, 10);
    
 
     //finally we need to create our event handler!
@@ -53,7 +51,7 @@ int main(int argc, char *argv[]){
                               
  
     //now we can begin our main loop!
-    int cont = 1;
+    cont = 1;
     int userInput = -5;
     
     while(cont){
@@ -79,7 +77,6 @@ int main(int argc, char *argv[]){
                 
             case 3:
                 std::cout << "In main, selection was exit\n";
-		cont = 0;
                 break;
             default:
                 break;

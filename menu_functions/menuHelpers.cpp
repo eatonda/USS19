@@ -68,16 +68,8 @@ int _getMouseClick(struct Clunky_Button* menuOptions, int numOfOptions, std::str
 }
 
 
-/*	buttonSetup
-Description: Creates an array of struct Clunky_Button assigning all parameters based on arguments recieved.
-Parameters: int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* sprite, int* xCoordinates, int* yCoordinates
-Returns: Dynamically allocated array of Clunky_Button
-Preconditions: No pointers arguments can be NULL, numOfButtons > 0, both arrays(xCoordinates and yCoordinates) must have a length equivalent to numOfButtons.
-*/ 
-struct Clunky_Button* buttonSetup(int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* sprite, int* xCoordinates, int* yCoordinates) {
-    /* Assert preconditions have been met */
-    assert(arrOfDesc != NULL && sprite != NULL && xCoordinates != NULL && yCoordinates != NULL);
-    assert(numOfButtons > 0);
+
+struct Clunky_Button* buttonSetup(int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* sprite, int x, int y) {
     
     /* Create an array of Clunky_Buttons that will make up the menu */
     struct Clunky_Button* menu = (struct Clunky_Button*)malloc(sizeof(struct Clunky_Button) * numOfButtons);
@@ -85,7 +77,7 @@ struct Clunky_Button* buttonSetup(int numOfButtons, std::string* arrOfDesc, stru
     
     /* Initialize buttons with corresponding descriptions and locations */
     for (int i = 0; i < numOfButtons; i++) {
-        clunky_button_init(&(menu[i]), sprite, xCoordinates[i], yCoordinates[i] , i, toC_String(arrOfDesc[i]));	
+        clunky_button_init(&(menu[i]), sprite, x, y, i, toC_String(arrOfDesc[i]));
     }
     
     return menu;
