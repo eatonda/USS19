@@ -16,3 +16,20 @@ char* toC_String(std::string str){
 
     return cStr;
 }
+
+
+/*  getMiddle
+ Description: Returns value to center image on corresponding axis of window. For example if centering on x axis provide image width value and window width info.
+ Parameters: int imageDimension, int windowDimension
+ Returns: Returns value to center image on corresponding axis of window.
+ Preconditions: Both parameters should be greater than 0. window width must be less than or equal to window dimension.
+ */
+int getMiddle(int imageDimension, int windowDimension) {
+    assert(imageDimension > 0 && windowDimension > 0);  // Assert preconditions
+    assert(imageDimension <= windowDimension);
+    
+    int imageMiddle = imageDimension/2;
+    int windowMiddle = windowDimension/2;
+    
+    return windowMiddle - imageMiddle;   //Center based off of center of image
+}
