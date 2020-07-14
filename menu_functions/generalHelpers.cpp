@@ -31,5 +31,8 @@ int getMiddle(int imageDimension, int windowDimension) {
     int imageMiddle = imageDimension/2;
     int windowMiddle = windowDimension/2;
     
-    return windowMiddle - imageMiddle;   //Center based off of center of image
+    int ceiling = 0;
+    if(imageDimension % 2 != 0) ceiling = 1;
+    
+    return (windowMiddle - imageMiddle) + ceiling;   //Center based off of center of image
 }
