@@ -29,7 +29,7 @@ int clunky_hash_grow(struct Clunky_Hash *table){
 
         //now, we need to reallocate memory to hold the bigger table
         //growth factor of 2 -> doubling
-        table = malloc((table->size) * (table->length) * 2);
+        table = (struct Clunky_Hash *)malloc((table->size) * (table->length) * 2);
 
         //now we need to copy over all of the old data into the new table
         for ( int i = 0; i < table->length; i++){
@@ -124,7 +124,7 @@ int clunky_hash_init(struct Clunky_Hash *table, int mem_size){
 	table->size = mem_size;
 	table->used = 0;
 
-	table->table = malloc(1024*mem_size);
+	table->table = (void **)malloc(1024*mem_size);
 	
 	//set all the mem to NULL
 	for (int i = 0; i < 1024; i++){
@@ -158,7 +158,7 @@ int clunky_spacial_init(struct Clunky_Spacial_Map *map, int mem_size, int length
 				//allocate 128 spots in the bucket at first. this can be grown if needed
 				map->map[i][j].length = 128;
 				map->map[i][j].num_used = 0;
-				map->map[i][j].bucket = malloc(map->size * 128);
+				map->map[i][j].bucket = (void **)malloc(map->size * 128);
 		}
 	}
 
@@ -185,7 +185,7 @@ int clunky_spacial_grow_map(struct Clunky_Spacial_Map *map){
                                 //allocate 128 spots in the bucket at first. this can be grown if needed
                                 map->map[i][j].length = 128;
                                 map->map[i][j].num_used = 0;
-                                map->map[i][j].bucket = malloc(map->size * 128);
+                                map->map[i][j].bucket = (void **)malloc(map->size * 128);
                 }
 	}
 
@@ -213,7 +213,7 @@ int clunky_spacial_grow_bucket(struct Clunky_Spacial_Bucket *bucket, int mem_siz
 	struct Clunky_Spacial_Bucket *hold = bucket;
 
 	//allocate the new memeory
-	bucket->bucket = malloc(mem_size * bucket->length * 2);
+	bucket->bucket = (void **)malloc(mem_size * bucket->length * 2);
 
 	//transfer over all of the old memory
 	for (int i = 0; i < bucket->length; i++){
