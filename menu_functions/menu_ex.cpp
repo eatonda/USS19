@@ -96,7 +96,7 @@ int main(int argc, char *argv[]){
                         break;
                         
                     case 0:
-                        std::cout << "In main, selection was login\n";                        break;
+                        std::cout << "In main, selection was login\n";                       
                         break;
                         
                     case 1:
