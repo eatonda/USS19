@@ -1,6 +1,7 @@
 
 #include "getHighScores.hpp"
 #include "writeScores.hpp"
+#include "enterScore.hpp"
 #include <vector>
 #include <string>
 #include <iostream>
@@ -77,6 +78,9 @@ int main() {
 	}
 
 	std::cout << "TEST 4 PASSED: all scores written and retrieved match.\n";
+
+	// enter a new score
+	enterScore(54, 10, 10, "aaaaa");
 	
 	return 0;
 }
