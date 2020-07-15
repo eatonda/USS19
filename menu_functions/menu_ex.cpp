@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
                                         /* CREATE MAIN MENU */
 
     /* Parameters for main menu */
-    std::string mainMenuDescriptions [MAIN_MENU_NUM_OF_BUTTONS] = {"start", "leaderboard", "help", "quit"};
+    std::string mainMenuDescriptions [MAIN_MENU_NUM_OF_BUTTONS] = {"start", "leaderboard", "user manual", "quit"};
     
     int x = getMiddle(BUTTON_WIDTH, WINDOW_WIDTH);  // Get x coordinate that centers the button
     int xCoordinates [MAIN_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
@@ -52,19 +52,6 @@ int main(int argc, char *argv[]){
 
     
     
-    /* Parameters for Log IN or Continue Menu, using same x and y coordinates but just the first 3 */
-    std::string loginContinueDescriptions [LOGIN_CONTINUE_NUM_OF_BUTTONS] = {"log in", "continue", "back"};
-    
-    struct Clunky_Texture login_continue_texture;
-    clunky_load_texture(toC_String("./loginContinueButtons.bmp"), &login_continue_texture, &window);  // Initialize texture for main menu
-    
-    struct Clunky_Sprite lcb;   //stores sprite image of main menu buttons
-    clunky_init_sprite(LOGIN_CONTINUE_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &login_continue_texture, &lcb); // Initialize sprite
-
-    struct Clunky_Button *login_continue_menu = buttonSetup(LOGIN_CONTINUE_NUM_OF_BUTTONS, loginContinueDescriptions, &lcb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
-    
-    /* Initialize a Menu object for the mainMenu*/
-    Menu* loginContinueMenu =  new Menu(&window, login_continue_menu, LOGIN_CONTINUE_NUM_OF_BUTTONS, loginContinueDescriptions);
     
     
     //finally we need to create our event handler!
@@ -75,7 +62,7 @@ int main(int argc, char *argv[]){
     //now we can begin our main loop!
     int cont = 1;
     int main_userInput = -5;
-    int loginContinue_userInput = -5;
+  
     
     while(cont){
         main_userInput = mainMenu->run(&event);
@@ -88,28 +75,6 @@ int main(int argc, char *argv[]){
                 
             case 0:
                 std::cout << "In main, selection was start\n";
-                loginContinue_userInput = loginContinueMenu->run(&event);
-                switch (loginContinue_userInput) {
-                    case -1:
-                        std::cout << "In main, x window selected\n";
-                        cont = 0;
-                        break;
-                        
-                    case 0:
-                        std::cout << "In main, selection was login\n";                       
-                        break;
-                        
-                    case 1:
-                        std::cout << "In main, selection was continue\n";
-                        break;
-                        
-                    case 2:
-                        std::cout << "In main, selection was back\n";
-                        break;
-                    default:
-                        break;
-                }
-                
                 break;
                 
             case 1:
@@ -117,7 +82,7 @@ int main(int argc, char *argv[]){
                 break;
                 
             case 2:
-                std::cout << "In main, selection was help\n";
+                std::cout << "In main, selection was user manual\n";
                 break;
                 
             case 3:
