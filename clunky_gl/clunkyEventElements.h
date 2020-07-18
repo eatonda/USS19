@@ -11,7 +11,7 @@ struct Clunky_Event_Summary{
     int str_used;
     int collect_string;
 
-    unsigned long selected_ele;
+    unsigned long eid;
 
 };
 
@@ -19,7 +19,8 @@ struct Clunky_Event_Summary{
 //that are rendered to the screen and interacted with the mouse or keyboard
 struct Clunky_Event_Element_Container{
 
-    struct Clunky_Event_Element *elements;
+    struct Clunky_Event_Element **elements;
+    int len_ele;
     int num_ele;
 
     struct Clunky_Event_Summary sum;
@@ -61,11 +62,11 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
 int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w);
 
-unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e);
-
 //clunky event element container
 int clunky_eec_init(struct Clunky_Event_Element_Container *eec);
-int clunky_eec_add_elements(struct Clunky_Element_Container *eec, struct Clunky_Event_Element *ele, int num_ele);
-int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e);
+int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element *ele, int num_ele);
+int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w);
+int clunky_eec_grow(struct Clunky_Event_Element_Container *eec);
+int clunky_eec_free(struct Clunky_Event_Element_Container *eec);
 
 #endif

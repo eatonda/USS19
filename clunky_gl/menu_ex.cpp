@@ -40,21 +40,30 @@ int main(int argc, char *argv[]){
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
     //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Event_Element *mainmenu = (struct Clunky_Event_Element *)malloc(sizeof(struct Clunky_Event_Element) * 4);
+    struct Clunky_Event_Element *mainMenuElements = (struct Clunky_Event_Element *)malloc(sizeof(struct Clunky_Event_Element) * 4);
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
-    clunky_element_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0", 'D', 'H');
-    clunky_element_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0", 'B', 'N');
-    clunky_element_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 'B', 'A');
-    clunky_element_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0", 'B', 'H');
+    clunky_element_init(&(mainMenuElements[0]), &mmb, 100, 10, 0, "start\0", 'D', 'H');
+    clunky_element_init(&(mainMenuElements[1]), &mmb, 100, 60, 1, "options\0", 'B', 'N');
+    clunky_element_init(&(mainMenuElements[2]), &mmb, 100, 110, 2, "credits\0", 'B', 'A');
+    clunky_element_init(&(mainMenuElements[3]), &mmb, 100, 160, 3, "quit\0", 'B', 'H');
 
+    //now lets declare our Event Element Container (EEC)
+    struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
 
+    //init the eec
+    clunky_eec_init(eec);
+
+    //add the Main Menu Elements (aka buttons at this point) to the eec
+    clunky_eec_add_elements(eec, mainMenuElements, 4);
+    
     //now we can begin our main loop!
     cont = 1;
     unsigned long bid;
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
+        clunky_eec_update(eec, &event, &window);
         
         //if there has been a keypress (indicated with num_input != 0)
         //or a mouse click (indicated with lc || rc == 1)
@@ -72,39 +81,7 @@ int main(int argc, char *argv[]){
                 if (event.input[k] == 'q') cont = 0;
             }
 
-       }
-       //now lets deal with mouse clicks!
-            //check to see if there is any button activity
-            //if a button has been clicked, its BID will be returned by the function
-            //we can get the BID using the buttons name by hashing it
-            //only one button can be clicked at a time, so we only need to
-            //check once per loop
-            bid = clunky_element_update(mainmenu, 4, &event);
-
-            //if bid == 0, there was no button press
-            //therefore, we dont need to check
-            if (bid){
-                //check to see if the start button was pressed
-                if (bid == clunky_hash_gen("start\0")){
-                    printf("CLICKED THE START BUTTON\n");
-                }
-                else if (bid == clunky_hash_gen("options\0")){
-                    printf("CLICKED THE OPTIONS BUTTON\n");
-                }
-                else if (bid == clunky_hash_gen("credits\0")){
-                    printf("CLICKED THE CREDITS BUTTON\n");
-                }
-                else if (bid == clunky_hash_gen("quit\0")){
-                    printf("CLICKED THE QUIT BUTTON\n");
-                    cont = 0;
-                }
-            }
-
-        //alright, now we need to render the buttons!
-        clunky_element_render(&(mainmenu[0]), &window);
-        clunky_element_render(&(mainmenu[1]), &window);
-        clunky_element_render(&(mainmenu[2]), &window);
-        clunky_element_render(&(mainmenu[3]), &window);
+        }
 
         //Update the window!
         clunky_present_window(&window);

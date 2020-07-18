@@ -3,18 +3,35 @@
 #include "clunkyEventElements.h"
 
 unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type, char effect){
-    //check to make sure the type is 'r' or 't'
-    if (type != 'B' && type != 'T' && type != 'D' && type != 'S') return 0;
-
-    //check to make sure that the type if 'T', 'R', 'N', 'A', 'H', 'R'
-    char good[] = {'T', 'R', 'N', 'A', 'H', 'R'};
+    //we need to verify that the element's type and effect are valid parameters
+    //Declare valid type and effect labels
+    char valid_type[] = {'B', 'T', 'D', 'S'};
+    const int valid_type_cnt = 4;
+    char valid_effect[] = {'T', 'R', 'N', 'A', 'H', 'R'};
+    const int valid_effect_cnt = 6;
+    
+    //now check to make sure that the type and effect passed are in 
+    //the list of valid options
     int i, cont = 0;
-    for (i = 0; i < 6; i++){
-        if (effect == good[i]) cont = 1;
+    //check the type
+    for (i = 0; i < valid_type_cnt; i++){
+        if (type == valid_type[i]) cont = 1;
+    }
+    
+    //if we didnt find a valid type, stop
+    if (!cont) return 0;
+    else cont = 0;
+    
+    //check the effect
+    for (i = 0; i < valid_effect_cnt; i++){
+        if (effect == valid_effect[i]) cont = 1;
     }
 
+    //if we didnt find a valid effect, stop
     if (!cont) return 0;
 
+    //at this point we know that we have valid type and effect parameters,
+    //so begin to init the element
     //copy over the type
     b->type = type;
 
@@ -48,7 +65,7 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     return b->eid;
 }
 
-unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e){
+unsigned long clunky_element_update_OLD(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e){
 
     int i;
     unsigned long eid = 0;
@@ -119,4 +136,121 @@ int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *
     return 0;
 }
 
+int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
+    //need to allocate the initial memory for the event elements
+    //start with 5 ee's
+    eec->len_ele = 5;
+    //and make note that we are using 0 cells
+    eec->num_ele = 0;
 
+    //init the memory for the buttons
+    eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+
+    return 0;
+}
+
+int clunky_eec_free(struct Clunky_Event_Element_Container *eec){
+    int i;
+    //will free all of the memory assosiated with the EEC, included the ee's
+    //first, free the string in the summary
+    if (eec->sum.str != NULL) free(eec->sum.str);
+
+    //now all of the elements that have been put inside the eec
+    for (i = 0; i < eec->num_ele; i++) free(eec->elements[i]);
+
+    //now free the element array itself
+    free(eec->elements);
+    eec->elements = NULL;
+
+    return 0;
+}
+
+int clunky_eec_grow(struct Clunky_Event_Element_Container *eec){
+    int i;
+    //dynamicly allocate and grow the elements array in the eec
+    //have a temp pointer to hold the addr of the current array
+    struct Clunky_Event_Element **addr_hold = eec->elements;
+
+    //grow the size of the eec elements array
+    //double the capacity
+    eec->len_ele *= 2;
+    
+    //reallocate the memory
+    eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+
+    //copy over all of the old ee's
+    for (i = 0; i < eec->num_ele; i++) eec->elements[i] = addr_hold[i];
+
+    //free the hold array
+    free(addr_hold);
+
+    //return the new size of the array
+    return eec->len_ele;
+}
+
+int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element *ele, int num_ele){
+    int i;
+    //first, make sure that the eec's element array has the capacity, 
+    //if not grow it
+    if ((eec->num_ele + num_ele) > eec->len_ele) clunky_eec_grow(eec);
+
+    //now copy over the memory addresses!
+    for (i = 0; i < num_ele; i++) eec->elements[i + eec->num_ele] = &(ele[i]);
+
+    //make note of how many elements where just added
+    eec->num_ele += num_ele;
+
+    return 0;
+}
+
+int clunky_mouse_helper(struct Clunky_Event_Element * ele, struct Clunky_Event *e){
+    //local function only to this file for help check to see if the mouse is hovering over an element
+    //return 1 if so, otherwise 0
+    if ( e->mx >= ele->x && e->mx <= (ele->x + ele->w) &&
+             e->my >= ele->y && e->my <= (ele->y + ele->h)){
+        return 1;
+    }
+
+    return 0;
+}
+
+int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
+    int i;
+    //first, for legibility, I'm going to create a pointer reference towards the eec's summary element
+    //this is just to try to make the code have fewer de-references
+    //because theres going to be a lot going on in this function
+    struct Clunky_Event_Summary *summary = &(eec->sum);
+    //clear the previous eid in case there isnt a new one this itteration
+    summary->eid = 0;
+
+    //we need to now loop through every element in the eec
+    for (i = 0; i < eec->num_ele; i++){
+        //each type of element will need to be handled differently
+        //use a switch statement to orginize the code
+        switch(eec->elements[i]->type){
+            case 'B': //Button
+                //REGULAR BUTTON: needs hover+click for interaction
+                if(clunky_mouse_helper(eec->elements[i], e) && e->lc){
+                    //set the itneraction to 2 ->clicked
+                    eec->elements[i]->interact = 2;
+                   
+                   //make note of the eid for the summary
+                   summary->eid = eec->elements[i]->eid;
+                }
+                else{
+                    //the button isnt being interacted with in a meaningful way
+                    //set interact to 0 -> no interaction
+                    eec->elements[i]->interact = 0;
+                }
+                break;
+            default: //just set the interaction level to 0
+                eec->elements[i]->interact = 0;
+                break;
+         }
+
+        //now render the element to the window
+        clunky_element_render(eec->elements[i], w);
+    }
+
+    return 0;
+}
