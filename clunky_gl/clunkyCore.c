@@ -10,6 +10,8 @@ int clunky_event(struct Clunky_Event *event){
 	event->num_input = 0;
     event->lc = 0;
     event->rc = 0;
+    event->dx = 0;
+    event->dy = 0;
 
 	//now we loop for all events
 	while(SDL_PollEvent(&(event->e)) && event->num_input < 25){
@@ -30,6 +32,10 @@ int clunky_event(struct Clunky_Event *event){
             }
         }
         else if (event->e.type == SDL_MOUSEMOTION){
+            //calculate the mouse delta
+            event->dx = event->e.motion.x - event->mx;
+            event->dy = event->e.motion.y - event->my;
+
             //get the new mouse position
             event->mx = event->e.motion.x;
             event->my = event->e.motion.y;
@@ -39,6 +45,7 @@ int clunky_event(struct Clunky_Event *event){
             switch ( event->e.button.button){
                 case SDL_BUTTON_LEFT:
                     event->lc = 1;
+                    event->lcs = 1;
                     break;
                 case SDL_BUTTON_RIGHT:
                     event->rc = 1;
@@ -47,12 +54,18 @@ int clunky_event(struct Clunky_Event *event){
                     break;
             }
         }
+        else if (event->e.type ==SDL_MOUSEBUTTONUP){
+            //one of the mouse buttons is no longer  being pressed!
+            if ( event->e.button.button == SDL_BUTTON_LEFT){
+                    event->lcs = 0;
+            }
+        }
 	}
 
 	return 0;
 }
 
-int clunky_init(struct Clunky_Window *window, int width_p, int height_p){
+int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_p, int height_p){
 	//we need to initilizse SDL
 	//use SDL's fucntions to do so
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ){
@@ -87,6 +100,9 @@ int clunky_init(struct Clunky_Window *window, int width_p, int height_p){
 	 //set the animation coutners
 	 window->animation_counter = 0;
 	 window->sub_counter = 0;
+
+     //set the sustained click to 0
+     e->lcs = 0;
 
 	
 	 return 0;

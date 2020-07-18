@@ -62,12 +62,19 @@ unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, str
                     eid = b[i].eid;
                 }
                 else b[i].interact = 1; //hovering
-        }
+
+                //if the mouse click is being sustained
+                //and if the element is a dragable, update its position
+                if (e->lcs && b[i].type == 'D'){
+                    b[i].x += e->dx;
+                    b[i].y += e->dy;
+                }
         else{
             //set ineract to not hover or clicked
             b[i].interact = 0;
         }
 
+    }
     }
 
 

@@ -22,7 +22,11 @@ struct Clunky_Event{
 
         int mx; //mouse x position
         int my; //mouse y position
+        int dx; //mouse delta x
+        int dy; //mouse delta y
+
         int lc; //left click
+        int lcs; //left click sustained
         int rc; //right click
 };
 
@@ -77,7 +81,7 @@ struct Clunky_Entity{
 //====================
 //core functionality
 int clunky_event(struct Clunky_Event *event);
-int clunky_init(struct Clunky_Window *window, int width_p, int height_p);
+int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_p, int height_p);
 int clunky_update_renderer(struct Clunky_Window *window);
 int clunky_update_window(struct Clunky_Window *window);
 int clunky_present_window(struct Clunky_Window *window);
