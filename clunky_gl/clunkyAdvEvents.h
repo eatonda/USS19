@@ -7,6 +7,9 @@
 struct Clunky_Button{
     struct  Clunky_Sprite *s;
 
+
+    char type; //what type of button we have: (t)oggle or (r)eg
+
     unsigned long bid;
     int x;
     int y;
@@ -17,7 +20,7 @@ struct Clunky_Button{
 
     int row;
 };
-unsigned long clunky_button_init(struct Clunky_Button *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name);
+unsigned long clunky_button_init(struct Clunky_Button *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type);
 
 int clunky_button_render(struct Clunky_Button *b, struct Clunky_Window *w);
 

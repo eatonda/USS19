@@ -87,21 +87,21 @@ int main(int argc, char *argv[]){
                 
             case 3:
                 std::cout << "In main, selection was exit\n";
-		cont = 0;
+        		cont = 0;
                 break;
             default:
                 break;
         }
         
+
+        //Update and present the window
+        clunky_present_window(&window);
+        clunky_update_renderer(&window);
+
+        //Now we just need a small delay to prevent the loop from consuming
+        //too many resources
+        SDL_Delay(10);
     }
-
-    //Update and present the window
-    clunky_present_window(&window);
-    clunky_update_renderer(&window);
-
-    //Now we just need a small delay to prevent the loop from consuming
-    //too many resources
-    SDL_Delay(10);
 
     //Quit SDL subsystems
     SDL_Quit();

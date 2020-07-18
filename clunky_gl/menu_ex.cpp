@@ -40,10 +40,10 @@ int main(int argc, char *argv[]){
     struct Clunky_Button *mainmenu = (struct Clunky_Button *)malloc(sizeof(struct Clunky_Button) * 4);
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
-    clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0");
-    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0");
-    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0");
-    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0");
+    clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0", 'r');
+    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0", 'r');
+    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 't');
+    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0", 'r');
 
     //finally we need to create our event handler!
     struct Clunky_Event event;

@@ -42,7 +42,7 @@ void Menu::display() {
 int Menu::run(struct Clunky_Event* event) {
     int userChoice = -2;    //Stores user's selection
 
-    while(true) {
+//    while(true) {
         
         assert(event != NULL);  // Assert preconditions
         
@@ -72,7 +72,7 @@ int Menu::run(struct Clunky_Event* event) {
         
          display();
         
-    }
+  //  }
 }
         
             
