@@ -51,9 +51,6 @@ int main(int argc, char *argv[]){
     
 
     
-    
-    
-    
     //finally we need to create our event handler!
     struct Clunky_Event event;
     
@@ -94,18 +91,11 @@ int main(int argc, char *argv[]){
         }
         
     }
-
-    //Update and present the window
-    clunky_present_window(&window);
-    clunky_update_renderer(&window);
-
-    //Now we just need a small delay to prevent the loop from consuming
-    //too many resources
-    SDL_Delay(10);
-
+    
     //Quit SDL subsystems
     SDL_Quit();
 
+   
     return 0;
 }
 
