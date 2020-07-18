@@ -76,7 +76,7 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 	
 	//now we can init the window
 	window->window = NULL;
-	window->window = SDL_CreateWindow( "Granny Crumpet", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_p, height_p, SDL_WINDOW_SHOWN );
+	window->window = SDL_CreateWindow( "USS-19 Presents: Battleship!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_p, height_p, SDL_WINDOW_SHOWN );
 
 	 //check to see if the window was made properly
 	 if (window->window == NULL){

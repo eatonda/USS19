@@ -203,19 +203,39 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
     return 0;
 }
 
-int clunky_mouse_helper(struct Clunky_Event_Element * ele, struct Clunky_Event *e){
-    //local function only to this file for help check to see if the mouse is hovering over an element
-    //return 1 if so, otherwise 0
+int clunky_mouse_interaction_helper(struct Clunky_Event_Element * ele, struct Clunky_Event *e){
+    //local helper function to set the itneract status of elements
     if ( e->mx >= ele->x && e->mx <= (ele->x + ele->w) &&
              e->my >= ele->y && e->my <= (ele->y + ele->h)){
-        return 1;
-    }
+        //check to see if the mouse was clicked
+        if (e->lc){
+            //set the itneraction to 2 ->clicked
+            ele->interact = 2;
 
-    return 0;
+            //return that the element was clicked
+            return 2;
+        }
+        else{
+            //otherwise we are just hovering over the button
+            ele->interact = 1;
+
+            //return that the element is hovered over
+            return 1;
+       }
+
+    }
+    else{
+        //the button isnt being interacted with in a meaningful way
+        //set interact to 0 -> no interaction
+        ele->interact = 0;
+
+        //return that there was no interaction
+        return 0;
+    }
 }
 
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
-    int i;
+    int i, status;
     //first, for legibility, I'm going to create a pointer reference towards the eec's summary element
     //this is just to try to make the code have fewer de-references
     //because theres going to be a lot going on in this function
@@ -225,26 +245,18 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
-        //each type of element will need to be handled differently
+        //check to see if the element is being interacted with
+        status = clunky_mouse_interaction_helper(eec->elements[i], e);
+
+        //if the element was clicked, status == 2, make note of the eid for the summary
+        if (status == 2) summary->eid = eec->elements[i]->eid;
+
+        //some elements require extra proccessing than just hovered or clicked
         //use a switch statement to orginize the code
         switch(eec->elements[i]->type){
-            case 'B': //Button
-                //REGULAR BUTTON: needs hover+click for interaction
-                if(clunky_mouse_helper(eec->elements[i], e) && e->lc){
-                    //set the itneraction to 2 ->clicked
-                    eec->elements[i]->interact = 2;
-                   
-                   //make note of the eid for the summary
-                   summary->eid = eec->elements[i]->eid;
-                }
-                else{
-                    //the button isnt being interacted with in a meaningful way
-                    //set interact to 0 -> no interaction
-                    eec->elements[i]->interact = 0;
-                }
+            case 'D': //Draggable Element
                 break;
-            default: //just set the interaction level to 0
-                eec->elements[i]->interact = 0;
+            default:
                 break;
          }
 
