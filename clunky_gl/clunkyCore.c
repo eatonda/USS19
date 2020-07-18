@@ -136,6 +136,18 @@ int clunky_update_window(struct Clunky_Window *window){
 int clunky_present_window(struct Clunky_Window *window){
     clunky_update_window(window);
     clunky_update_renderer(window);
+
+    //incriment the animation counter
+    if (window->sub_counter++ >= 25){
+        window->sub_counter = 0;
+        window->animation_counter++;
+    }
+
+    if ( window->animation_counter >= 10 ){
+        window->animation_counter = 0;
+    }
+
+
     SDL_Delay(10);
     return 0;
 }

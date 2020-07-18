@@ -45,7 +45,7 @@ int main(int argc, char *argv[]){
     //unfortuantly, this is best done manually on a small scale
     clunky_element_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0", 'D', 'H');
     clunky_element_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0", 'B', 'N');
-    clunky_element_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 'B', 'T');
+    clunky_element_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 'B', 'A');
     clunky_element_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0", 'B', 'H');
 
 

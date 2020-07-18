@@ -6,8 +6,8 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     //check to make sure the type is 'r' or 't'
     if (type != 'B' && type != 'T' && type != 'D' && type != 'S') return 0;
 
-    //check to make sure that the type if 'T', 'R', 'N', 'F', 'H', 'R'
-    char good[] = {'T', 'R', 'N', 'F', 'H', 'R'};
+    //check to make sure that the type if 'T', 'R', 'N', 'A', 'H', 'R'
+    char good[] = {'T', 'R', 'N', 'A', 'H', 'R'};
     int i, cont = 0;
     for (i = 0; i < 6; i++){
         if (effect == good[i]) cont = 1;
@@ -37,6 +37,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
     //set the row number
     b->row = row;
+
+    //get the max column count
+    b->col_max = s->texture->width  / s->cell.w;
 
     //generate the BID
     b->eid = clunky_hash_gen(b_name);
@@ -83,12 +86,16 @@ unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, str
 }
 
 int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w){
-    //if the button isnt clicked, render col 1
-    if (!b->interact){
+    if (b->interact == 1 && b->effect != 'R' && b->effect != 'H'){
         //render the unclicked version
         clunky_render_sprite(b->x, b->y, b->row, 0, b->s, w);
     }
-    else if (b->interact == 1 && b->effect != 'R' && b->effect != 'H'){
+    else if (b->effect == 'A'){
+        //render the elements sprite at the respectful animation cell
+        int ani = w->animation_counter % b->col_max;
+        clunky_render_sprite(b->x, b->y, b->row, ani, b->s, w);
+    }
+    else if (!b->interact){
         //render the unclicked version
         clunky_render_sprite(b->x, b->y, b->row, 0, b->s, w);
     }

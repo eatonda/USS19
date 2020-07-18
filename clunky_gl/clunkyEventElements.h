@@ -40,7 +40,7 @@ struct Clunky_Event_Element{
                 //rendering
                 //[T]oggle
                 //[N]othing / regular
-                //[F]lash
+                //[A]nimate
                 //[H]over
                 //[R] -> Hover + Toggle
 
