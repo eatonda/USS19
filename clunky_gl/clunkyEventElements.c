@@ -255,6 +255,23 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
         //use a switch statement to orginize the code
         switch(eec->elements[i]->type){
             case 'D': //Draggable Element
+
+                //Ok, first, we need to see if the element was interacted with.
+                //If so, we need to set the dragging (misc) status to indicate that
+                if (status == 2) eec->elements[i]->misc = 1;
+                //else if misc already is 1, and lcs is not true (i.e. the player let go of the
+                //element) then set the misc status back to 0
+                else if (e->lcs == 0) eec->elements[i]->misc = 0;
+
+                //if the misc status is set to true, then the element is being dragged
+                //thus we need to update its x/y location
+                if (eec->elements[i]->misc){
+                    //update the x, y coords of the element
+                    eec->elements[i]->x += e->dx;
+                    eec->elements[i]->y += e->dy;
+                }
+                
+
                 break;
             default:
                 break;

@@ -52,6 +52,8 @@ struct Clunky_Event_Element{
     int h;
 
     int interact; // 0: No, 1: Hover, 2: Clicked
+    int misc; //a misc variable to be used differently depending on the type
+              //of element. EX: draging status
 
     int row;
     int col_max;
