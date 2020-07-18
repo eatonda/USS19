@@ -40,13 +40,12 @@ int main(int argc, char *argv[]){
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
     //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Event_Element *mainMenuElements = (struct Clunky_Event_Element *)malloc(sizeof(struct Clunky_Event_Element) * 4);
+    struct Clunky_Event_Element **mainMenuElements = (struct Clunky_Event_Element **)malloc(sizeof(struct Clunky_Event_Element*) * 4);
     //now we need to init all of the buttons
-    //unfortuantly, this is best done manually on a small scale
-    clunky_element_init(&(mainMenuElements[0]), &mmb, 100, 10, 0, "start\0", 'D', 'H');
-    clunky_element_init(&(mainMenuElements[1]), &mmb, 100, 60, 1, "options\0", 'B', 'N');
-    clunky_element_init(&(mainMenuElements[2]), &mmb, 100, 110, 2, "credits\0", 'B', 'A');
-    clunky_element_init(&(mainMenuElements[3]), &mmb, 100, 160, 3, "quit\0", 'B', 'H');
+    mainMenuElements[0] = clunky_standard_button_init(&mmb, 100, 10, 0, "start");
+    mainMenuElements[1] = clunky_standard_button_init(&mmb, 100, 60, 1, "options");
+    mainMenuElements[2] = clunky_standard_button_init(&mmb, 100, 110, 2, "credits");
+    mainMenuElements[3] = clunky_standard_button_init(&mmb, 100, 160, 3, "quit");
 
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));

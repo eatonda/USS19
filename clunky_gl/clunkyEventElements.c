@@ -188,14 +188,14 @@ int clunky_eec_grow(struct Clunky_Event_Element_Container *eec){
     return eec->len_ele;
 }
 
-int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element *ele, int num_ele){
+int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element **ele, int num_ele){
     int i;
     //first, make sure that the eec's element array has the capacity, 
     //if not grow it
     if ((eec->num_ele + num_ele) > eec->len_ele) clunky_eec_grow(eec);
 
     //now copy over the memory addresses!
-    for (i = 0; i < num_ele; i++) eec->elements[i + eec->num_ele] = &(ele[i]);
+    for (i = 0; i < num_ele; i++) eec->elements[i + eec->num_ele] = ele[i];
 
     //make note of how many elements where just added
     eec->num_ele += num_ele;
@@ -287,4 +287,45 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     }
 
     return 0;
+}
+
+struct Clunky_Event_Element *clunky_standard_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name){
+    //create a standard clunky button!
+    //this function remove the need to pass in as many arguments to the init call
+
+    //first we need to allocate the memory
+    struct Clunky_Event_Element *ele = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+
+    //init the button
+    clunky_element_init(ele, s, x, y, row, e_name, 'B', 'H');
+
+    return ele;
+}
+
+
+struct Clunky_Event_Element *clunky_toggle_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name){
+    //create a standard clunky button!
+    //this function remove the need to pass in as many arguments to the init call
+    
+    //first we need to allocate the memory
+    struct Clunky_Event_Element *ele = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+
+    //init the button
+    clunky_element_init(ele, s, x, y, row, e_name, 'B', 'T');
+
+    return ele;
+}
+
+
+struct Clunky_Event_Element *clunky_dragable_element_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name){
+    //create a standard clunky button!
+    //this function remove the need to pass in as many arguments to the init call
+    
+    //first we need to allocate the memory
+    struct Clunky_Event_Element *ele = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+
+    //init the button
+    clunky_element_init(ele, s, x, y, row, e_name, 'D', 'N');
+
+    return ele;
 }
