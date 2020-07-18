@@ -60,6 +60,7 @@ int main(int argc, char *argv[]){
     //now we can begin our main loop!
     cont = 1;
     unsigned long bid;
+
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
@@ -83,10 +84,30 @@ int main(int argc, char *argv[]){
 
         }
 
+        //check the buttons to see if anywhere clicked
+        //first, check to make sure that there was a selected button
+        if (eec->sum.eid != 0){
+            //ok, a button was interacted with!
+            //find out which one
+            if (eec->sum.eid == clunky_hash_gen("start")){
+                printf("START\n");
+            }
+            else if (eec->sum.eid == clunky_hash_gen("options")){
+                printf("OPTIONS\n");
+            }
+            else if (eec->sum.eid == clunky_hash_gen("credits")){
+                printf("CREDITS\n");
+            }
+            else if (eec->sum.eid == clunky_hash_gen("quit")){
+                printf("QUIT\n");
+                cont = 0;
+            }
+        }
+
         //Update the window!
         clunky_present_window(&window);
     }
-
+    
 
     //Quit SDL subsystems
     SDL_Quit();
