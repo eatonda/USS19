@@ -36,14 +36,6 @@ void Menu::display() {
     for (int i = 0; i < numOfOptions; i++) {
          clunky_button_render(&(menuOptions[i]), window);   // Render buttons
     }
-
-    //Update and present the window
-    clunky_present_window(window);
-    clunky_update_renderer(window);
-
-    //Now we just need a small delay to prevent the loop from consuming
-    //too many resources
-    SDL_Delay(10);
     
 }
 
