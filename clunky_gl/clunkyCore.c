@@ -100,7 +100,7 @@ int clunky_update_renderer(struct Clunky_Window *window){
 	return 0;
 }
 
-int clunky_present_window(struct Clunky_Window *window){
+int clunky_update_window(struct Clunky_Window *window){
 	SDL_RenderPresent(window->render);
 
 	if (window->animation_counter >= 4){
@@ -115,6 +115,13 @@ int clunky_present_window(struct Clunky_Window *window){
 	}
 
 	return 0;
+}
+
+int clunky_present_window(struct Clunky_Window *window){
+    clunky_update_window(window);
+    clunky_update_renderer(window);
+    SDL_Delay(10);
+    return 0;
 }
 
 int clunky_load_texture(char *path, struct Clunky_Texture *texture, struct Clunky_Window *window){

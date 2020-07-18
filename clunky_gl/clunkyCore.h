@@ -79,6 +79,7 @@ struct Clunky_Entity{
 int clunky_event(struct Clunky_Event *event);
 int clunky_init(struct Clunky_Window *window, int width_p, int height_p);
 int clunky_update_renderer(struct Clunky_Window *window);
+int clunky_update_window(struct Clunky_Window *window);
 int clunky_present_window(struct Clunky_Window *window);
 
 //=====================

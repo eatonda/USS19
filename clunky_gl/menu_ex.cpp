@@ -5,7 +5,7 @@
 
 #include "clunkyCore.h"
 #include "clunkyHash.h"
-#include "clunkyAdvEvents.h"
+#include "clunkyEventElements.h"
 
 int main(int argc, char *argv[]){
 
@@ -37,13 +37,13 @@ int main(int argc, char *argv[]){
     //now we get into buttons
     //the menu will have 4 buttons: start, options, credits, quit
     //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Button *mainmenu = (struct Clunky_Button *)malloc(sizeof(struct Clunky_Button) * 4);
+    struct Clunky_Event_Element *mainmenu = (struct Clunky_Event_Element *)malloc(sizeof(struct Clunky_Event_Element) * 4);
     //now we need to init all of the buttons
     //unfortuantly, this is best done manually on a small scale
-    clunky_button_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0", 'r');
-    clunky_button_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0", 'r');
-    clunky_button_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 't');
-    clunky_button_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0", 'r');
+    clunky_element_init(&(mainmenu[0]), &mmb, 100, 10, 0, "start\0", 'r');
+    clunky_element_init(&(mainmenu[1]), &mmb, 100, 60, 1, "options\0", 'r');
+    clunky_element_init(&(mainmenu[2]), &mmb, 100, 110, 2, "credits\0", 't');
+    clunky_element_init(&(mainmenu[3]), &mmb, 100, 160, 3, "quit\0", 'r');
 
     //finally we need to create our event handler!
     struct Clunky_Event event;
@@ -79,7 +79,7 @@ int main(int argc, char *argv[]){
             //we can get the BID using the buttons name by hashing it
             //only one button can be clicked at a time, so we only need to
             //check once per loop
-            bid = clunky_button_check(mainmenu, 4, &event);
+            bid = clunky_element_check(mainmenu, 4, &event);
 
             //if bid == 0, there was no button press
             //therefore, we dont need to check
@@ -102,18 +102,13 @@ int main(int argc, char *argv[]){
         }
 
         //alright, now we need to render the buttons!
-        clunky_button_render(&(mainmenu[0]), &window);
-        clunky_button_render(&(mainmenu[1]), &window);
-        clunky_button_render(&(mainmenu[2]), &window);
-        clunky_button_render(&(mainmenu[3]), &window);
+        clunky_element_render(&(mainmenu[0]), &window);
+        clunky_element_render(&(mainmenu[1]), &window);
+        clunky_element_render(&(mainmenu[2]), &window);
+        clunky_element_render(&(mainmenu[3]), &window);
 
-        //finally, we need to update and present the window
+        //Update the window!
         clunky_present_window(&window);
-        clunky_update_renderer(&window);
-
-        //Now we just need a small delay to prevent the loop from consuming
-        //too many resources
-        SDL_Delay(10);
     }
 
 

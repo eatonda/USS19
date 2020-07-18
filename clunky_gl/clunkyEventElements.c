@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "clunkyAdvEvents.h"
+#include "clunkyEventElements.h"
 
-unsigned long clunky_button_init(struct Clunky_Button *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type){
+unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type){
     //check to make sure the type is 'r' or 't'
     if (type != 'r' && type != 't') return 0;
 
@@ -27,13 +27,13 @@ unsigned long clunky_button_init(struct Clunky_Button *b, struct Clunky_Sprite *
     b->row = row;
 
     //generate the BID
-    b->bid = clunky_hash_gen(b_name);
+    b->eid = clunky_hash_gen(b_name);
 
     //return the BID
-    return b->bid;
+    return b->eid;
 }
 
-unsigned long clunky_button_check(struct Clunky_Button *b, int num, struct Clunky_Event *e){
+unsigned long clunky_element_check(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e){
     //make sure that the left button is clicked first
     if (!e->lc) return 0;
 
@@ -52,7 +52,7 @@ unsigned long clunky_button_check(struct Clunky_Button *b, int num, struct Clunk
                     if (b[i].clicked) b[i].clicked = 0;
                     else b[i].clicked = 1;
                 }
-                return b[i].bid;
+                return b[i].eid;
             }
         }
 
@@ -61,7 +61,7 @@ unsigned long clunky_button_check(struct Clunky_Button *b, int num, struct Clunk
     return 0;
 }
 
-int clunky_button_render(struct Clunky_Button *b, struct Clunky_Window *w){
+int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w){
     //if the button isnt clicked, render col 1
     if (!b->clicked){
         //render the unclicked version
@@ -84,4 +84,5 @@ int clunky_button_render(struct Clunky_Button *b, struct Clunky_Window *w){
 
     return 0;
 }
+
 
