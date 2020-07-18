@@ -1,8 +1,8 @@
 #include "clunkyCore.h"
 #include "clunkyHash.h"
 
-#ifndef CLUNKYADVEVENTS_H
-#define CLUNKYADVEVENTS_H
+#ifndef CLUNKYEVENTELEMENTS_H
+#define CLUNKYEVENTELEMENTS_H
 
 struct Clunky_Event_Summary{
 
@@ -31,11 +31,18 @@ struct Clunky_Event_Element{
 
 
     char type; //what type of element we have: 
-                //[b]utton
-    char effect; //what type of cosmetic effect to add to the element's rendering
+                //[B]utton
+                //[T]extbox
+                //[D]raggable
+                //[S]nap-To
+
+    char effect; //what type of cosmetic effect to add to the element's 
+                //rendering
                 //[T]oggle
-                //[R]egular
+                //[N]othing / regular
                 //[F]lash
+                //[H]over
+                //[R] -> Hover + Toggle
 
     unsigned long eid;
     int x;
@@ -43,16 +50,22 @@ struct Clunky_Event_Element{
     int w;
     int h;
 
-    int clicked;
+    int interact; // 0: No, 1: Hover, 2: Clicked
 
     int row;
     int col_max;
 };
 
-unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type);
+//clunky event elements
+unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type, char effect);
 
 int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w);
 
-unsigned long clunky_element_check(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e);
+unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e);
+
+//clunky event element container
+int clunky_eec_init(struct Clunky_Event_Element_Container *eec);
+int clunky_eec_add_elements(struct Clunky_Element_Container *eec, struct Clunky_Event_Element *ele, int num_ele);
+int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e);
 
 #endif

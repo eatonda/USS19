@@ -2,12 +2,24 @@
 #include <stdio.h>
 #include "clunkyEventElements.h"
 
-unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type){
+unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_Sprite *s, int x, int y, int row, const char *b_name, char type, char effect){
     //check to make sure the type is 'r' or 't'
-    if (type != 'r' && type != 't') return 0;
+    if (type != 'B' && type != 'T' && type != 'D' && type != 'S') return 0;
+
+    //check to make sure that the type if 'T', 'R', 'N', 'F', 'H', 'R'
+    char good[] = {'T', 'R', 'N', 'F', 'H', 'R'};
+    int i, cont = 0;
+    for (i = 0; i < 6; i++){
+        if (effect == good[i]) cont = 1;
+    }
+
+    if (!cont) return 0;
 
     //copy over the type
     b->type = type;
+
+    //copy over the effect
+    b->effect = effect;
 
     //copy over the x & y positions
     b->x = x;
@@ -21,7 +33,7 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     b->h = b->s->cell.h;
 
     //set the clicked status to false
-    b->clicked = 0;
+    b->interact = 0;
 
     //set the row number
     b->row = row;
@@ -33,37 +45,43 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     return b->eid;
 }
 
-unsigned long clunky_element_check(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e){
-    //make sure that the left button is clicked first
-    if (!e->lc) return 0;
+unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, struct Clunky_Event *e){
 
     int i;
+    unsigned long eid = 0;
     for (i = 0; i < num; i++){
         //check to see if the mouse is in the bounding box of one of the buttons
-        if ( e->mx >= b[i].x && e->mx <= (b[i].x + b[i].w)){
-            if (e->my >= b[i].y && e->my <= (b[i].y + b[i].h)){
-                if (b[i].type == 'r'){    
-                    //regular button
-                    //set the clicked status to 1 ->true
-                    b[i].clicked = 1;
+        if ( e->mx >= b[i].x && e->mx <= (b[i].x + b[i].w) &&
+             e->my >= b[i].y && e->my <= (b[i].y + b[i].h)){
+                 
+                //check to see if the user is clicking or hovering
+                if (e->lc){
+                    //the button was clicked!
+                    b[i].interact = 2; //clicked
+                    //remember the eid
+                    eid = b[i].eid;
                 }
-                else{
-                    //toggle button
-                    if (b[i].clicked) b[i].clicked = 0;
-                    else b[i].clicked = 1;
-                }
-                return b[i].eid;
-            }
+                else b[i].interact = 1; //hovering
+        }
+        else{
+            //set ineract to not hover or clicked
+            b[i].interact = 0;
         }
 
     }
 
-    return 0;
+
+
+    return eid;
 }
 
 int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w){
     //if the button isnt clicked, render col 1
-    if (!b->clicked){
+    if (!b->interact){
+        //render the unclicked version
+        clunky_render_sprite(b->x, b->y, b->row, 0, b->s, w);
+    }
+    else if (b->interact == 1 && b->effect != 'R' && b->effect != 'H'){
         //render the unclicked version
         clunky_render_sprite(b->x, b->y, b->row, 0, b->s, w);
     }
@@ -72,14 +90,6 @@ int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *
         clunky_render_sprite(b->x, b->y, b->row, 1, b->s, w);
         //incriment the clicked counter by one
         //this will be used to add a slight delay in how long the texture will change
-
-        if (b->type == 'r'){
-            //regular button sprite rendering
-            b->clicked += 1;
-
-            //if the clicked couter is over 10, reset it
-            if (b->clicked > 10) b->clicked = 0;
-        }
     }
 
     return 0;
