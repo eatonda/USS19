@@ -64,6 +64,7 @@ unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, str
                     //remember the eid
                     eid = b[i].eid;
                 }
+                else if (b[i].interact == 2 && e->lcs) b[i].interact = 2;
                 else b[i].interact = 1; //hovering
 
                 //if the mouse click is being sustained
@@ -74,7 +75,16 @@ unsigned long clunky_element_update(struct Clunky_Event_Element *b, int num, str
                 }
         else{
             //set ineract to not hover or clicked
-            b[i].interact = 0;
+            //if the mouse click is being sustained
+            //and if the element is a dragable, update its position
+            if (e->lcs && b[i].interact == 2 && b[i].type == 'D'){
+                b[i].x += e->dx;
+                b[i].y += e->dy;
+            }
+            else{
+                //otherwise just reset the click indicator
+                b[i].interact = 0;
+            }
         }
 
     }
