@@ -10,8 +10,6 @@ int clunky_event(struct Clunky_Event *event){
 	event->num_input = 0;
     event->lc = 0;
     event->rc = 0;
-    event->dx = 0;
-    event->dy = 0;
 
 	//now we loop for all events
 	while(SDL_PollEvent(&(event->e)) && event->num_input < 25){
@@ -32,10 +30,6 @@ int clunky_event(struct Clunky_Event *event){
             }
         }
         else if (event->e.type == SDL_MOUSEMOTION){
-            //calculate the mouse delta
-            event->dx = event->e.motion.x - event->mx;
-            event->dy = event->e.motion.y - event->my;
-
             //get the new mouse position
             event->mx = event->e.motion.x;
             event->my = event->e.motion.y;

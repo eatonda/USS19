@@ -212,6 +212,11 @@ int clunky_mouse_interaction_helper(struct Clunky_Event_Element * ele, struct Cl
             //set the itneraction to 2 ->clicked
             ele->interact = 2;
 
+            //set the mouse delta
+            //(position between the elements x,y point and the mouse)
+            e->dx = e->mx - ele->x;
+            e->dy = e->my - ele->y;
+
             //return that the element was clicked
             return 2;
         }
@@ -267,8 +272,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 //thus we need to update its x/y location
                 if (eec->elements[i]->misc){
                     //update the x, y coords of the element
-                    eec->elements[i]->x += e->dx;
-                    eec->elements[i]->y += e->dy;
+                    eec->elements[i]->x = e->mx - e->dx;
+                    eec->elements[i]->y = e->my - e->dy;
                 }
                 
 
