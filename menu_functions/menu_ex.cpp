@@ -20,7 +20,9 @@ Menu* makeMainMenu(Clunky_Window* window);
 int main(int argc, char *argv[]){
     /* Window for rendering to screen */
     struct Clunky_Window window;
-    clunky_init(&window, WINDOW_WIDTH, WINDOW_HEIGHT);    // Initialize window
+    
+    struct Clunky_Event event;
+    clunky_init(&window, &event, WINDOW_WIDTH, WINDOW_HEIGHT);    // Initialize window
 
                                         /* CREATE MAIN MENU */
 
@@ -52,10 +54,6 @@ int main(int argc, char *argv[]){
 
     
     
-    
-    
-    //finally we need to create our event handler!
-    struct Clunky_Event event;
     
     
                     
