@@ -37,35 +37,27 @@ int _SDL_QUIT_Check(struct Clunky_Event* event) {
 }
 
 
-int _getMouseClick(struct Clunky_Button* menuOptions, int numOfOptions, std::string* optionNames, Clunky_Event* event) {
+/*  _getMouseClick
+ Description: Returns the menu option clicked on.
+ Parameters: struct Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames, Clunky_Event* event
+ Preconditons: An option was clicked and no parameters can be NULL
+ Returns: int option clicked in array indexing
+ */
+
+int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames, Clunky_Event* event) {
     assert(event != NULL && optionNames != NULL && menuOptions != NULL);  // Assert preconditions
     
-    unsigned long bid;  //Button id
+    int optionNumber = -1; //Corresponds with option number selected. Array indexing thus first option is 0.
     
-    // If there is a mouse click see if it selected a menu options
-    if (event->lc || event->rc) {
-        
-        /*
-         check to see if there is any button activity
-         if a button has been clicked, its BID will be returned by the function
-         we can get the BID using the buttons name by hashing it
-         only one button can be clicked at a time, so we only need to
-         check once per loop */
-         bid = clunky_button_check(menuOptions, numOfOptions, event);
-
-        if (bid) {
-            for (int i = 0; i < numOfOptions; i++) {
-                if (bid == clunky_hash_gen((toC_String(optionNames[i])))) {
-                    printf("Clicked the %s Button\n", optionNames[i].c_str());   //For debugging
-                    
-                    return i;    //Return index to deal with choice
-                }
-            }
-            
+    for (int i = 0; i < numOfOptions; i++) {
+        if (menuOptions->sum.eid == clunky_hash_gen(toC_String(optionNames[i]))) {
+            // If menu option was selected return index
+            return i;
         }
     }
-    return numOfOptions + 1;  // Signal a choice has not been made and to continue the loop
 }
+    
+
 
 
 /*	buttonSetup
@@ -74,19 +66,31 @@ Parameters: int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* spri
 Returns: Dynamically allocated array of Clunky_Button
 Preconditions: No pointers arguments can be NULL, numOfButtons > 0, both arrays(xCoordinates and yCoordinates) must have a length equivalent to numOfButtons.
 */ 
-struct Clunky_Button* buttonSetup(int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* sprite, int* xCoordinates, int* yCoordinates) {
+struct Clunky_Event_Element_Container* buttonSetup(int numOfButtons, std::string* arrOfDesc, struct Clunky_Sprite* sprite, int* xCoordinates, int* yCoordinates) {
     /* Assert preconditions have been met */
     assert(arrOfDesc != NULL && sprite != NULL && xCoordinates != NULL && yCoordinates != NULL);
     assert(numOfButtons > 0);
     
-    /* Create an array of Clunky_Buttons that will make up the menu */
-    struct Clunky_Button* menu = (struct Clunky_Button*)malloc(sizeof(struct Clunky_Button) * numOfButtons);
+    /* Create an array of Clunky_Event_Elements that will make up the menu */
+    struct Clunky_Event_Element** menu = (struct Clunky_Event_Element**)malloc(sizeof(struct Clunky_Event_Element*) * numOfButtons);
+    
     assert(menu != NULL);
     
     /* Initialize buttons with corresponding descriptions and locations */
     for (int i = 0; i < numOfButtons; i++) {
-        clunky_button_init(&(menu[i]), sprite, xCoordinates[i], yCoordinates[i] , i, toC_String(arrOfDesc[i]));	
+        menu[i] = clunky_standard_button_init(sprite, xCoordinates[i], yCoordinates[i] , i, toC_String(arrOfDesc[i]));
     }
     
-    return menu;
+    /* Transfer buttons to Event Element Container (EEC) */
+    struct Clunky_Event_Element_Container* eec = (struct Clunky_Event_Element_Container*)malloc(sizeof(struct Clunky_Event_Element_Container));
+    
+    assert(eec != NULL);
+    
+    clunky_eec_init(eec);   //init eec
+    
+    // Add button elements to container
+    clunky_eec_add_elements(eec, menu, numOfButtons);
+    
+    return eec;
+    
 }

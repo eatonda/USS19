@@ -9,7 +9,7 @@
 #include "menu.hpp"
 
 
-Menu::Menu(struct Clunky_Window* window, struct Clunky_Button* menuOptions, int numOfOptions, std::string* optionNames) {
+Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames) {
     this->window = window;
     this->menuOptions = menuOptions;
     this->numOfOptions = numOfOptions;
@@ -17,9 +17,7 @@ Menu::Menu(struct Clunky_Window* window, struct Clunky_Button* menuOptions, int 
 }
 
 
-
-
-struct Clunky_Button* Menu::getMenuOptions() {
+struct Clunky_Event_Element_Container* Menu::getMenuOptions() {
     return menuOptions;
 }
 
@@ -32,18 +30,16 @@ std::string* Menu::getOptionNames() {
     return optionNames;
 }
 
-void Menu::display() {
-    for (int i = 0; i < numOfOptions; i++) {
-         clunky_button_render(&(menuOptions[i]), window);   // Render buttons
-    }
-
+void Menu::_display(struct Clunky_Event* event) {
+    //clunky_eec_update(menuOptions, event, window); //update event container
+    
     //Update and present the window
     clunky_present_window(window);
-    clunky_update_renderer(window);
+    //clunky_update_renderer(window);
 
     //Now we just need a small delay to prevent the loop from consuming
     //too many resources
-    SDL_Delay(10);
+    //SDL_Delay(10);
     
 }
 
@@ -58,9 +54,9 @@ int Menu::run(struct Clunky_Event* event) {
         //there are any events in it, you must fisrt call clunky_event to
         //check the system for events and populate the structure
         clunky_event(event);
-
+        clunky_eec_update(menuOptions, event, window); //update event container
         // Sift through events if there are any.
-        if (_isEvent(event)) {
+        if (menuOptions->sum.eid) {
             
             // Check for SDL_QUIT
             if (_SDL_QUIT_Check(event) < 0) {
@@ -71,14 +67,13 @@ int Menu::run(struct Clunky_Event* event) {
             
             if (userChoice >= 0 && userChoice < numOfOptions) {
                 
-                
                 // If valid choice return user's choice
                 return userChoice;
             } else {
                 userChoice = -2;    // Reset variable
             }
         
-         display();
+         _display(event);
         
     }
 }
