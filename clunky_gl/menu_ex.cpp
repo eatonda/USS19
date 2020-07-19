@@ -60,10 +60,18 @@ int main(int argc, char *argv[]){
     cont = 1;
     unsigned long bid;
 
+    //create a clunky text object!
+    struct Clunky_Text *text = clunky_get_text(200, 200, 512, 64, 1., &window);
+    clunky_replace_text(text, "HELLO THERE TEAM!\0");
+    for (int i = 0; i < text->str_used; i++){
+        printf("%c, (%d, %d)\n", text->str[i], text->str_row[i], text->str_col[i]);
+    }
+
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
         clunky_eec_update(eec, &event, &window);
+        clunky_render_text(text, &window);
         
         //if there has been a keypress (indicated with num_input != 0)
         //or a mouse click (indicated with lc || rc == 1)

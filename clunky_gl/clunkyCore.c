@@ -81,6 +81,9 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 	//now lets create the rederer
 	window->render = NULL;
 	window->render = SDL_CreateRenderer( window->window, -1, SDL_RENDERER_ACCELERATED );
+    //set the background color to white
+    SDL_SetRenderDrawColor(window->render, 255, 255, 255, 255);
+
 
 	if (window->render == NULL){
 		fprintf(stderr, "Uh oh! renderer couldnt be made!\n");
@@ -97,7 +100,19 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 
      //set the sustained click to 0
      e->lcs = 0;
+    
+    //===========================================================
+    //create the text texture and sprite
+    //first, allocate the memory for the text object, the texture, and the sprite
+    struct Clunky_Texture *texture = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    window->sprite = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
 
+    //load the alpha-numeric texture
+    clunky_load_texture("./clunky_assets/AlphaNumeric.bmp", texture, window);
+
+    //now convert it into a sprite 
+    //7 rows, 6 columns
+    clunky_init_sprite(7, 6, texture, window->sprite);
 	
 	 return 0;
 }
@@ -520,6 +535,207 @@ int clunky_entity_update_positions(struct Clunky_Entity **bucket, int length){
 	return 0;
 }
 
+struct Clunky_Text *clunky_get_text(int x, int y, int w, int h, float scale, struct Clunky_Window *win){
+    //first, allocate the memory for the text object
+    struct Clunky_Text *txt = (struct Clunky_Text *) malloc(sizeof(struct Clunky_Text));
+
+    //copy the sprite addr from the window
+    txt->s = win->sprite;
+
+    //set the x, y, w, h, and scale values
+    txt->x = x;
+    txt->y = y;
+    txt->w = w;
+    txt->h = h;
+    txt->scale = scale;
+
+    //initilize 32 characters for the string
+    txt->str = (char*) malloc (sizeof(char) * 32);
+    
+    //initilize an equal ammount of memory for the str_row/col arrays
+    //these arrays are used to stro the cell row/column to construct the string, so the math
+    //doesnt need to be done each time the text is rendered
+    txt->str_row = (int *) malloc (sizeof(int) * 32);
+    txt->str_col = (int *) malloc (sizeof(int) * 32);
+
+    txt->str_len = 32;
+    txt->str_used = 0;
+
+    //return the text object
+    return txt;
+}
+
+int clunky_text_free(struct Clunky_Text *txt){
+    //free all of the dynamic memory allocated towards this specific text object
+    free(txt->str);
+    free(txt->str_row);
+    free(txt->str_col);
+
+    //note we dont need to free the sprite since it belongs to the window
+    return 0;
+}
+
+int clunky_text_grow(struct Clunky_Text *txt){
+    //double the size of the str_* arrays
+    txt->str_len *= 2;
+
+    //we need a temporary hold for the character array
+    char *hold_arr = txt->str;
+
+    //free the str_col/row memory
+    free(txt->str_row);
+    free(txt->str_col);
+
+    //re-allocate memory
+    txt->str = (char*) malloc (sizeof(char) * txt->str_len);
+    txt->str_row = (int *) malloc (sizeof(int) * txt->str_len);
+    txt->str_col = (int *) malloc (sizeof(int) * txt->str_len);
+
+    //copy over the character string
+    for (int i = 0; i < txt->str_used; i++) txt->str[i] = hold_arr[i];
+
+    //free the old character array
+    free(hold_arr);
+
+    return 0;
+}
+
+int clunky_replace_text(struct Clunky_Text *txt, const char *new_str){
+    int i;
+    for (i = 0; new_str[i] != '\0'; i++){
+        txt->str[i] = new_str[i];
+
+        if ( i >= txt->str_len) clunky_text_grow(txt);
+    }
+
+    txt->str_used = i;
+
+    clunky_str_to_int(txt);
+
+    return 0;
+}
+
+int clunky_add_text(struct Clunky_Text *txt, const char *new_str){
+     int i;
+    for (i = 0; new_str[i] != '\0'; i++){
+        txt->str[i + txt->str_used] = new_str[i];
+
+        if ( (i + txt->str_used) >= txt->str_len) clunky_text_grow(txt);
+    }
+
+    txt->str_used += i;
+
+    clunky_str_to_int(txt);
+
+    return 0;
+}
+
+int clunky_remove_text(struct Clunky_Text *txt, int cnt){
+    if ((txt->str_used - cnt) < 0) txt->str_used = 0;
+    else txt->str_used -= cnt;
+
+    return 0;
+}
+
+int clunky_str_to_int(struct Clunky_Text *txt){
+    //convert the character string into an array of row and column numbers
+    //Order of cells: 0-9, A-Z, . ! ? : ( ) 
+    //7 rows, 6 columns
+    //0-9: 48-57
+    //A-Z: 65-90  (note the capitals!)
+    //Space: 32
+    //.:46
+    //!:33
+    //?:63
+    //::58
+    //(:40
+    //):41
+    
+    //Lowest Ascii value: Space, 32
+
+    int i, cell;
+    for (i = 0; i < txt->str_used; i++){
+        if (txt->str[i] >= 48 && txt->str[i] <= 57){
+           //we have a value between 0 and 9
+           //the digits are directly mapped to their cell number
+           cell = txt->str[i] - 48;
+        }
+        else if (txt->str[i] >= 65 && txt->str[i] <= 90){
+           //we have a value between A-Z
+           //these digits are mapped to their cell number + 10
+           cell = txt->str[i] - 65 + 10;
+        }
+        else{
+            //now we are dealing with individual characters
+            //use a switch statement
+            switch (txt->str[i] - 32){
+                case 0:
+                    //space
+                    //ID with -1
+                    cell = -1;
+                    break;
+                case 46-32:
+                    //.
+                    //cell 37
+                    cell = 36;
+                    break;
+                case 33-32:
+                    //!
+                    //cell 38
+                    cell = 37;
+                    break;
+                case 63-32:
+                    //?
+                    //cell 39
+                    cell = 38;
+                    break;
+                case 58 - 32:
+                    //:
+                    //cell 40
+                    cell = 39;
+                    break;
+                case 40-32:
+                    //(
+                    //cell 41
+                    cell = 40;
+                    break;
+                case 41-32:
+                    //)
+                    //cell 42
+                    cell = 41;
+                    break;
+                default:
+                    //unsupported character
+                    cell = -2;
+                    break;
+            }
+        }
+
+        //now convert the cell to row/column
+        txt->str_row[i] = cell/6;
+        txt->str_col[i] = cell%6;
+    }
+
+
+    return 0;
+}
+
+int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
+    int i, w_offset, h_offset;
+
+    for (i = 0; i < txt->str_used; i++){
+        //calculate where to put the character in the defined region
+        w_offset = (txt->s->cell.w * i) % txt->w;
+        h_offset = (txt->s->cell.w * i) / txt->w;
+
+        //if the row/col is >= 0, then render it to the screen
+        if (txt->str_row[i] >= 0 && txt->str_col[i] >= 0){
+            clunky_render_sprite((txt->x + w_offset), txt->y * (1 +  h_offset), txt->str_row[i], txt->str_col[i], txt->s, w);
+        }
+    }
+
+    return 0;
+}
 
 
 
