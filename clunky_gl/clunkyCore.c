@@ -131,7 +131,7 @@ int clunky_update_window(struct Clunky_Window *window){
 	if (window->animation_counter >= 4){
 		window->animation_counter = 0;
 	}
-	if (window->sub_counter >= 20){
+	if (window->sub_counter >= 80){
 		window->animation_counter++;
 		window->sub_counter = 0;
 	}
@@ -236,12 +236,12 @@ int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *s
 	//first, we need to verify that the specified row/column fits within the texture!
 	if (((col+1) * sprite->cell.w) > sprite->texture->width){
 		//uh oh! we are running out of the sprite sheet!
-		fprintf(stderr, "Sprite render out of bounds! column\n");
+		fprintf(stderr, "Sprite render out of bounds! column: %d\n", col);
 		return -1;
 	}
 	else if (((row+1) * sprite->cell.h) > sprite->texture->height){
 		//uh oh! we are running out of the sprite sheet!
-                fprintf(stderr, "Sprite render out of bounds! row\n");
+                fprintf(stderr, "Sprite render out of bounds! row: %d\n", row);
                 return -1;
 	}
 
