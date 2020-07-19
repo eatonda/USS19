@@ -46,7 +46,7 @@ int main(int argc, char *argv[]){
     struct Clunky_Sprite mmb;   //stores sprite image of main menu buttons
     clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &main_menu_texture, &mmb); // Initialize sprite
 
-    struct Clunky_Button *main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, &mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    struct Clunky_Event_Element_Container* main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, &mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
     /* Initialize a Menu object for the mainMenu*/
     Menu* mainMenu =  new Menu(&window, main_menu, MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions);
