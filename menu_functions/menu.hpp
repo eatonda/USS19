@@ -30,11 +30,13 @@ private:
     
     int numOfOptions;
     
+    int* values;    // pointer to an array of button values
+    
     std::string* optionNames;   // Pointer to an array of option names for comparision purposes.
     
     
 public:
-    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames);
+    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames);
     
     struct Clunky_Event_Element_Container* getMenuOptions(); // Returns menuOptions member variable
     
@@ -44,7 +46,7 @@ public:
     
     void _display(struct Clunky_Event* event);    // Renders buttons to the screen
     
-    int run(struct Clunky_Event* event);    // Runs menu and returns user input
+    int run(struct Clunky_Event* event, int* userInput);    // Runs menu and updates user input via reference, returns 0 if quit is encountered
 };
 
 #endif /* menu_hpp */

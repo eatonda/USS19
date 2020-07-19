@@ -10,21 +10,33 @@
 
 int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme) {
 
-
+/* Constants for all menu buttons */
 const int NUM_OF_SPRITE_COLS = 2;
-const int MAIN_MENU_NUM_OF_BUTTONS = 4;
-const int LOGIN_CONTINUE_NUM_OF_BUTTONS = 3;
 const int BUTTON_WIDTH = 165;
 const int BUTTON_HEIGHT = 160;
-
-
-
     
+/* Constants for MAIN MENU */
+const int MAIN_MENU_NUM_OF_BUTTONS = 4;
+
+/* Constants for COLOR MENU */
+const int COLOR_MENU_NUM_OF_BUTTONS = 3;
+    
+/* Constants for SHIP MENU */
+const int SHIP_MENU_NUM_OF_BUTTONS = 4;
+    
+/* Constants for Board MENU */
+const int BOARD_MENU_NUM_OF_BUTTONS = 4;
+    
+
+   
                             /* CREATE MAIN MENU */
 
-    /* Parameters for main menu */
+    // Options for main menu
     std::string mainMenuDescriptions [MAIN_MENU_NUM_OF_BUTTONS] = {"start", "leaderboard", "user manual", "quit"};
     
+    int MAIN_MENU_VALUES[MAIN_MENU_NUM_OF_BUTTONS] = {0, 1, 2, 3};     // Navigates Main menu
+    int navigation; // Holds value for navigation sake
+
     int x = getMiddle(BUTTON_WIDTH, window->width);  // Get x coordinate that centers the button
     
     int xCoordinates [MAIN_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
@@ -40,7 +52,7 @@ const int BUTTON_HEIGHT = 160;
     }
 
     struct Clunky_Texture main_menu_texture;
-    clunky_load_texture(toC_String("./mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
+    clunky_load_texture(toC_String("/menu_functions/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
     
     struct Clunky_Sprite mmb;   //stores sprite image of main menu buttons
     clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &main_menu_texture, &mmb); // Initialize sprite
@@ -48,45 +60,121 @@ const int BUTTON_HEIGHT = 160;
     struct Clunky_Event_Element_Container* main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, &mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
     /* Initialize a Menu object for the mainMenu*/
-    Menu* mainMenu =  new Menu(window, main_menu, MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions);
+    Menu* mainMenu =  new Menu(window, main_menu, MAIN_MENU_NUM_OF_BUTTONS, MAIN_MENU_VALUES, mainMenuDescriptions);
     
+    
+    
+                        /* CREATE COLOR MENU */
+    // For simplicity all menus will have the same y and x coordinates but they can be customized
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    std::string colorMenuDescriptions [COLOR_MENU_NUM_OF_BUTTONS] = {"0", "1", "BACK"};
+    int COLOR_MENU_VALUES [COLOR_MENU_NUM_OF_BUTTONS] = {0, 1};     // Values for color are either 0 for light and 1 for dark
+
+    struct Clunky_Texture color_menu_texture;
+    clunky_load_texture(toC_String("/menu_functions/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
+    
+    
+    struct Clunky_Sprite cmb;   //stores sprite image of color menu buttons
+    clunky_init_sprite(COLOR_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &color_menu_texture, &cmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* color_menu = buttonSetup(COLOR_MENU_NUM_OF_BUTTONS, colorMenuDescriptions, &cmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    /* Initialize a Menu object for the colorMenu*/
+    Menu* colorMenu =  new Menu(window, color_menu, COLOR_MENU_NUM_OF_BUTTONS, COLOR_MENU_VALUES, colorMenuDescriptions);
+    
+    
+    
+                        /* CREATE SHIP MENU */
+    // For simplicity all menus will have the same y and x coordinates but they can be customized
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    std::string shipMenuDescriptions [SHIP_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
+    int SHIP_MENU_VALUES [SHIP_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
+    
+    struct Clunky_Texture ship_menu_texture;
+    clunky_load_texture(toC_String("/menu_functions/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
+    
+    
+    struct Clunky_Sprite smb;   //stores sprite image of ship menu buttons
+    clunky_init_sprite(SHIP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &ship_menu_texture, &smb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* ship_menu = buttonSetup(SHIP_MENU_NUM_OF_BUTTONS, shipMenuDescriptions, &smb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    /* Initialize a Menu object for the shipMenu*/
+    Menu* shipMenu =  new Menu(window, ship_menu, SHIP_MENU_NUM_OF_BUTTONS, SHIP_MENU_VALUES, shipMenuDescriptions);
+    
+    
+    
+                       /* CREATE BOARD MENU */
+    // For simplicity all menus will have the same y and x coordinates but they can be customized
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    std::string boardMenuDescriptions [BOARD_MENU_NUM_OF_BUTTONS] = {"25", "50", "75", "BACK"};
+    int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {25, 50, 75};     // Values for numOfShips
+    
+    struct Clunky_Texture board_menu_texture;
+    clunky_load_texture(toC_String("/menu_functions/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
+    
+    
+    struct Clunky_Sprite bmb;   //stores sprite image of board menu buttons
+    clunky_init_sprite(BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &board_menu_texture, &bmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* board_menu = buttonSetup(BOARD_MENU_NUM_OF_BUTTONS, boardMenuDescriptions, &bmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    /* Initialize a Menu object for the boardMenu*/
+    Menu* boardMenu =  new Menu(window, board_menu, BOARD_MENU_NUM_OF_BUTTONS, BOARD_MENU_VALUES, boardMenuDescriptions);
+    
+    
+    
+    
+                    
+                         
                     
     // Menus main loop
     int cont = 1;
     
-    // Variables holding user input per menu, different ones used for readabiality sake.
-    int main_userInput = -5;
+    // Holds main menu navigation
+    int main_userInput;
+   
   
-    
     while(cont){
-        main_userInput = mainMenu->run(event);
-        std::cout << "In getGameParameters:\n"; // Trace statement
-        switch (main_userInput) {
-            case -1:
-                std::cout << "x icon selected\n";
-                cont = 0;
-                break;
-                
-            case 0:
-                std::cout << "selection was start\n";
-                break;
-                
-            case 1:
-                std::cout << "selection was leaderboard\n";
-                break;
-                
-            case 2:
-                std::cout << "selection was user manual\n";
-                break;
-                
-            case 3:
-                std::cout << "selection was exit\n";
-        cont = 0;
-                break;
-            default:
-                break;
-        }
+        // Run Main Menu, note no variables are intitalized in main
+        // Also note that when back is encountered 0 is returend
+        // Also note if SDL_Quit is encountered -1 is returned
         
+        if (mainMenu->run(event, &navigation) > 0){
+            switch (navigation) {
+                case 0:
+                    std::cout << "START was selected\n";
+                    if (colorMenu->run(event, colorTheme) > 0) {
+                        if (shipMenu->run(event, numOfShips) > 0) {
+                            if (boardMenu->run(event, dimensions)) {
+                                return 1;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 1:
+                    std::cout << "LEADERBOARD was selected\n";
+                    break;
+                    
+                case 2:
+                    std::cout << "USER MANUAL was selected\n";
+                    break;
+                    
+                case 3:
+                    std::cout << "EXIT was selected\n";
+                    cont = 0;
+                    
+                default:
+                    break;
+            }
+            
+        } else {
+            cont = 0;   // Exit loop
+        }
     }
 
     //Quit SDL subsystems

@@ -1,6 +1,6 @@
 // Main File for the game
 
-#include "getGameParameters.hpp"
+#include "menu_functions/getGameParameters.hpp"
 
 const int WINDOW_WIDTH = 540;
 const int WINDOW_HEIGHT = 480;
