@@ -53,7 +53,7 @@ int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOf
         if (menuOptions->sum.eid == clunky_hash_gen(toC_String(optionNames[i]))) {
             // Check for back option
             if (optionNames[i] == "BACK") {
-                return numOfOptions + 1;    // To signal back was selected
+                return numOfOptions;    // To signal back was selected
             } else
             // If other menu option was selected return index
             return i;

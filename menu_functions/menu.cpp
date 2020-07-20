@@ -63,26 +63,30 @@ int Menu::run(struct Clunky_Event* event, int* userInput) {
         clunky_event(event);
         clunky_eec_update(menuOptions, event, window); //update event container
         // Sift through events if there are any.
-        if (menuOptions->sum.eid) {
+        if (event->num_input) {
             
             // Check for SDL_QUIT
             if (_SDL_QUIT_Check(event) < 0) {
                 return -1;  // Return -1 to signal exit from SDL_QUIT
             }
         }
-            userChoice = _getMouseClick(menuOptions, numOfOptions, optionNames, event);
         
-        if (values != NULL && userChoice < numOfOptions)
+        userChoice = _getMouseClick(menuOptions, numOfOptions, optionNames, event);
+        
+        if (values != NULL && userChoice < numOfOptions) {
             *userInput = values[userChoice];    //Update user input via reference
+        }
         
-            if (userChoice == numOfOptions) {
-                return 0; // Back was selected, return 0
+        if (userChoice == numOfOptions) {
+            return 0; // Back was selected, return 0
             
-            } else if (userChoice >= 0 && userChoice <= numOfOptions){
-                return 1;    // return 1 for a valid choice made
-            } else {
-                userChoice = -2;    // Reset variable
-            }
+        }
+        
+        if (userChoice >= 0 && userChoice <= numOfOptions){
+            return 1;    // return true for non back index selected
+        } else {
+            userChoice = -2;    // Reset variable
+        }
         
          _display(event);
         

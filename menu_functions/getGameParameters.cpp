@@ -27,7 +27,8 @@ const int SHIP_MENU_NUM_OF_BUTTONS = 4;
 /* Constants for Board MENU */
 const int BOARD_MENU_NUM_OF_BUTTONS = 4;
     
-
+/* Constant for menus array */
+const int NUM_OF_MENUS = 4;
    
                             /* CREATE MAIN MENU */
 
@@ -128,55 +129,106 @@ const int BOARD_MENU_NUM_OF_BUTTONS = 4;
     
     
     
-                    
+    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu}; // Holds all menus for easy indexing
                          
                     
-    // Menus main loop
-    int cont = 1;
-    
-    // Holds main menu navigation
-    int main_userInput;
+    //Flag that determines whether or not to go to next menu or to go back
+    int menuFlag; //0 equals BACK, -1 means SDL_quit, 0 < x Means progress to next menu
    
-  
-    while(cont){
-        // Run Main Menu, note no variables are intitalized in main
+    // Controls each menu loop, used different names for readability, reminds you which menu you are in
+    int mainCont = 1;
+    int colorCont = 1;
+    int shipCont = 1;
+    int boardCont = 1;
+    
+    int i = 0;
+    
+    
+    
+  // Menus Main Loop
+    while(mainCont){
+        // Run Main Menu
         // Also note that when back is encountered 0 is returend
         // Also note if SDL_Quit is encountered -1 is returned
-        
-        if (mainMenu->run(event, &navigation) > 0){
+        menuFlag = menus[i]->run(event, &navigation);
+        //std::cout << menuFlag;
+        if (menuFlag > 0) {
             switch (navigation) {
                 case 0:
-                    std::cout << "START was selected\n";
-                    if (colorMenu->run(event, colorTheme) > 0) {
-                        if (shipMenu->run(event, numOfShips) > 0) {
-                            if (boardMenu->run(event, dimensions)) {
-                                return 1;
+                    i++;    //increment index to next menu
+                    std::cout << "GGP(): START\n";
+                    while (colorCont) {
+                        menuFlag = menus[i]->run(event, colorTheme);   // Run colorMenu
+                        
+                        if (menuFlag > 0) {
+                            i++;
+                            while (shipCont) {
+                                menuFlag = menus[i]->run(event, numOfShips);    // Run shipsMenu
+                                if (menuFlag > 0){
+                                    i++;
+                                    while (boardCont) {
+                                        menuFlag = menus[i]->run(event, dimensions);    // Run board menu
+                                        if (menuFlag > 0) {
+                                            return 1;   //Return true to main
+                                        } else if (!menuFlag) {
+                                            std::cout << "GGP(): BACK\n";
+                                            i--;
+                                            break;
+                                        } else {
+                                            std::cout << "GGP(): SDL_QUIT\n";
+                                            mainCont = 0;   // Turn off main loop
+                                            break;
+                                        }
+                                    }
+                                    
+                                } else if (!menuFlag) {
+                                    std::cout << "GGP(): BACK\n";
+                                    i--;
+                                    break;
+                                } else {
+                                    std::cout << "GGP(): SDL_QUIT\n";
+                                    mainCont = 0;   // Turn off main loop
+                                    break;
+                                }
                             }
+                            
+                        } else if (!menuFlag){
+                            std::cout << "GGP(): BACK\n";
+                            i--;
+                            break;
+                            
+                            
+                        } else {
+                            std::cout << "GGP(): SDL_QUIT\n";
+                            mainCont = 0;   // Turn off main loop
+                            break;
                         }
                     }
                     break;
                     
                 case 1:
-                    std::cout << "LEADERBOARD was selected\n";
+                    std::cout << "GGP(): LEADERBOARDS\n";
                     break;
-                    
+                
                 case 2:
-                    std::cout << "USER MANUAL was selected\n";
+                    std::cout << "GGP(): USER MANUAL\n";
                     break;
                     
                 case 3:
-                    std::cout << "EXIT was selected\n";
-                    cont = 0;
+                    std::cout << "GGP(): EXIT\n";
+                    mainCont = 0;   // Exit main loop
+                    break;
                     
                 default:
                     break;
             }
-            
         } else {
-            cont = 0;   // Exit loop
+            std::cout << "GGP(): SDL_QUIT encountered\n";
+            mainCont = 0;   //Exit main loop
         }
     }
 
+    std::cout << "Out of Loop\n";
     //Quit SDL subsystems
     SDL_Quit();
 
