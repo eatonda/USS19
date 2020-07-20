@@ -11,6 +11,8 @@ struct Clunky_Window{
 
 	int animation_counter;
 	int sub_counter;
+
+    struct Clunky_Sprite *sprite;
 };
 
 struct Clunky_Event{
@@ -22,7 +24,11 @@ struct Clunky_Event{
 
         int mx; //mouse x position
         int my; //mouse y position
+        int dx; //mouse delta x
+        int dy; //mouse delta y
+
         int lc; //left click
+        int lcs; //left click sustained
         int rc; //right click
 };
 
@@ -40,6 +46,23 @@ struct Clunky_Sprite{
 
 	int sprite_row;
 	int sprite_column; //if we are using an animated sprite, this value is negitive, oteherwise it specifiese which column to use on the sheet
+};
+
+struct Clunky_Text{
+    struct Clunky_Sprite *s;
+
+    int x;
+    int y;
+    int w;
+    int h;
+
+    float scale;
+
+    char *str;
+    int *str_row; //used to reduce the ammount of proccessing, so we dont
+    int *str_col; //need to recalculate the sprite cels at each render
+    int str_len;
+    int str_used;
 };
 
 struct Clunky_HitBox{
@@ -77,8 +100,9 @@ struct Clunky_Entity{
 //====================
 //core functionality
 int clunky_event(struct Clunky_Event *event);
-int clunky_init(struct Clunky_Window *window, int width_p, int height_p);
+int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_p, int height_p);
 int clunky_update_renderer(struct Clunky_Window *window);
+int clunky_update_window(struct Clunky_Window *window);
 int clunky_present_window(struct Clunky_Window *window);
 
 //=====================
@@ -101,5 +125,16 @@ int clunky_hitbox_init(int width, int height, int slope, int x_offset, int y_off
 int clunky_collision_core(struct Clunky_Entity *check, struct Clunky_Entity *mate, int *dir);
 int clunky_entity_collision(struct Clunky_Entity *check, struct Clunky_Entity **bucket, int length, int *dir); //return -1 (no collisions), 0 (cant fall), 1 (can fall)
 int clunky_entity_update_positions(struct Clunky_Entity **bucket, int length);
+
+//=====================
+//Clunky Text
+struct Clunky_Text *clunky_get_text(int x, int y, int w, int h, float scale, Clunky_Window *);
+int clunky_text_free(struct Clunky_Text *txt);
+int clunky_text_grow(struct Clunky_Text *txt);
+int clunky_replace_text(struct Clunky_Text *txt, const char *new_str);
+int clunky_add_text(struct Clunky_Text *txt, const char *new_str);
+int clunky_remove_text(struct Clunky_Text *txt, int cnt);
+int clunky_str_to_int(struct Clunky_Text *txt);
+int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w);
 
 #endif

@@ -26,26 +26,20 @@ int main(int argc, char *argv[]){
     clunky_init(&window, &event, 640, 480);
 
     //Now we will load the texture that contains all of our main menu buttons
-    struct Clunky_Texture main_menu_texture;
-    clunky_load_texture("./buttons.bmp", &main_menu_texture, &window);
+    struct Clunky_Texture water_tex;
+    clunky_load_texture("./clunky_assets/Water.bmp", &water_tex, &window);
 
     //From the trexture we can create a sprite. 
     //Clunky Sprites allow for the rendering of partial sections of
     //the texture, instead of the entire texture at once
-    struct Clunky_Sprite mmb;
+    struct Clunky_Sprite water_spr;
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(4, 2, &main_menu_texture, &mmb);
+    clunky_init_sprite(1, 5, &water_tex, &water_spr);
 
-    //now we get into buttons
-    //the menu will have 4 buttons: start, options, credits, quit
-    //we will store all the buttons for this menu in one dynamic array
-    struct Clunky_Event_Element **mainMenuElements = (struct Clunky_Event_Element **)malloc(sizeof(struct Clunky_Event_Element*) * 4);
-    //now we need to init all of the buttons
-    mainMenuElements[0] = clunky_standard_button_init(&mmb, 100, 10, 0, "start");
-    mainMenuElements[1] = clunky_standard_button_init(&mmb, 100, 60, 1, "options");
-    mainMenuElements[2] = clunky_standard_button_init(&mmb, 100, 110, 2, "credits");
-    mainMenuElements[3] = clunky_standard_button_init(&mmb, 100, 160, 3, "quit");
+    water_spr.sprite_row = 0;
+    water_spr.sprite_column = -1;
+
 
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
@@ -53,16 +47,13 @@ int main(int argc, char *argv[]){
     //init the eec
     clunky_eec_init(eec);
 
-    //add the Main Menu Elements (aka buttons at this point) to the eec
-    clunky_eec_add_elements(eec, mainMenuElements, 4);
-    
     //now we can begin our main loop!
     cont = 1;
     unsigned long bid;
 
     //create a clunky text object!
-    struct Clunky_Text *text = clunky_get_text(200, 200, 512, 64, 1., &window);
-    clunky_replace_text(text, "HELLO THERE TEAM!\0");
+    struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 1., &window);
+    clunky_replace_text(text, "THIS IS THE BOARD! :)\0");
     for (int i = 0; i < text->str_used; i++){
         printf("%c, (%d, %d)\n", text->str[i], text->str_row[i], text->str_col[i]);
     }
@@ -110,6 +101,8 @@ int main(int argc, char *argv[]){
                 cont = 0;
             }
         }
+
+        clunky_animate_sprite(100, 100, &water_spr, &window);
 
         //Update the window!
         clunky_present_window(&window);

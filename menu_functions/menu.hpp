@@ -15,36 +15,38 @@
 #include <SDL2/SDL.h>
 #include "menuHelpers.hpp"
 
-//extern "C" {
-    #include "../clunky_gl/clunkyCore.h"
-    #include "../clunky_gl/clunkyHash.h"
-    #include "../clunky_gl/clunkyAdvEvents.h"
-//}
+
+#include "../clunky_gl/clunkyCore.h"
+#include "../clunky_gl/clunkyHash.h"
+#include "../clunky_gl/clunkyEventElements.h"
+
 
 class Menu {
     
 private:
     struct Clunky_Window* window; // Reference to main's window
     
-    struct Clunky_Button* menuOptions;    // Pointer to an array of Clunky_Buttons
+    struct Clunky_Event_Element_Container* menuOptions;    // Pointer to container of button elements
     
     int numOfOptions;
+    
+    int* values;    // pointer to an array of button values
     
     std::string* optionNames;   // Pointer to an array of option names for comparision purposes.
     
     
 public:
-    Menu(struct Clunky_Window* window, struct Clunky_Button* menuOptions, int numOfOptions, std::string* optionNames);
+    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames);
     
-    struct Clunky_Button* getMenuOptions(); // Returns menuOptions member variable
+    struct Clunky_Event_Element_Container* getMenuOptions(); // Returns menuOptions member variable
     
     int getNumOfOptions();  // Returns the numOfOptions member
     
     std::string* getOptionNames();   // Returns the array of option names
     
-    void display();    // Renders buttons to the screen
+    void _display(struct Clunky_Event* event);    // Renders buttons to the screen
     
-    int run(struct Clunky_Event* event);    // Runs menu and returns user input
+    int run(struct Clunky_Event* event, int* userInput);    // Runs menu and updates user input via reference, returns 0 if quit is encountered
 };
 
 #endif /* menu_hpp */
