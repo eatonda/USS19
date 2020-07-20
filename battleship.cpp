@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     int boardSize = -1;     // Square board thus w = h
     int colorScheme = -1;   // Color scheme is either 0(light) or 1(dark)
     
-    if (getGameParameters(&window, &event, &numOfShips, &boardSize, &colorScheme)) {
+    if (getGameParameters(&window, &event, &boardSize, &numOfShips &colorScheme)) {
         
         /* Trace Statement showing instantiated parameters */
         std::cout << " Parameters Instantiated via getGameParameters()\n";
