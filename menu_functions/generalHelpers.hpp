@@ -1,10 +1,4 @@
-//
-//  generalHelpers.hpp
-//  BattleShip_Playground
-//
-//  Created by David Eaton on 7/12/20.
-//  Copyright © 2020 David Eaton. All rights reserved.
-//
+
 
 #ifndef generalHelpers_hpp
 #define generalHelpers_hpp
