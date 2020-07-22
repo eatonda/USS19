@@ -102,7 +102,11 @@ int main(int argc, char *argv[]){
             }
         }
 
-        clunky_animate_sprite(100, 100, &water_spr, &window);
+        for (int i = 0; i < 5*64; i += 64){
+            for (int j = 0; j < 5*64; j += 64){
+               clunky_animate_sprite(100 + i, 100 + j, &water_spr, &window);
+            }
+        }
 
         //Update the window!
         clunky_present_window(&window);
