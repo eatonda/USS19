@@ -34,9 +34,11 @@ private:
     
     std::string* optionNames;   // Pointer to an array of option names for comparision purposes.
     
+    Clunky_Text* title; // Holds menu title
+    
     
 public:
-    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames);
+    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title);
     
     struct Clunky_Event_Element_Container* getMenuOptions(); // Returns menuOptions member variable
     

@@ -9,12 +9,13 @@
 #include "menu.hpp"
 
 
-Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames) {
+Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title) {
     this->window = window;
     this->menuOptions = menuOptions;
     this->numOfOptions = numOfOptions;
     this->values = values;
     this->optionNames = optionNames;
+    this->title = title;
 }
 
 
@@ -36,6 +37,7 @@ void Menu::_display(struct Clunky_Event* event) {
     
     //Update and present the window
     clunky_present_window(window);
+    clunky_render_text(title, window);
     //clunky_update_renderer(window);
 
     //Now we just need a small delay to prevent the loop from consuming
