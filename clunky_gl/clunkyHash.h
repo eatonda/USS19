@@ -42,6 +42,9 @@ int clunky_spacial_free(struct Clunky_Spacial_Map *map);
 int clunky_spacial_reset(struct Clunky_Spacial_Map *map);
 int clunky_spacial_get_used(int x, int y, struct Clunky_Spacial_Map *map); //will return the length of the bucket used
 void **clunky_spacial_get_bucket(int x, int y, struct Clunky_Spacial_Map *map); //will return the array/bucket
+int clunky_spacial_stitch_used(int x, int y, int w, int h, struct Clunky_Spacial_Map *map);
+void **clunky_spacial_stitch_bucket(int x, int y, int w, int h, struct Clunky_Spacial_Map *map);
+
 int clunky_spacial_insert(int x, int y, struct Clunky_Spacial_Map *map, void *data);
 
 

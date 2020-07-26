@@ -40,20 +40,50 @@ int main(int argc, char *argv[]){
     water_spr.sprite_row = 0;
     water_spr.sprite_column = -1;
 
+    //create a 5x5 board for now
+    char names[] = "cell_x_\0";
+    int cnt = 0;
+    struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * 25);
+    for (int i = 0; i < 5; i++){
+        for (int j = 0; j < 5; j++){
+            names[4] = '0' + i;
+            names[6] = '0' + j;
+
+            cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element ));
+
+            clunky_element_init(cells[cnt], &water_spr, 64*i, 64*j, 0, names, 'S', 'N');
+
+            cnt++;
+        }
+    }
+
+     //Now we will load the texture that contains all of our main menu buttons
+    struct Clunky_Texture pp_tex;
+    clunky_load_texture("./clunky_assets/PlanningPin.bmp", &pp_tex, &window);
+    struct Clunky_Sprite pp_spr;
+    clunky_init_sprite(1, 1, &pp_tex, &pp_spr);
+
+    struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 500, 200, 0, "ppd");
+
+
 
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
 
     //init the eec
     clunky_eec_init(eec);
-
+    clunky_eec_add_elements(eec, cells, 25);
+    clunky_eec_add_elements(eec, &ppd, 1);
+    printf("ASASASASAS\n");
     //now we can begin our main loop!
     cont = 1;
     unsigned long bid;
 
     //create a clunky text object!
     struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 1., &window);
+    printf("HHH\n");
     clunky_replace_text(text, "THIS IS THE BOARD! :)\0");
+    printf("CCCC\n");
     for (int i = 0; i < text->str_used; i++){
         printf("%c, (%d, %d)\n", text->str[i], text->str_row[i], text->str_col[i]);
     }
@@ -63,7 +93,6 @@ int main(int argc, char *argv[]){
         clunky_event(&event);
         clunky_eec_update(eec, &event, &window);
         clunky_render_text(text, &window);
-        
         //if there has been a keypress (indicated with num_input != 0)
         //or a mouse click (indicated with lc || rc == 1)
         //then check to see what has happened
@@ -84,25 +113,17 @@ int main(int argc, char *argv[]){
 
         //check the buttons to see if anywhere clicked
         //first, check to make sure that there was a selected button
-        if (eec->sum.eid != 0){
-            //ok, a button was interacted with!
-            //find out which one
-            if (eec->sum.eid == clunky_hash_gen("start")){
-                printf("START\n");
-            }
-            else if (eec->sum.eid == clunky_hash_gen("options")){
-                printf("OPTIONS\n");
-            }
-            else if (eec->sum.eid == clunky_hash_gen("credits")){
-                printf("CREDITS\n");
-            }
-            else if (eec->sum.eid == clunky_hash_gen("quit")){
-                printf("QUIT\n");
-                cont = 0;
+        if (eec->sum.event_type != 'N'){
+            if (eec->sum.event_type == 'S'){
+                printf("Elements have been snapped together!\n");
+                for (int k = 0; k < eec->snaps_used; k++){
+                    if (eec->snaps[k]->eid == eec->sum.eid_two){
+                        printf(">>Snap To Element: %s\n", eec->snaps[k]->name);
+                    }
+                }
             }
         }
 
-        clunky_animate_sprite(100, 100, &water_spr, &window);
 
         //Update the window!
         clunky_present_window(&window);

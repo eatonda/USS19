@@ -11,7 +11,9 @@ struct Clunky_Event_Summary{
     int str_used;
     int collect_string;
 
-    unsigned long eid;
+    unsigned long eid_one;
+    unsigned long eid_two;
+    char event_type;
 
 };
 
@@ -22,6 +24,11 @@ struct Clunky_Event_Element_Container{
     struct Clunky_Event_Element **elements;
     int len_ele;
     int num_ele;
+
+    struct Clunky_Event_Element **snaps;
+    int snaps_len;//atm just keep the snaps the same length and grow it at the same time as the
+                  //elements array. Will clean this up later
+    int snaps_used;
 
     struct Clunky_Event_Summary sum;
 
@@ -46,6 +53,7 @@ struct Clunky_Event_Element{
                 //[R] -> Hover + Toggle
 
     unsigned long eid;
+    char name[256];
     int x;
     int y;
     int w;
