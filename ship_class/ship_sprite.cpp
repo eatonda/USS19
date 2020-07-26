@@ -15,10 +15,10 @@ int main(int argc, char *argv[]){
 
     struct Clunky_Event event;
 
-    clunky_init(&window, &event, 1000, 1000);
+    clunky_init(&window, &event, 500, 500);
 
     struct Clunky_Texture ship_tex;
-    clunky_load_texture("yellow_square.bmp", &ship_tex, &window);
+    clunky_load_texture("rsz_yellow_square.bmp", &ship_tex, &window);
 
     struct Clunky_Sprite ship_sprite;
     clunky_init_sprite(1, 1, &ship_tex, &ship_sprite);
@@ -92,8 +92,8 @@ int main(int argc, char *argv[]){
                clunky_animate_sprite(100 + i, 100 + j, &ship_sprite, &window);
             }
         }*/
-        clunky_render_sprite(30, 30, ship_sprite.sprite_row, ship_sprite.sprite_column, &ship_sprite, &window);
-        clunky_render_sprite(60, 60, ship_sprite.sprite_row, ship_sprite.sprite_column, &ship_sprite, &window);
+        clunky_render_sprite(100, 100, ship_sprite.sprite_row, ship_sprite.sprite_column, &ship_sprite, &window);
+        clunky_render_sprite(164, 100, ship_sprite.sprite_row, ship_sprite.sprite_column, &ship_sprite, &window);
         //clunky_render_sprite(100, 100, ship_sprite.sprite_row, ship_sprite.sprite_column, &ship_sprite, &window);
 
         //Update the window!
