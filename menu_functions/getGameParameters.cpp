@@ -241,10 +241,12 @@ const int NUM_OF_MENUS = 4;
                     
                 case 1:
                     std::cout << "GGP(): LEADERBOARDS\n";
+                    std::cout << "HIGHSCORES:\n *FOO:XXX\n *BAR:XXX\n *FOOBAR:XXX\n";
                     break;
                 
                 case 2:
                     std::cout << "GGP(): USER MANUAL\n";
+                    std::cout << "HOW TO PLAY:\n Click the buttons to navigate menus, when the board is created click the cells to add a planning pin\n";
                     break;
                     
                 case 3:

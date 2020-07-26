@@ -266,8 +266,14 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 if (status == 2) eec->elements[i]->misc = 1;
                 //else if misc already is 1, and lcs is not true (i.e. the player let go of the
                 //element) then set the misc status back to 0
-                else if (e->lcs == 0) eec->elements[i]->misc = 0;
+                else if (e->lcs == 0){
+                    //idicate that the element is no longer being draggeed
+                    eec->elements[i]->misc = 0;
 
+                    //check to see if we overlap with a snap-to element
+
+
+                }
                 //if the misc status is set to true, then the element is being dragged
                 //thus we need to update its x/y location
                 if (eec->elements[i]->misc){

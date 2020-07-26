@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
 
     struct Clunky_Event event;
 
-    clunky_init(&window, &event, 500, 500);
+    clunky_init(&window, &event, 1000, 1000);
 
     struct Clunky_Texture ship_tex;
     clunky_load_texture("yellow_square.bmp", &ship_tex, &window);
