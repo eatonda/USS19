@@ -57,7 +57,6 @@ int main(int argc, char *argv[]){
     SDL_StartTextInput();
 
     SDL_Event e;
-
    
     while(cont){
         //first thing: check to see if there have been any new events!
