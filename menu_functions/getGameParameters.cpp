@@ -294,7 +294,10 @@ const int NUM_OF_MENUS = 5;
                 case 2:
                     std::cout << "GGP(): USER MANUAL\n";
                     std::cout << "HOW TO PLAY:\n Click the buttons to navigate menus, when the board is created click the cells to add a planning pin\n";
-                    menus[4]->runPage(event);
+                    if (menus[4]->runPage(event) == -1){
+                        mainCont = 0;   //Break loop
+                        
+                    }
                     break;
                     
                 case 3:
