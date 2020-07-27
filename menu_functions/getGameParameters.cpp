@@ -164,7 +164,7 @@ const int NUM_OF_MENUS = 5;
     title = "USER MANUAL";
     
     // Note main menu must be capitalized to MAIN MENU for menu function to recognize it properly
-    std::string helpMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS"};
+    std::string helpMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS", "NEXT"};
     
     struct Clunky_Texture help_menu_texture;
     clunky_load_texture(toC_String("/menu_functions/menu_assets/pageMenuButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu

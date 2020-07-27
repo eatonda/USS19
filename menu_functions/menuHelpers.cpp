@@ -54,7 +54,7 @@ int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOf
             // Check for back option
             if (optionNames[i] == "BACK" || optionNames[i] == "MAIN MENU") {
                 return numOfOptions;    // To signal back was selected
-            } else if (optionNames[i] == "PREVIOUS PAGE") {
+            } else if (optionNames[i] == "PREVIOUS") {
                 return -1;  // Special Case for previous page
             } else if (optionNames[i] == "NEXT") {
                 return numOfOptions + 1;    // Special case for next page

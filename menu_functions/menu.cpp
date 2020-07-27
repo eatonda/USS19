@@ -179,7 +179,7 @@ int Menu::runPage(struct Clunky_Event* event) {
 
         } else if (userChoice == -1) {
             // Previous page was selected.
-            if (pageNumber - 1 > 0) {
+            if (pageNumber - 1 >= 0) {
                 pageNumber--;   //If not first page decrement index
             }
         } else if (userChoice == numOfOptions + 1) {
