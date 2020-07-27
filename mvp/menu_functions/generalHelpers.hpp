@@ -1,0 +1,12 @@
+
+
+#ifndef generalHelpers_hpp
+#define generalHelpers_hpp
+
+#include <stdio.h>
+#include<string>
+
+char* toC_String(std::string str);  // Converts std::string to a mutable c string
+
+int getMiddle(int imageDimension, int windowDimension); //Calculates middle of screen  based on a on a image dimension(width or height) and the window dimension(width or height).
+#endif /* generalHelpers_hpp */

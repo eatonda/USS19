@@ -67,6 +67,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
         b->name[i] = b_name[i];
     }
 
+    //set the ignore flag to false
+    b->ignore = 0;
+
     //return the BID
     return b->eid;
 }
@@ -258,8 +261,8 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
 
 int clunky_mouse_interaction_helper(struct Clunky_Event_Element * ele, struct Clunky_Event *e){
     //local helper function to set the itneract status of elements
-    if ( e->mx >= ele->x && e->mx <= (ele->x + ele->w) &&
-             e->my >= ele->y && e->my <= (ele->y + ele->h)){
+    if ( e->mx >= ele->x && e->mx <= (ele->x + ele->s->ap_w) &&
+             e->my >= ele->y && e->my <= (ele->y + ele->s->ap_h)){
         //check to see if the mouse was clicked
         if (e->lc){
             //set the itneraction to 2 ->clicked
@@ -371,6 +374,9 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
+        //first, make sure the element isnt designated as IGNORE
+        if (eec->elements[i]->ignore) continue;
+
 //        printf("EEC %d/%d  %s\n", i, eec->num_ele, eec->elements[i]->name);
         //check to see if the element is being interacted with
         if (eec->elements[i]->type != 'S'){
@@ -382,6 +388,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
             //set the EID_One to the eid of the clicked element, and the type to 'C'
             summary->eid_one = eec->elements[i]->eid;
             summary->event_type = 'C';
+            printf("<<%d, %d>>\n", eec->elements[i]->x, eec->elements[i]->y);
         }
 
         //some elements require extra proccessing than just hovered or clicked

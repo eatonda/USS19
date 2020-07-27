@@ -64,6 +64,9 @@ struct Clunky_Event_Element{
 
     int row;
     int col_max;
+
+    //the ignor flag to have the EEC updaterand renderer just skip over the element
+    int ignore;
 };
 
 //clunky event elements
