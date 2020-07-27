@@ -49,9 +49,9 @@ int main(int argc, char *argv[]){
             names[4] = '0' + i;
             names[6] = '0' + j;
 
-            cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element ));
+            cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
 
-            clunky_element_init(cells[cnt], &water_spr, 64*i, 64*j, 0, names, 'S', 'N');
+            clunky_element_init(cells[cnt], &water_spr, 64*i, 64*j, 0, names, 'S', 'A');
 
             cnt++;
         }
@@ -72,6 +72,7 @@ int main(int argc, char *argv[]){
 
     //init the eec
     clunky_eec_init(eec);
+    printf(">>>>>\n");
     clunky_eec_add_elements(eec, cells, 25);
     clunky_eec_add_elements(eec, &ppd, 1);
     printf("ASASASASAS\n");
