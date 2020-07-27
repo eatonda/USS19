@@ -52,11 +52,15 @@ int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOf
     for (int i = 0; i < numOfOptions; i++) {
         if (menuOptions->sum.eid == clunky_hash_gen(toC_String(optionNames[i]))) {
             // Check for back option
-            if (optionNames[i] == "BACK") {
+            if (optionNames[i] == "BACK" || optionNames[i] == "MAIN MENU") {
                 return numOfOptions;    // To signal back was selected
+            } else if (optionNames[i] == "PREVIOUS PAGE") {
+                return -1;  // Special Case for previous page
+            } else if (optionNames[i] == "NEXT") {
+                return numOfOptions + 1;    // Special case for next page
             } else
-            // If other menu option was selected return index
-            return i;
+                // If other menu option was selected return index
+                return i;
         }
     }
 }
