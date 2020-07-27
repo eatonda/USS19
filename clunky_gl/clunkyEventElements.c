@@ -307,19 +307,19 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
     //figure out which element is overlap which, if any overlap is even occuring
     //the width and hieght need to be checked independantly
     //first, check the X axis overlap
-    if ( a->x <= b->x && (a->x + a->w) >= b->x){
+    if ( a->x <= b->x && (a->x + a->s->ap_w) >= b->x){
         //element B overlaps A on the X axis!
-        w_over = (a->x + a->w) - b->x;
+        w_over = (a->x + a->s->ap_w) - b->x;
 
         //make sure that the overlap lengths arent larger than the sides of b
-        if ( w_over > b->w ) w_over = b->w;
+        if ( w_over > b->s->ap_w ) w_over = b->s->ap_w;
     }
-    else if ( b->x <= a->x && (b->x + b->w) >= a->x){
+    else if ( b->x <= a->x && (b->x + b->s->ap_w) >= a->x){
         //element A overlaps B on the X axis!
-        w_over = (b->x + b->w) - a->x;
+        w_over = (b->x + b->s->ap_w) - a->x;
 
         //make sure that the overlap lengths arent larger than the sides of b
-        if ( w_over > a->w ) w_over = a->w;
+        if ( w_over > a->s->ap_w ) w_over = a->s->ap_w;
     }
     else{
         //there is no overlap!
@@ -327,19 +327,19 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
     }
 
     //now check the Y axis overlap
-    if ( a->y <= b->y && (a->y + a->h) >= b->y ){
+    if ( a->y <= b->y && (a->y + a->s->ap_h) >= b->y ){
         //element B overlaps A on the Y axis!
-        h_over = (a->y + a->h) - b->y;
+        h_over = (a->y + a->s->ap_h) - b->y;
 
         //make sure that the overlap lengths arent larger than the sides of b
-        if ( h_over > b->h ) h_over = b->h;
+        if ( h_over > b->s->ap_h ) h_over = b->s->ap_h;
     }
-    else if ( b->y <= a->y && (b->y + b->h) >= a->y ){
+    else if ( b->y <= a->y && (b->y + b->s->ap_h) >= a->y ){
         //element A overlaps B on the Y axis!
-        h_over = (b->y + b->h) - a->y;
+        h_over = (b->y + b->s->ap_h) - a->y;
 
         //make sure that the overlap lengths arent larger than the sides of b
-        if ( h_over > a->h ) h_over = a->h;
+        if ( h_over > a->s->ap_h ) h_over = a->s->ap_h;
     }
     else{
         //there is no overlap!
@@ -348,8 +348,8 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
 
     //we need to know the smallist area
     int area = 0;
-    if (a->w * a->h < b->w * b->h) area = a->w * a->h;
-    else area = b->w * b->h;
+    if (a->s->ap_w * a->s->ap_h < b->s->ap_w * b->s->ap_h) area = a->s->ap_w * a->s->ap_h;
+    else area = b->s->ap_w * b->s->ap_h;
 
     //return the percent overlap
    // printf("%d, %d\n", (w_over * h_over), area);
@@ -414,8 +414,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                             if (over_max > 0.05){
                                 //snap the elements together!
                                 //center->center
-                            eec->elements[i]->x = eec->snaps[over_indx]->x + (int)( 0.5 * (float) (eec->snaps[over_indx]->w - eec->elements[i]->w));
-                            eec->elements[i]->y = eec->snaps[over_indx]->y + (int)( 0.5 * (float) (eec->snaps[over_indx]->h - eec->elements[i]->h));
+                            eec->elements[i]->x = eec->snaps[over_indx]->x + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_w - eec->elements[i]->s->ap_w));
+                            eec->elements[i]->y = eec->snaps[over_indx]->y + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_h - eec->elements[i]->s->ap_h));
 
                             //made a reference to this snap event
                             //event type(S)nap
