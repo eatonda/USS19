@@ -12,7 +12,7 @@
  Description: Typical menu constructor with no additional text content.
  Parameters: struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title
  */
-Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title) {
+Menu::Menu(struct Clunky_Window* window, struct Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, struct Clunky_Text* title) {
     this->window = window;
     this->menuOptions = menuOptions;
     this->numOfOptions = numOfOptions;
@@ -25,12 +25,10 @@ Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOpt
  Description: Menu constructor when utilizing a menu as a page with additional text content
  Parameters:
  */
-Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions,
-            int* values, std::string* optionNames, Clunky_Text* title, Clunky_Text** content, int numberOfPages, int linesPerPage) {
+Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames, struct Clunky_Text* title, struct Clunky_Text** content, int numberOfPages, int linesPerPage) {
     this->window = window;
     this->menuOptions = menuOptions;
     this->numOfOptions = numOfOptions;
-    this->values = values;
     this->optionNames = optionNames;
     this->title = title;
     this->content = content;
@@ -82,6 +80,9 @@ void Menu::_displayPage(struct Clunky_Event* event, int pageNum){
     for (int i = 0; i < linesPerPage; i++) {
         clunky_render_text(&(content[pageNumber][i]), window);    // Render page to screen
     }
+//    for (int i = 0; i < linesPerPage * pageNumber; i++){
+//        clunky_render_text(content[i], window);
+//    }
     
 }
 

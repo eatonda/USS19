@@ -27,8 +27,11 @@ const int SHIP_MENU_NUM_OF_BUTTONS = 4;
 /* Constants for Board MENU */
 const int BOARD_MENU_NUM_OF_BUTTONS = 4;
     
+/* Constants for Help MENU */
+const int HELP_MENU_NUM_OF_BUTTONS = 3;
+    
 /* Constant for menus array */
-const int NUM_OF_MENUS = 4;
+const int NUM_OF_MENUS = 5;
    
     std::string title;  // String used to initialize each menu clunky_text object
     
@@ -157,9 +160,53 @@ const int NUM_OF_MENUS = 4;
     Menu* boardMenu =  new Menu(window, board_menu, BOARD_MENU_NUM_OF_BUTTONS, BOARD_MENU_VALUES, boardMenuDescriptions, boardMenuTitle);
     
     
+                    /* CREATE HELP MENU */
+    title = "USER MANUAL";
+    
+    // Note main menu must be capitalized to MAIN MENU for menu function to recognize it properly
+    std::string helpMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS"};
+    
+    struct Clunky_Texture help_menu_texture;
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/pageMenuButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu
+    
+    struct Clunky_Sprite hmb;   //stores sprite image of help menu buttons
+    clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &help_menu_texture, &hmb); // Initialize sprite
+    
+    // Buttons for pages should be at the bottom of the screen in a single row
+    int xOffset = window->width * 0.25;
+    x = window->width * 0.20;
+    for (int i = 0; i < HELP_MENU_NUM_OF_BUTTONS; i++){
+        xCoordinates[i] = x;
+        x+= xOffset;
+        yCoordinates[i] = window->height * 0.95;
+    }
+    
+    struct Clunky_Event_Element_Container* help_menu = buttonSetup(HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, &hmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    struct Clunky_Text* helpMenuTitle = clunky_get_text(window->width * 0.5, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
+    
+    clunky_add_text(helpMenuTitle, toC_String(title));   // Add text to clunky_text
+    
+//    struct Clunky_Text* content = (struct Clunky_Text*)malloc(sizeof(struct Clunky_Text*) * 8);
+   std::string words[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
+
+ 
+    struct Clunky_Text* content[8];
+    int lineOffset = window->height * 0.05;
+    int lineY = window->height * 0.2;
+    for(int i = 0; i < 8; i++) {
+        content[i] = clunky_get_text(window->width * 0.5, lineY, window->width * 0.1, window->height * 0.10, 1.0, window);
+        clunky_add_text(content[i], toC_String(words[i]));
+        lineY+= lineOffset;
+    }
+        
+//Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions,
+//int* values, std::string* optionNames, struct Clunky_Text* title, struct Clunky_Text* content, int numberOfPages, int linesPerPage)
+    
+    Menu* helpMenu = new Menu(window, help_menu, HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, helpMenuTitle, content, 3, 2);
     
     
-    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu}; // Holds all menus for easy indexing
+    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu}; // Holds all menus for easy indexing
                          
                     
     //Flag that determines whether or not to go to next menu or to go back
@@ -247,6 +294,7 @@ const int NUM_OF_MENUS = 4;
                 case 2:
                     std::cout << "GGP(): USER MANUAL\n";
                     std::cout << "HOW TO PLAY:\n Click the buttons to navigate menus, when the board is created click the cells to add a planning pin\n";
+                    menus[4]->runPage(event);
                     break;
                     
                 case 3:

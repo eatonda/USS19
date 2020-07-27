@@ -36,7 +36,7 @@ private:
     
     struct Clunky_Text* title; // Holds menu title
     
-    struct Clunky_Text** content = NULL;   // Holds optional text content
+    struct Clunky_Text** content;   // Holds optional text content
     
     int numberOfPages = 0;  // Holds total number of pages
     int linesPerPage = 0; // Holds lines per page not including title
@@ -44,9 +44,9 @@ private:
     
     
 public:
-    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title);
+    Menu(struct Clunky_Window* window, struct Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, struct Clunky_Text* title);
     
-    Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions, int* values, std::string* optionNames, Clunky_Text* title, Clunky_Text** content, int numberOfPages, int linesPerPage);    // Constructor if there is content to intitialize
+    Menu(struct Clunky_Window* window, struct Clunky_Event_Element_Container* menuOptions, int numOfOptions, std::string* optionNames, struct Clunky_Text* title, struct Clunky_Text** content, int numberOfPages, int linesPerPage);    // Constructor if there is content to intitialize
     
     struct Clunky_Event_Element_Container* getMenuOptions(); // Returns menuOptions member variable
     
