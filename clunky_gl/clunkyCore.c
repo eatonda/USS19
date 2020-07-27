@@ -229,6 +229,11 @@ int clunky_init_sprite(int rows, int cols, struct Clunky_Texture *texture, struc
 	sprite->cell.w = texture->width/cols;
 	sprite->cell.h = texture->height/rows;
 
+    sprite->w = sprite->cell.w;
+    sprite->h = sprite->cell.h;
+    sprite->ap_w = sprite->cell.w;
+    sprite->ap_h = sprite->cell.h;
+
 	return 0;
 }
 
@@ -250,12 +255,12 @@ int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *s
 	sprite->cell.y = row *sprite->cell.h;
 	//now we need to set up the destination rect
 	sprite->texture->render_area.x = x;
-        sprite->texture->render_area.y = y;
-        sprite->texture->render_area.w = sprite->cell.w * sprite->texture->scale;
-        sprite->texture->render_area.h = sprite->cell.h * sprite->texture->scale;
+    sprite->texture->render_area.y = y;
+    sprite->texture->render_area.w = sprite->ap_w;
+    sprite->texture->render_area.h = sprite->ap_h;
 
         //now we can finally render
-        SDL_RenderCopy(window->render, sprite->texture->texture, &(sprite->cell), &(sprite->texture->render_area));
+    SDL_RenderCopy(window->render, sprite->texture->texture, &(sprite->cell), &(sprite->texture->render_area));
 
 	return 0;
 }
@@ -737,7 +742,14 @@ int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
     return 0;
 }
 
+int clunky_sprite_scale(float scale, struct Clunky_Sprite *sprite){
+    //update the scale, width, and height of the sprite
+    sprite->texture->scale = scale;
+    sprite->ap_w = sprite->w * scale;
+    sprite->ap_h = sprite->h * scale;
 
+    return 0;
+}
 
 
 

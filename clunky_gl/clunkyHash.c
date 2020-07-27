@@ -166,7 +166,8 @@ int clunky_spacial_init(struct Clunky_Spacial_Map *map, int mem_size, int length
 }
 
 int clunky_spacial_grow_map(struct Clunky_Spacial_Map *map){
-	//this function is to grow the the map, increasing the number of buckets. It doesnt affect the size of the buckets
+    printf("GROWING SPACIAL MAP\n");
+    //this function is to grow the the map, increasing the number of buckets. It doesnt affect the size of the buckets
 	//make a temporary pointer to the old memory
 	struct Clunky_Spacial_Bucket **hold = map->map;
 	
@@ -307,4 +308,25 @@ int clunky_spacial_insert(int x, int y, struct Clunky_Spacial_Map *map, void *da
 	}
 }
 
+int clunky_spacial_stitch_used(int x, int y, int w, int h, struct Clunky_Spacial_Map *map){
+    //first, we need to get the total ammount of objects in all fo the buckets we need to pull from
+    int total = 0;
+    int i, j;
+    int w_off = w / map->width;
+    int h_off = h / map->height;
+    for (i = -1*w_off; i <= w_off; i++){
+        for (j = -1 * h_off; j <= h_off; j++){
+            total += clunky_spacial_get_used(x + i * map->width, y + j * map->height, map);
+        }
+    }
 
+    printf("$%d, $%d, $%d\n", total, w_off, h_off);
+
+    return total;
+}
+
+
+void **clunky_spacial_stitch_bucket(int x, int y, int w, int h, struct Clunky_Spacial_Map *map){
+
+    return NULL;
+}

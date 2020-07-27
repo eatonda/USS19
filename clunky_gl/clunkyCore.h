@@ -44,6 +44,14 @@ struct Clunky_Sprite{
 	struct Clunky_Texture *texture;
 	SDL_Rect cell;
 
+    //the actual width and height
+    int w;
+    int h;
+
+    //the aparent width and height
+    int ap_w;
+    int ap_h;
+
 	int sprite_row;
 	int sprite_column; //if we are using an animated sprite, this value is negitive, oteherwise it specifiese which column to use on the sheet
 };
@@ -113,6 +121,7 @@ int clunky_free_texture(struct Clunky_Texture *texture);
 int clunky_render_texture(int x, int y, struct Clunky_Texture *texture, struct Clunky_Window *window);
 int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *sprite, struct Clunky_Window *window);
 int clunky_animate_sprite(int x, int y, struct Clunky_Sprite *sprite, struct Clunky_Window *window);
+int clunky_sprite_scale(float scale, struct Clunky_Sprite *sprite);
 
 //====================
 //clunky entity
