@@ -70,6 +70,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     //set the ignore flag to false
     b->ignore = 0;
 
+    //set the misc flag to 0
+    b->misc = 0;
+
     //return the BID
     return b->eid;
 }

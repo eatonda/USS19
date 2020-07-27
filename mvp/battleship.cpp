@@ -121,12 +121,18 @@ int main(int argc, char *argv[]) {
                     //SDL events
                     //'q' -> SDL_QUIT
                     if (event.input[k] == 'q') cont = 0;
+                    else if (event.input[k] == 'S'){
+                        printf("SPAWNING NEW ELEMENT from keystroke\n");
+                        struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 0, 0, 0, "ppd\0");
+                        printf("<%d, %d>\n", ppd->x, ppd->y);
+                        clunky_eec_add_elements(eec, &ppd, 1);
+                }
                 }
 
             }
             if (eec->sum.event_type != 'N'){
                 if (eec->sum.eid_one == clunky_hash_gen("spawn\0")){
-                    printf("SPAWNING NEW ELEMENT\n");
+                    printf("SPAWNING NEW ELEMENT from button\n");
                     struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 0, 0, 0, "ppd\0");
                     printf("<%d, %d>\n", ppd->x, ppd->y);
                     clunky_eec_add_elements(eec, &ppd, 1);
