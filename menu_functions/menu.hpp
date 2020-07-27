@@ -38,9 +38,9 @@ private:
     
     struct Clunky_Text** content;   // Holds optional text content
     
-    int numberOfPages = 0;  // Holds total number of pages
-    int linesPerPage = 0; // Holds lines per page not including title
-    int pageNumber = 0; // index for navigating through pages
+    int numberOfPages;  // Holds total number of pages
+    int linesPerPage; // Holds lines per page not including title
+    int pageNumber; // index for navigating through pages
     
     
 public:

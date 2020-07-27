@@ -34,6 +34,7 @@ Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOpt
     this->content = content;
     this->numberOfPages = numberOfPages;
     this->linesPerPage = linesPerPage;
+    this->pageNumber = 0;
 }
 
 struct Clunky_Event_Element_Container* Menu::getMenuOptions() {
@@ -77,13 +78,17 @@ void Menu::_displayPage(struct Clunky_Event* event, int pageNum){
     clunky_present_window(window);
     clunky_render_text(title, window);
     
-    for (int i = 0; i < linesPerPage; i++) {
-        clunky_render_text(&(content[pageNumber][i]), window);    // Render page to screen
-    }
-//    for (int i = 0; i < linesPerPage * pageNumber; i++){
-//        clunky_render_text(content[i], window);
+//    for (int i = 0; i < linesPerPage; i++) {
+//        clunky_render_text(&(content[pageNumber][i]), window);    // Render page to screen
 //    }
-    
+    if (pageNumber > 0) {
+        for (int i = linesPerPage * pageNumber; i < linesPerPage * (pageNumber * 2); i++){
+            clunky_render_text(content[i], window);
+        }
+    } else if (pageNumber == 0){
+        for (int i = 0; i < linesPerPage; i++){
+            clunky_render_text(content[i], window);
+        }    }
 }
 
 /*  run
