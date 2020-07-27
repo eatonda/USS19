@@ -82,7 +82,7 @@ int main(int argc, char *argv[]){
     unsigned long bid;
 
     //create a clunky text object!
-    struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 1., &window);
+    struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 0.5, &window);
     printf("HHH\n");
     clunky_replace_text(text, "THIS IS THE BOARD! :)\0");
     printf("CCCC\n");

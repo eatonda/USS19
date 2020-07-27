@@ -728,10 +728,13 @@ int clunky_str_to_int(struct Clunky_Text *txt){
 int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
     int i, w_offset, h_offset;
 
+    //scale the sprite
+    clunky_sprite_scale(txt->scale, txt->s);
+
     for (i = 0; i < txt->str_used; i++){
         //calculate where to put the character in the defined region
-        w_offset = (txt->s->cell.w * i) % txt->w;
-        h_offset = (txt->s->cell.w * i) / txt->w;
+        w_offset = (txt->s->ap_w * i) % txt->w;
+        h_offset = (txt->s->ap_w * i) / txt->w;
 
         //if the row/col is >= 0, then render it to the screen
         if (txt->str_row[i] >= 0 && txt->str_col[i] >= 0){
