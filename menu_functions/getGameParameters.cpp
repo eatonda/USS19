@@ -59,7 +59,7 @@ const int NUM_OF_MENUS = 4;
     }
 
     struct Clunky_Texture main_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
     
     struct Clunky_Sprite mmb;   //stores sprite image of main menu buttons
     clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &main_menu_texture, &mmb); // Initialize sprite
@@ -88,7 +88,7 @@ const int NUM_OF_MENUS = 4;
     
 
     struct Clunky_Texture color_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
     
     
     struct Clunky_Sprite cmb;   //stores sprite image of color menu buttons
@@ -115,7 +115,7 @@ const int NUM_OF_MENUS = 4;
     int SHIP_MENU_VALUES [SHIP_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
     
     struct Clunky_Texture ship_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
     
     
     struct Clunky_Sprite smb;   //stores sprite image of ship menu buttons
@@ -141,7 +141,7 @@ const int NUM_OF_MENUS = 4;
     int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {25, 50, 75};     // Values for numOfShips
     
     struct Clunky_Texture board_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
     
     
     struct Clunky_Sprite bmb;   //stores sprite image of board menu buttons
