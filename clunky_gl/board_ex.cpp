@@ -39,6 +39,7 @@ int main(int argc, char *argv[]){
 
     water_spr.sprite_row = 0;
     water_spr.sprite_column = -1;
+    clunky_sprite_scale(1.75, &water_spr);
 
     //create a 5x5 board for now
     char names[] = "cell_x_\0";
@@ -51,7 +52,7 @@ int main(int argc, char *argv[]){
 
             cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
 
-            clunky_element_init(cells[cnt], &water_spr, 64*i, 64*j, 0, names, 'S', 'A');
+            clunky_element_init(cells[cnt], &water_spr, water_spr.ap_w*i, water_spr.ap_h*j, 0, names, 'S', 'A');
 
             cnt++;
         }
@@ -117,7 +118,7 @@ int main(int argc, char *argv[]){
         if (eec->sum.event_type != 'N'){
             if (eec->sum.event_type == 'S'){
                 printf("Elements have been snapped together!\n");
-                for (int k = 0; k < eec->snaps_used; k++){
+                for (int k = 0; k < eec->num_snaps; k++){
                     if (eec->snaps[k]->eid == eec->sum.eid_two){
                         printf(">>Snap To Element: %s\n", eec->snaps[k]->name);
                     }

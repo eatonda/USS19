@@ -26,9 +26,8 @@ struct Clunky_Event_Element_Container{
     int num_ele;
 
     struct Clunky_Event_Element **snaps;
-    int snaps_len;//atm just keep the snaps the same length and grow it at the same time as the
-                  //elements array. Will clean this up later
-    int snaps_used;
+    int num_snaps;
+    int len_snaps;
 
     struct Clunky_Event_Summary sum;
 

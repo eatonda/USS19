@@ -144,14 +144,18 @@ int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *
 
 int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //need to allocate the initial memory for the event elements
-    //start with 5 ee's
+    //start with 5 ee's and snaps
     eec->len_ele = 16;
-    //and make note that we are using 0 cells
+    eec->len_snaps = 16;
+    //and make note that we are using 0 cells and snaps
     eec->num_ele = 0;
+    eec->num_snaps = 0;
+
+
 
     //init the memory for the event elements
     eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
-    eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+    eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
 
     return 0;
 }
@@ -174,33 +178,60 @@ int clunky_eec_free(struct Clunky_Event_Element_Container *eec){
 
 int clunky_eec_grow(struct Clunky_Event_Element_Container *eec){
     int i;
-    //dynamicly allocate and grow the elements array in the eec
-    //have a temp pointer to hold the addr of the current array
-    printf("GROWING %d\n", eec->num_ele);
-    struct Clunky_Event_Element **addr_hold = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
-
-    printf("COPYING 1\n");
-    for (i = 0; i < eec->num_ele; i++) addr_hold[i] = eec->elements[i];
-
-    //grow the size of the eec elements array
-    //double the capacity
-    eec->len_ele *= 2;
     
-    //reallocate the memory
-    eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+    //if we are out of space in the elements array, grow it
+    if ( eec->num_ele  >= eec->len_ele ){
 
-    //copy over all of the old ee's
-    printf("COPYING 2, %d\n", eec->num_ele);
-    for (i = 0; i < eec->num_ele; i++){
-        eec->elements[i] = addr_hold[i];
-        printf("^^%p\n", eec->elements[i]);
+        //dynamicly allocate and grow the elements array in the eec
+        //have a temp pointer to hold the addr of the current array
+        struct Clunky_Event_Element **addr_hold = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+
+        for (i = 0; i < eec->num_ele; i++) addr_hold[i] = eec->elements[i];
+
+        //grow the size of the eec elements array
+        //double the capacity
+        eec->len_ele *= 2;
+    
+        //reallocate the memory
+        eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+
+        //copy over all of the old ee's
+        for (i = 0; i < eec->num_ele; i++){
+            eec->elements[i] = addr_hold[i];
+        }
+
+        //free the hold array
+        free(addr_hold);
+
     }
 
-    //free the hold array
-//    free(addr_hold);
+    //check to see if we need to grow the snaps array
+    if ( eec->num_snaps  >= eec->len_snaps ){
 
-    //return the new size of the array
-    return eec->len_ele;
+        //dynamicly allocate and grow the elements array in the eec
+        //have a temp pointer to hold the addr of the current array
+        struct Clunky_Event_Element **addr_hold = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
+        
+        for (i = 0; i < eec->num_snaps; i++) addr_hold[i] = eec->snaps[i];
+        
+        //grow the size of the eec elements array
+        //double the capacity
+        eec->len_snaps *= 2;
+        
+        //reallocate the memory
+        eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
+        
+        //copy over all of the old ee's
+        for (i = 0; i < eec->num_snaps; i++){
+            eec->snaps[i] = addr_hold[i];
+        }
+        
+        //free the hold array
+        free(addr_hold);
+
+    }
+
+    return 0;
 }
 
 int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element **ele, int num_ele){
@@ -217,7 +248,8 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
 
         //if it is a snap-to element, add it to the spacial map
         if (ele[i]->type == 'S'){
-            eec->snaps[eec->snaps_used++] = ele[i];
+            eec->snaps[eec->num_snaps++] = ele[i];
+            if ( eec->num_snaps  >= eec->len_snaps ) clunky_eec_grow(eec);
         }
     }
 
@@ -366,11 +398,11 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                     eec->elements[i]->misc = 0;
 
                     //if there are any snap_to elements, calculate the overlap
-                    if (eec->snaps_used){
+                    if (eec->num_snaps){
                         //get the elements
                         float over_max = 0.;
                         int over_indx = 0;
-                        for (int indx = 0; indx < eec->snaps_used; indx++){
+                        for (int indx = 0; indx < eec->num_snaps; indx++){
                             float over = EE_Overlap_Helper(eec->elements[i], eec->snaps[indx]);
                             if (over > over_max){
                                 over_max = over;
