@@ -1,0 +1,8 @@
+1. Select Start to initiate setup menu.
+2. Select color theme to choose game color theme
+3. Select number of ships to play with.
+4. Select board size
+5. Place ships on board to initiate battle.
+6. When it is your turn select a position on the board to attack.
+7. Player with no ships remaining loses.
+8. Have fun.

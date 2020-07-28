@@ -189,6 +189,11 @@ const int NUM_OF_MENUS = 5;
     
 //    struct Clunky_Text* content = (struct Clunky_Text*)malloc(sizeof(struct Clunky_Text*) * 8);
    std::string words[8] = {"1", "2", "3", "4", "5", "6", "7", "8"};
+    
+    std::string path = "/menu_functions/menu_assets/user_manual.txt";
+    std::vector<char*> manualStrings;
+    fileToStrings(path, manualStrings);    //Get cstring version of text file
+    
 
  
     struct Clunky_Text* content[8];
@@ -196,7 +201,8 @@ const int NUM_OF_MENUS = 5;
     int lineY = window->height * 0.2;
     for(int i = 0; i < 8; i++) {
         content[i] = clunky_get_text(window->width * 0.5, lineY, window->width * 0.1, window->height * 0.10, 1.0, window);
-        clunky_add_text(content[i], toC_String(words[i]));
+        //clunky_add_text(content[i], toC_String(words[i]));
+        clunky_add_text(content[i], manualStrings[i]);
         lineY+= lineOffset;
     }
         
