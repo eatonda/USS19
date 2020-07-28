@@ -44,6 +44,7 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
     //set the default z value to 0
     b->z = 0;
+    b->z_init = 0;
 
     //copy over the sprite address
     b->s = s;
@@ -72,6 +73,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
     //set the misc flag to 0
     b->misc = 0;
+
+    //set the ignore flag to false
+    b->ignore = 0;
 
     //return the BID
     return b->eid;
@@ -280,6 +284,35 @@ int insertion_helper(struct Clunky_Event_Element_Container *eec, struct Clunky_E
     return 0;
 }
 
+int eec_merge(struct Clunky_Event_Element **elements, int l, int m, int r){
+
+    return 0;
+}
+
+int eec_mergesort(struct Clunky_Event_Element **elements, int l, int r){
+    
+    if (l < r) { 
+        // Same as (l+r)/2, but avoids overflow for 
+        // large l and h 
+        int m = l + (r - l) / 2; 
+  
+        // Sort first and second halves 
+        eec_mergesort(elements, l, m); 
+        eec_mergesort(elements, m + 1, r); 
+  
+        eec_merge(elements, l, m, r); 
+    } 
+
+    return 0;
+}
+
+int clunky_eec_mergesort(struct Clunky_Event_Element_Container *eec){
+
+
+
+    return 0;
+}
+
 
 int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element **ele, int num_ele){
     int i;
@@ -404,7 +437,7 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
 
 
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
-    int i, status;
+    int i, status, clicked = 0;
     //first, for legibility, I'm going to create a pointer reference towards the eec's summary element
     //this is just to try to make the code have fewer de-references
     //because theres going to be a lot going on in this function
@@ -413,13 +446,19 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     summary->event_type = 'N';
 
     //we need to now loop through every element in the eec
-    for (i = 0; i < eec->num_ele; i++){
+    for (i = eec->num_ele - 1; i > 0; i--){
         //check to see if the element is being interacted with
-        if (eec->elements[i]->type != 'S'){
+        if (eec->elements[i]->type != 'S' && !clicked){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
+
+            if (status == 2){
+                clicked = 1;
+                eec->elements[i]->z = 100;
+            }
         }
         else{
             status = 0;
+            eec->elements[i]->z = eec->elements[i]->z_init;
         }
 
         //if the element was clicked, status == 2, make note of the eid for the summary
