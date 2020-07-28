@@ -200,7 +200,7 @@ const int NUM_OF_MENUS = 5;
     int lineOffset = window->height * 0.05;
     int lineY = window->height * 0.2;
     for(int i = 0; i < 8; i++) {
-        content[i] = clunky_get_text(window->width * 0.5, lineY, window->width * 0.1, window->height * 0.10, 1.0, window);
+        content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.95, window->height * 0.10, 0.50, window);
         //clunky_add_text(content[i], toC_String(words[i]));
         clunky_add_text(content[i], manualStrings[i]);
         lineY+= lineOffset;
