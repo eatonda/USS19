@@ -60,6 +60,8 @@ int clunky_event(struct Clunky_Event *event){
 }
 
 int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_p, int height_p){
+
+    printf("+++++====+++++\n");
 	//we need to initilizse SDL
 	//use SDL's fucntions to do so
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ){
@@ -67,6 +69,8 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 		fprintf(stderr, "Issue initing window!\n");
 		exit(1);
 	}
+
+    printf("+++++====+++++\n");
 	
 	//now we can init the window
 	window->window = NULL;
@@ -77,6 +81,8 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 	 	fprintf(stderr, "Uh oh! Window coudlnt be made!\n");
                 exit(1);
 	}
+
+    printf("+++++====+++++\n");
 
 	//now lets create the rederer
 	window->render = NULL;
@@ -90,6 +96,8 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
                 exit(1);
 	}
 
+    printf("+++++====+++++\n");
+
 	 //remember the width and height
 	 window->width = width_p;
 	 window->height = height_p;
@@ -101,6 +109,8 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
      //set the sustained click to 0
      e->lcs = 0;
     
+    printf("+++++====+++++\n");
+
     //===========================================================
     //create the text texture and sprite
     //first, allocate the memory for the text object, the texture, and the sprite
@@ -623,12 +633,11 @@ int clunky_replace_text(struct Clunky_Text *txt, const char *new_str){
 int clunky_add_text(struct Clunky_Text *txt, const char *new_str){
      int i;
     for (i = 0; new_str[i] != '\0'; i++){
-        txt->str[i + txt->str_used] = new_str[i];
+        txt->str[txt->str_used++] = new_str[i];
 
-        if ( (i + txt->str_used) >= txt->str_len) clunky_text_grow(txt);
+        if ( (txt->str_used) >= txt->str_len) clunky_text_grow(txt);
     }
 
-    txt->str_used += i;
 
     clunky_str_to_int(txt);
 
@@ -738,7 +747,7 @@ int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
 
         //if the row/col is >= 0, then render it to the screen
         if (txt->str_row[i] >= 0 && txt->str_col[i] >= 0){
-            clunky_render_sprite((txt->x + w_offset), txt->y * (1 +  h_offset), txt->str_row[i], txt->str_col[i], txt->s, w);
+            clunky_render_sprite((txt->x + w_offset), txt->y + txt->s->ap_h * (1 +  h_offset), txt->str_row[i], txt->str_col[i], txt->s, w);
         }
     }
 
