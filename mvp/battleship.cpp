@@ -91,6 +91,8 @@ int main(int argc, char *argv[]) {
 
             clunky_element_init(cells[cnt], &water_spr, BOARD_OFFSET_W+water_spr.ap_w*i, BOARD_OFFSET_H+water_spr.ap_h*j, 0, "foo\0", 'S', 'A');
 
+            cells[cnt]->z = 1;
+
             cnt++;
         }
     }
@@ -100,6 +102,11 @@ int main(int argc, char *argv[]) {
     printf("===========================\n");
     clunky_eec_add_elements(eec, &spawn, 1);
     printf("===========================\n");
+
+    printf("++%d, %d\n", eec->len_ele, eec->num_ele);
+    for (int p = 0; p < eec->num_ele; p++){
+        printf("==%d, %d\n", eec->elements[p]->z, p+1);
+    }
         
         
         

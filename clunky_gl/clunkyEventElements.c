@@ -268,9 +268,14 @@ int insertion_helper(struct Clunky_Event_Element_Container *eec, struct Clunky_E
             eec->elements[i] = ele;
             //make note that we added another element
             eec->num_ele++;
-            break;
+            return i;
         }
     }
+
+    //if we make it here, we need to put the new element at the head
+    eec->elements[0] = ele;
+    //make note that we're adding another element
+    eec->num_ele++;
 
     return 0;
 }
@@ -412,6 +417,9 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
         //check to see if the element is being interacted with
         if (eec->elements[i]->type != 'S'){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
+        }
+        else{
+            status = 0;
         }
 
         //if the element was clicked, status == 2, make note of the eid for the summary
