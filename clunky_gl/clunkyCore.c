@@ -229,6 +229,11 @@ int clunky_init_sprite(int rows, int cols, struct Clunky_Texture *texture, struc
 	sprite->cell.w = texture->width/cols;
 	sprite->cell.h = texture->height/rows;
 
+    sprite->w = sprite->cell.w;
+    sprite->h = sprite->cell.h;
+    sprite->ap_w = sprite->cell.w;
+    sprite->ap_h = sprite->cell.h;
+
 	return 0;
 }
 
@@ -250,12 +255,12 @@ int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *s
 	sprite->cell.y = row *sprite->cell.h;
 	//now we need to set up the destination rect
 	sprite->texture->render_area.x = x;
-        sprite->texture->render_area.y = y;
-        sprite->texture->render_area.w = sprite->cell.w * sprite->texture->scale;
-        sprite->texture->render_area.h = sprite->cell.h * sprite->texture->scale;
+    sprite->texture->render_area.y = y;
+    sprite->texture->render_area.w = sprite->ap_w;
+    sprite->texture->render_area.h = sprite->ap_h;
 
         //now we can finally render
-        SDL_RenderCopy(window->render, sprite->texture->texture, &(sprite->cell), &(sprite->texture->render_area));
+    SDL_RenderCopy(window->render, sprite->texture->texture, &(sprite->cell), &(sprite->texture->render_area));
 
 	return 0;
 }
@@ -723,10 +728,13 @@ int clunky_str_to_int(struct Clunky_Text *txt){
 int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
     int i, w_offset, h_offset;
 
+    //scale the sprite
+    clunky_sprite_scale(txt->scale, txt->s);
+
     for (i = 0; i < txt->str_used; i++){
         //calculate where to put the character in the defined region
-        w_offset = (txt->s->cell.w * i) % txt->w;
-        h_offset = (txt->s->cell.w * i) / txt->w;
+        w_offset = (txt->s->ap_w * i) % txt->w;
+        h_offset = (txt->s->ap_w * i) / txt->w;
 
         //if the row/col is >= 0, then render it to the screen
         if (txt->str_row[i] >= 0 && txt->str_col[i] >= 0){
@@ -737,7 +745,14 @@ int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
     return 0;
 }
 
+int clunky_sprite_scale(float scale, struct Clunky_Sprite *sprite){
+    //update the scale, width, and height of the sprite
+    sprite->texture->scale = scale;
+    sprite->ap_w = sprite->w * scale;
+    sprite->ap_h = sprite->h * scale;
 
+    return 0;
+}
 
 
 

@@ -111,7 +111,7 @@ int Menu::run(struct Clunky_Event* event, int* userInput) {
         clunky_event(event);
         clunky_eec_update(menuOptions, event, window); //update event container
         // Sift through events if there are any.
-        if (event->num_input) {
+        if (menuOptions->sum->type != 'N') {
             
             // Check for SDL_QUIT
             if (_SDL_QUIT_Check(event) < 0) {
@@ -164,7 +164,7 @@ int Menu::runPage(struct Clunky_Event* event) {
         clunky_event(event);
         clunky_eec_update(menuOptions, event, window); //update event container
         // Sift through events if there are any.
-        if (event->num_input) {
+        if (menuOptions->sum->type != 'N') {
 
             // Check for SDL_QUIT
             if (_SDL_QUIT_Check(event) < 0) {

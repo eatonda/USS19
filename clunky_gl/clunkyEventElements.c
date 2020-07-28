@@ -42,6 +42,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     b->x = x;
     b->y = y;
 
+    //set the default z value to 0
+    b->z = 0;
+
     //copy over the sprite address
     b->s = s;
 
@@ -60,6 +63,15 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
     //generate the BID
     b->eid = clunky_hash_gen(b_name);
+
+    //copy over the name
+    for (i = 0; i < 256; i++)  b->name[i] = '\0';
+    for (i = 0; b_name[i] != '\0'; i++){
+        b->name[i] = b_name[i];
+    }
+
+    //set the misc flag to 0
+    b->misc = 0;
 
     //return the BID
     return b->eid;
@@ -138,13 +150,18 @@ int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *
 
 int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //need to allocate the initial memory for the event elements
-    //start with 5 ee's
-    eec->len_ele = 5;
-    //and make note that we are using 0 cells
+    //start with 5 ee's and snaps
+    eec->len_ele = 16;
+    eec->len_snaps = 16;
+    //and make note that we are using 0 cells and snaps
     eec->num_ele = 0;
+    eec->num_snaps = 0;
 
-    //init the memory for the buttons
+
+
+    //init the memory for the event elements
     eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+    eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
 
     return 0;
 }
@@ -167,46 +184,125 @@ int clunky_eec_free(struct Clunky_Event_Element_Container *eec){
 
 int clunky_eec_grow(struct Clunky_Event_Element_Container *eec){
     int i;
-    //dynamicly allocate and grow the elements array in the eec
-    //have a temp pointer to hold the addr of the current array
-    struct Clunky_Event_Element **addr_hold = eec->elements;
-
-    //grow the size of the eec elements array
-    //double the capacity
-    eec->len_ele *= 2;
     
-    //reallocate the memory
-    eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+    //if we are out of space in the elements array, grow it
+    if ( eec->num_ele  >= eec->len_ele ){
 
-    //copy over all of the old ee's
-    for (i = 0; i < eec->num_ele; i++) eec->elements[i] = addr_hold[i];
+        //dynamicly allocate and grow the elements array in the eec
+        //have a temp pointer to hold the addr of the current array
+        struct Clunky_Event_Element **addr_hold = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
 
-    //free the hold array
-    free(addr_hold);
+        for (i = 0; i < eec->num_ele; i++) addr_hold[i] = eec->elements[i];
 
-    //return the new size of the array
-    return eec->len_ele;
+        //grow the size of the eec elements array
+        //double the capacity
+        eec->len_ele *= 2;
+    
+        //reallocate the memory
+        eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
+
+        //copy over all of the old ee's
+        for (i = 0; i < eec->num_ele; i++){
+            eec->elements[i] = addr_hold[i];
+        }
+
+        //free the hold array
+        free(addr_hold);
+
+    }
+
+    //check to see if we need to grow the snaps array
+    if ( eec->num_snaps  >= eec->len_snaps ){
+
+        //dynamicly allocate and grow the elements array in the eec
+        //have a temp pointer to hold the addr of the current array
+        struct Clunky_Event_Element **addr_hold = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
+        
+        for (i = 0; i < eec->num_snaps; i++) addr_hold[i] = eec->snaps[i];
+        
+        //grow the size of the eec elements array
+        //double the capacity
+        eec->len_snaps *= 2;
+        
+        //reallocate the memory
+        eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
+        
+        //copy over all of the old ee's
+        for (i = 0; i < eec->num_snaps; i++){
+            eec->snaps[i] = addr_hold[i];
+        }
+        
+        //free the hold array
+        free(addr_hold);
+
+    }
+
+    return 0;
 }
+
+int insertion_helper(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element *ele){
+    //first, if there are NO elements in the array, just put it at the head
+    if (!eec->num_ele){
+        //add the element to the head position
+        eec->num_ele++;
+        eec->elements[0] = ele;
+    }
+
+    //if the number of elements currently in the array + 1 (the new element) >= length
+    //of the array, grow it before continuing
+    if ( (eec->num_ele + 1) >= eec->len_ele ) clunky_eec_grow(eec);
+
+    //now we start at the tail position and bubble the element towards the head
+    //this is a min array of if the element ahead of the new element has a larger z
+    //value swap
+    //And yes, I know this is NOT an efficient way to do it. a binary search would be better
+    //but I'm in a time crunch
+    for (int i = eec->num_ele; i > 0; i--){
+        //the the element ahead of this one is greater, shift it down
+        if ( eec->elements[i-1]->z > ele->z ){
+            //shift the element back by one
+            eec->elements[i] = eec->elements[i-1];
+        }
+        else{
+            //we found a spot to put the new element
+            eec->elements[i] = ele;
+            //make note that we added another element
+            eec->num_ele++;
+            return i;
+        }
+    }
+
+    //if we make it here, we need to put the new element at the head
+    eec->elements[0] = ele;
+    //make note that we're adding another element
+    eec->num_ele++;
+
+    return 0;
+}
+
 
 int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element **ele, int num_ele){
     int i;
-    //first, make sure that the eec's element array has the capacity, 
-    //if not grow it
-    if ((eec->num_ele + num_ele) > eec->len_ele) clunky_eec_grow(eec);
 
     //now copy over the memory addresses!
-    for (i = 0; i < num_ele; i++) eec->elements[i + eec->num_ele] = ele[i];
+    for (i = 0; i < num_ele; i++){
+        //insert the current element into the appropreit spot
+        insertion_helper(eec, ele[i]);
+        //if it is a snap-to element, add it to the spacial map
+        if (ele[i]->type == 'S'){
+            eec->snaps[eec->num_snaps++] = ele[i];
+            if ( eec->num_snaps  >= eec->len_snaps ) clunky_eec_grow(eec);
+        }
+    }
 
-    //make note of how many elements where just added
-    eec->num_ele += num_ele;
 
     return 0;
 }
 
 int clunky_mouse_interaction_helper(struct Clunky_Event_Element * ele, struct Clunky_Event *e){
     //local helper function to set the itneract status of elements
-    if ( e->mx >= ele->x && e->mx <= (ele->x + ele->w) &&
-             e->my >= ele->y && e->my <= (ele->y + ele->h)){
+    if ( e->mx >= ele->x && e->mx <= (ele->x + ele->s->ap_w) &&
+             e->my >= ele->y && e->my <= (ele->y + ele->s->ap_h)){
         //check to see if the mouse was clicked
         if (e->lc){
             //set the itneraction to 2 ->clicked
@@ -239,6 +335,74 @@ int clunky_mouse_interaction_helper(struct Clunky_Event_Element * ele, struct Cl
     }
 }
 
+float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Element *b){
+    //calculate the percent overlap
+    //between two ee's
+
+//    printf("%ld -- %ld\n", a->eid, b->eid);
+  //   printf("(%d,%d), (%d,%d)\n", a->x, a->y, b->x, b->y);
+
+    float overlap = 0.;
+
+    int w_over = 0;
+    int h_over = 0;
+
+    //figure out which element is overlap which, if any overlap is even occuring
+    //the width and hieght need to be checked independantly
+    //first, check the X axis overlap
+    if ( a->x <= b->x && (a->x + a->s->ap_w) >= b->x){
+        //element B overlaps A on the X axis!
+        w_over = (a->x + a->s->ap_w) - b->x;
+
+        //make sure that the overlap lengths arent larger than the sides of b
+        if ( w_over > b->s->ap_w ) w_over = b->s->ap_w;
+    }
+    else if ( b->x <= a->x && (b->x + b->s->ap_w) >= a->x){
+        //element A overlaps B on the X axis!
+        w_over = (b->x + b->s->ap_w) - a->x;
+
+        //make sure that the overlap lengths arent larger than the sides of b
+        if ( w_over > a->s->ap_w ) w_over = a->s->ap_w;
+    }
+    else{
+        //there is no overlap!
+        return overlap;
+    }
+
+    //now check the Y axis overlap
+    if ( a->y <= b->y && (a->y + a->s->ap_h) >= b->y ){
+        //element B overlaps A on the Y axis!
+        h_over = (a->y + a->s->ap_h) - b->y;
+
+        //make sure that the overlap lengths arent larger than the sides of b
+        if ( h_over > b->s->ap_h ) h_over = b->s->ap_h;
+    }
+    else if ( b->y <= a->y && (b->y + b->s->ap_h) >= a->y ){
+        //element A overlaps B on the Y axis!
+        h_over = (b->y + b->s->ap_h) - a->y;
+
+        //make sure that the overlap lengths arent larger than the sides of b
+        if ( h_over > a->s->ap_h ) h_over = a->s->ap_h;
+    }
+    else{
+        //there is no overlap!
+        return overlap;
+    }
+
+    //we need to know the smallist area
+    int area = 0;
+    if (a->s->ap_w * a->s->ap_h < b->s->ap_w * b->s->ap_h) area = a->s->ap_w * a->s->ap_h;
+    else area = b->s->ap_w * b->s->ap_h;
+
+    //return the percent overlap
+   // printf("%d, %d\n", (w_over * h_over), area);
+    
+    return (float) (w_over * h_over) / (float) area;
+
+}
+
+
+
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
     int i, status;
     //first, for legibility, I'm going to create a pointer reference towards the eec's summary element
@@ -246,15 +410,25 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     //because theres going to be a lot going on in this function
     struct Clunky_Event_Summary *summary = &(eec->sum);
     //clear the previous eid in case there isnt a new one this itteration
-    summary->eid = 0;
+    summary->event_type = 'N';
 
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
         //check to see if the element is being interacted with
-        status = clunky_mouse_interaction_helper(eec->elements[i], e);
+        if (eec->elements[i]->type != 'S'){
+            status = clunky_mouse_interaction_helper(eec->elements[i], e);
+        }
+        else{
+            status = 0;
+        }
 
         //if the element was clicked, status == 2, make note of the eid for the summary
-        if (status == 2) summary->eid = eec->elements[i]->eid;
+        if (status == 2){
+            //set the EID_One to the eid of the clicked element, and the type to 'C'
+            summary->eid_one = eec->elements[i]->eid;
+            summary->event_type = 'C';
+            printf("<<%d, %d>>\n", eec->elements[i]->x, eec->elements[i]->y);
+        }
 
         //some elements require extra proccessing than just hovered or clicked
         //use a switch statement to orginize the code
@@ -266,14 +440,39 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 if (status == 2) eec->elements[i]->misc = 1;
                 //else if misc already is 1, and lcs is not true (i.e. the player let go of the
                 //element) then set the misc status back to 0
-                else if (e->lcs == 0){
-                    //idicate that the element is no longer being draggeed
+                else if (e->lcs == 0 && eec->elements[i]->misc){
                     eec->elements[i]->misc = 0;
 
-                    //check to see if we overlap with a snap-to element
+                    //if there are any snap_to elements, calculate the overlap
+                    if (eec->num_snaps){
+                        //get the elements
+                        float over_max = 0.;
+                        int over_indx = 0;
+                        for (int indx = 0; indx < eec->num_snaps; indx++){
+                            float over = EE_Overlap_Helper(eec->elements[i], eec->snaps[indx]);
+                            if (over > over_max){
+                                over_max = over;
+                                over_indx = indx;
+                            }
+                        }
+                            
+                            //choose the best non-zero overlap
+                            if (over_max > 0.05){
+                                //snap the elements together!
+                                //center->center
+                            eec->elements[i]->x = eec->snaps[over_indx]->x + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_w - eec->elements[i]->s->ap_w));
+                            eec->elements[i]->y = eec->snaps[over_indx]->y + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_h - eec->elements[i]->s->ap_h));
 
+                            //made a reference to this snap event
+                            //event type(S)nap
+                            summary->event_type = 'S';
+                            summary->eid_one = eec->elements[i]->eid;
+                            summary->eid_two = eec->snaps[over_indx]->eid;
 
-                }
+                        }
+                    }
+                } 
+
                 //if the misc status is set to true, then the element is being dragged
                 //thus we need to update its x/y location
                 if (eec->elements[i]->misc){
@@ -294,6 +493,25 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     return 0;
 }
+
+int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec){
+    //remove an element for the array, freeing its memory app.
+    //at the same time, shift all of the elements to the right of it, left by one
+
+    //first free the mem. safely
+    free(eec->elements[indx]);
+
+    //now shift
+    for (int i = indx; i < (eec->num_ele - 1); i++){
+        eec->elements[indx] = eec->elements[indx + 1];
+    }
+
+    //decriment element cntr
+    eec->num_ele--;
+
+    return 0;
+}
+        
 
 struct Clunky_Event_Element *clunky_standard_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name){
     //create a standard clunky button!

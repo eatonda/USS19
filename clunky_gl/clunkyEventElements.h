@@ -11,7 +11,9 @@ struct Clunky_Event_Summary{
     int str_used;
     int collect_string;
 
-    unsigned long eid;
+    unsigned long eid_one;
+    unsigned long eid_two;
+    char event_type;
 
 };
 
@@ -22,6 +24,10 @@ struct Clunky_Event_Element_Container{
     struct Clunky_Event_Element **elements;
     int len_ele;
     int num_ele;
+
+    struct Clunky_Event_Element **snaps;
+    int num_snaps;
+    int len_snaps;
 
     struct Clunky_Event_Summary sum;
 
@@ -46,8 +52,14 @@ struct Clunky_Event_Element{
                 //[R] -> Hover + Toggle
 
     unsigned long eid;
+    char name[256];
     int x;
     int y;
+
+    //the z coordinate for use with rendering on top of other sprites
+    //and for selecting only the top element
+    int z;
+
     int w;
     int h;
 
@@ -57,6 +69,7 @@ struct Clunky_Event_Element{
 
     int row;
     int col_max;
+
 };
 
 //clunky event elements
@@ -75,5 +88,6 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w);
 int clunky_eec_grow(struct Clunky_Event_Element_Container *eec);
 int clunky_eec_free(struct Clunky_Event_Element_Container *eec);
+int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec);
 
 #endif
