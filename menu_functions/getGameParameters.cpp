@@ -218,7 +218,7 @@ const int NUM_OF_MENUS = 5;
 //Menu::Menu(struct Clunky_Window* window, Clunky_Event_Element_Container* menuOptions, int numOfOptions,
 //int* values, std::string* optionNames, struct Clunky_Text* title, struct Clunky_Text* content, int numberOfPages, int linesPerPage)
     
-    Menu* helpMenu = new Menu(window, help_menu, HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, helpMenuTitle, content, 3, 2);
+    Menu* helpMenu = new Menu(window, help_menu, HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, helpMenuTitle, content, 4, 2);
     
     
     Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu}; // Holds all menus for easy indexing
