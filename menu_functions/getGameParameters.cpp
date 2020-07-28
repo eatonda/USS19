@@ -194,12 +194,16 @@ const int NUM_OF_MENUS = 5;
     std::vector<char*> manualStrings;
     fileToStrings(path, manualStrings);    //Get cstring version of text file
     
+    // Trace statement
+    for(int i = 0; i < manualStrings.size(); i ++){
+        printf("GGP() %s\n", manualStrings[i]);
+    }
 
  
-    struct Clunky_Text* content[8];
+    struct Clunky_Text* content[manualStrings.size()];
     int lineOffset = window->height * 0.05;
     int lineY = window->height * 0.3;
-    for(int i = 0; i < 8; i++) {
+    for(int i = 0; i < manualStrings.size(); i++) {
         content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.95, window->height * 0.10, 1.0, window);
         //clunky_add_text(content[i], toC_String(words[i]));
         clunky_add_text(content[i], manualStrings[i]);
