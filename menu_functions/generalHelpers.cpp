@@ -53,17 +53,21 @@ void clunkifyStr(char* str){
     for (int i = 0; i < strlen(str); i++){
         ascii = (int)str[i];
         
-        if (ascii >= 98 && ascii <= 122) {
+        if (ascii >= 97 && ascii <= 122) {
             ascii -= 32;    // Convert to capital letter
             str[i] = (char)ascii;
         }
     }
     
     for(int i = 0; i < strlen(str); i++){
-        if (!std::isalnum(str[i]) && str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?') {
-            // Convert invalid character to white space
-            str[i] = ' ';
+        ascii = (int)str[i];
+        if (ascii < 65 || ascii > 90) {
+            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?') {
+                // Convert invalid character to white space
+                str[i] = ' ';
+            }
         }
+    
     }
 }
 
