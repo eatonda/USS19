@@ -73,6 +73,9 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
 
+        //for now I need a smaller board size than what david's options provide
+        boardSize = 5;
+
         //calculate the board scale
         board_scale = 500. / ((float) water_spr.ap_w *(float) boardSize);
         printf("><><><><>%f\n", board_scale);

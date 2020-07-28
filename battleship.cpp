@@ -43,7 +43,8 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
         
-        
+        //I need the board size to be a bit smaller while I work on this
+        boardSize = 5;
         
         // Instantiate game objects
         
