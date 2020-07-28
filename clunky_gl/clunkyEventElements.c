@@ -42,6 +42,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     b->x = x;
     b->y = y;
 
+    //set the default z value to 0
+    b->z = 0;
+
     //copy over the sprite address
     b->s = s;
 
@@ -66,9 +69,6 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     for (i = 0; b_name[i] != '\0'; i++){
         b->name[i] = b_name[i];
     }
-
-    //set the ignore flag to false
-    b->ignore = 0;
 
     //set the misc flag to 0
     b->misc = 0;
@@ -240,24 +240,56 @@ int clunky_eec_grow(struct Clunky_Event_Element_Container *eec){
     return 0;
 }
 
+int insertion_helper(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element *ele){
+    //first, if there are NO elements in the array, just put it at the head
+    if (!eec->num_ele){
+        //add the element to the head position
+        eec->num_ele++;
+        eec->elements[0] = ele;
+    }
+
+    //if the number of elements currently in the array + 1 (the new element) >= length
+    //of the array, grow it before continuing
+    if ( (eec->num_ele + 1) >= eec->len_ele ) clunky_eec_grow(eec);
+
+    //now we start at the tail position and bubble the element towards the head
+    //this is a min array of if the element ahead of the new element has a larger z
+    //value swap
+    //And yes, I know this is NOT an efficient way to do it. a binary search would be better
+    //but I'm in a time crunch
+    for (int i = eec->num_ele; i > 0; i--){
+        //the the element ahead of this one is greater, shift it down
+        if ( eec->elements[i-1]->z > ele->z ){
+            //shift the element back by one
+            eec->elements[i] = eec->elements[i-1];
+        }
+        else{
+            //we found a spot to put the new element
+            eec->elements[i] = ele;
+            //make note that we added another element
+            eec->num_ele++;
+            break;
+        }
+    }
+
+    return 0;
+}
+
+
 int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Element **ele, int num_ele){
     int i;
-    int offset = eec->num_ele;
 
     //now copy over the memory addresses!
     for (i = 0; i < num_ele; i++){
-        eec->elements[i + offset] = ele[i];
-        eec->num_ele++;
-
-        //check to see if we need to grow the element array
-        if ( eec->num_ele  >= eec->len_ele ) clunky_eec_grow(eec);
-
+        //insert the current element into the appropreit spot
+        insertion_helper(eec, ele[i]);
         //if it is a snap-to element, add it to the spacial map
         if (ele[i]->type == 'S'){
             eec->snaps[eec->num_snaps++] = ele[i];
             if ( eec->num_snaps  >= eec->len_snaps ) clunky_eec_grow(eec);
         }
     }
+
 
     return 0;
 }
@@ -377,10 +409,6 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
-        //first, make sure the element isnt designated as IGNORE
-        if (eec->elements[i]->ignore) continue;
-
-//        printf("EEC %d/%d  %s\n", i, eec->num_ele, eec->elements[i]->name);
         //check to see if the element is being interacted with
         if (eec->elements[i]->type != 'S'){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
@@ -457,6 +485,25 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     return 0;
 }
+
+int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec){
+    //remove an element for the array, freeing its memory app.
+    //at the same time, shift all of the elements to the right of it, left by one
+
+    //first free the mem. safely
+    free(eec->elements[indx]);
+
+    //now shift
+    for (int i = indx; i < (eec->num_ele - 1); i++){
+        eec->elements[indx] = eec->elements[indx + 1];
+    }
+
+    //decriment element cntr
+    eec->num_ele--;
+
+    return 0;
+}
+        
 
 struct Clunky_Event_Element *clunky_standard_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name){
     //create a standard clunky button!

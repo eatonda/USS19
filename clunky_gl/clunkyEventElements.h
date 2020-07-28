@@ -55,6 +55,11 @@ struct Clunky_Event_Element{
     char name[256];
     int x;
     int y;
+
+    //the z coordinate for use with rendering on top of other sprites
+    //and for selecting only the top element
+    int z;
+
     int w;
     int h;
 
@@ -65,8 +70,6 @@ struct Clunky_Event_Element{
     int row;
     int col_max;
 
-    //the ignor flag to have the EEC updaterand renderer just skip over the element
-    int ignore;
 };
 
 //clunky event elements
@@ -85,5 +88,6 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w);
 int clunky_eec_grow(struct Clunky_Event_Element_Container *eec);
 int clunky_eec_free(struct Clunky_Event_Element_Container *eec);
+int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec);
 
 #endif
