@@ -8,6 +8,7 @@ struct Clunky_Priority_Wrapper{
 
     void *obj;
 
+    int mem_size;
 };
 
 struct Clunky_Priority_Queue{
@@ -17,6 +18,7 @@ struct Clunky_Priority_Queue{
 }
 
 struct Clunky_Priority_Queue *clunky_get_pq();
+
 
 
 #endif
