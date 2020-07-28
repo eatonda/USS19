@@ -84,7 +84,7 @@ void fileToStrings(std::string path, std::vector<char*> &vect){
     
     if (inputFile) {
         // If file opens successfully read in contents
-        while(inputFile >> line){
+        while(getline(inputFile, line)){
             std::cout << line << std::endl; //Trace statement for debugging
             cString = toC_String(line); // Convert to a c style string
             clunkifyStr(cString); //Remove invalid characters
