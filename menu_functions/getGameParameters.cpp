@@ -207,7 +207,7 @@ const int NUM_OF_MENUS = 5;
     int lineY = window->height * 0.3;
     for(int i = 0; i < manualStrings.size(); i++) {
         printf(">>%d, %d\n", i, manualStrings.size());
-        content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.95, window->height * 0.10, 1.0, window);
+        content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.9, window->height * 0.10, 1.0, window);
         printf("===\n");
         //clunky_add_text(content[i], toC_String(words[i]));
         clunky_add_text(content[i], manualStrings[i]);

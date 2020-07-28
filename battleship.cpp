@@ -3,7 +3,7 @@
 #include "menu_functions/getGameParameters.hpp"
 
 const int WINDOW_WIDTH = 1000;
-const int WINDOW_HEIGHT = 1000;
+const int WINDOW_HEIGHT = 700;
 
 int main(int argc, char *argv[]) {
     printf("starting battleship.cpp\n");

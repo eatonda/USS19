@@ -747,7 +747,7 @@ int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
 
         //if the row/col is >= 0, then render it to the screen
         if (txt->str_row[i] >= 0 && txt->str_col[i] >= 0){
-            clunky_render_sprite((txt->x + w_offset), txt->y * (1 +  h_offset), txt->str_row[i], txt->str_col[i], txt->s, w);
+            clunky_render_sprite((txt->x + w_offset), txt->y + txt->s->ap_h * (1 +  h_offset), txt->str_row[i], txt->str_col[i], txt->s, w);
         }
     }
 
