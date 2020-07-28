@@ -192,7 +192,9 @@ const int NUM_OF_MENUS = 5;
     
     std::string path = "./menu_functions/menu_assets/user_manual.txt";
     std::vector<char*> manualStrings;
+    printf("|||||||||\n");
     fileToStrings(path, manualStrings);    //Get cstring version of text file
+    printf("|||||||||\n");
     
     // Trace statement
     for(int i = 0; i < manualStrings.size(); i ++){
@@ -204,9 +206,12 @@ const int NUM_OF_MENUS = 5;
     int lineOffset = window->height * 0.05;
     int lineY = window->height * 0.3;
     for(int i = 0; i < manualStrings.size(); i++) {
+        printf(">>%d, %d\n", i, manualStrings.size());
         content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.95, window->height * 0.10, 1.0, window);
+        printf("===\n");
         //clunky_add_text(content[i], toC_String(words[i]));
         clunky_add_text(content[i], manualStrings[i]);
+        printf("++++\n");
         lineY+= lineOffset;
     }
         
