@@ -67,7 +67,7 @@ void clunkifyStr(char* str){
     for(int i = 0; i < strlen(str); i++){
         ascii = (int)str[i];
         if (ascii < 65 || ascii > 90) {
-            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?' && str[i] != ' ' && ascii < 48 && ascii > 57) {
+            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?' && str[i] != ' ' && ascii < 48 && ascii > 57 ) {
                 // Convert invalid character to white space
                 str[i] = (char)32;
             }

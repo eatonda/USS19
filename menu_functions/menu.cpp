@@ -81,7 +81,7 @@ void Menu::_displayPage(struct Clunky_Event* event, int pageNum){
 //    for (int i = 0; i < linesPerPage; i++) {
 //        clunky_render_text(&(content[pageNumber][i]), window);    // Render page to screen
 //    }
-    std::cout << "displayPage() pageNumber = " << pageNumber << std::endl;
+    //std::cout << "displayPage() pageNumber = " << pageNumber << std::endl;
     if (pageNumber > 0) {
         for (int i = linesPerPage * pageNumber; i < linesPerPage * (pageNumber + 1); i++){
             clunky_render_text(content[i], window);
