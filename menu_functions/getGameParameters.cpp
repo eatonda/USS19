@@ -198,7 +198,7 @@ const int NUM_OF_MENUS = 5;
  
     struct Clunky_Text* content[8];
     int lineOffset = window->height * 0.05;
-    int lineY = window->height * 0.2;
+    int lineY = window->height * 0.3;
     for(int i = 0; i < 8; i++) {
         content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.95, window->height * 0.10, 0.50, window);
         //clunky_add_text(content[i], toC_String(words[i]));

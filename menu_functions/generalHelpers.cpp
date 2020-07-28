@@ -53,18 +53,23 @@ void clunkifyStr(char* str){
     for (int i = 0; i < strlen(str); i++){
         ascii = (int)str[i];
         
-        if (ascii >= 97 && ascii <= 122) {
+        if (ascii >= 97 && ascii <= 122) {  //if lower case letter
             ascii -= 32;    // Convert to capital letter
             str[i] = (char)ascii;
         }
     }
     
+    //Trace Statement
+  
+        printf("%s\n", str);
+    
+    
     for(int i = 0; i < strlen(str); i++){
         ascii = (int)str[i];
         if (ascii < 65 || ascii > 90) {
-            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?') {
+            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?' && str[i] != ' ' && ascii < 48 && ascii > 57) {
                 // Convert invalid character to white space
-                str[i] = ' ';
+                str[i] = (char)32;
             }
         }
     
@@ -92,6 +97,8 @@ void fileToStrings(std::string path, std::vector<char*> &vect){
             std::cout << line << std::endl; //Trace statement for debugging
             cString = toC_String(line); // Convert to a c style string
             clunkifyStr(cString); //Remove invalid characters
+            
+            printf("clunkified string %s\n", cString);   //Trace Statement
             
             vect.push_back(cString);   //Add clunky string to vect
         }
