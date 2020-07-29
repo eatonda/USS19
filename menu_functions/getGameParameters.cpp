@@ -183,7 +183,7 @@ const int NUM_OF_MENUS = 6;
     
     struct Clunky_Event_Element_Container* help_menu = buttonSetup(HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, &hmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
-    struct Clunky_Text* helpMenuTitle = clunky_get_text(window->width * 0.5, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
+    struct Clunky_Text* helpMenuTitle = clunky_get_text(window->width * 0.4, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
     
     clunky_add_text(helpMenuTitle, toC_String(title));   // Add text to clunky_text
     
