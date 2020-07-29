@@ -147,7 +147,9 @@ int main(int argc, char *argv[]) {
             if (eec->sum.event_type != 'N'){
                 if (eec->sum.eid_one == clunky_hash_gen("spawn\0")){
                     printf("SPAWNING NEW ELEMENT from button\n");
-                    struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 0, 0, 0, "ppd\0");
+                    struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 10, 500, 0, "ppd\0");
+                    clunky_event_element_update_z(ppd, 5, eec);
+                    ppd->misc = 1;
                     printf("<%d, %d>\n", ppd->x, ppd->y);
                     clunky_eec_add_elements(eec, &ppd, 1);
                 }

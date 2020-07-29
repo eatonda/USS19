@@ -430,7 +430,10 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
             if (status == 2){
                 clicked = 1;
-                eec->elements[i]->z = 100;
+                //if its a draggable element, change its z
+                if (eec->elements[i]->type == 'D'){
+                    eec->elements[i]->z = 100;
+                }
             }
         }
         else{
@@ -703,6 +706,14 @@ int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e
 int clunky_clear_text(struct Clunky_Event_Summary *sum){
     //just set used to 0
     sum->str_used = 0;
+    return 0;
+}
+
+int clunky_event_element_update_z(struct Clunky_Event_Element *ele, int z, struct Clunky_Event_Element_Container *eec){
+    printf("--UPDATING Z\n");
+    ele->z = z;
+    ele->z_init = z;
+    clunky_eec_mergesort(eec);
     return 0;
 }
     

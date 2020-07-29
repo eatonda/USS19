@@ -82,6 +82,7 @@ int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *
 struct Clunky_Event_Element *clunky_standard_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name);
 struct Clunky_Event_Element *clunky_toggle_button_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name);
 struct Clunky_Event_Element *clunky_dragable_element_init(struct Clunky_Sprite *s, int x, int y, int row, const char *e_name);
+int clunky_event_element_update_z(struct Clunky_Event_Element *ele, int z, struct Clunky_Event_Element_Container *eec);
 
 //clunky event element container
 int clunky_eec_init(struct Clunky_Event_Element_Container *eec);
