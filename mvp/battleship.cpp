@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     struct Clunky_Sprite water_spr;
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(1, 5, &water_tex, &water_spr);
+    clunky_init_sprite(2, 5, &water_tex, &water_spr);
 
     water_spr.sprite_row = 0;
     water_spr.sprite_column = -1;
@@ -73,14 +73,15 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
 
-        //for now I need a smaller board size than what david's options provide
-        boardSize = 5;
 
         //calculate the board scale
         board_scale = 500. / ((float) water_spr.ap_w *(float) boardSize);
         printf("><><><><>%f\n", board_scale);
         clunky_sprite_scale(board_scale, &water_spr);
         clunky_sprite_scale(board_scale, &pp_spr);
+
+        //change the color of the water
+//        water_spr.sprite_row = colorScheme;
 
         struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * boardSize*boardSize);
     int cnt = 0;
@@ -89,7 +90,7 @@ int main(int argc, char *argv[]) {
             printf("<%d, %d>\n", i, j);
             cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
 
-            clunky_element_init(cells[cnt], &water_spr, BOARD_OFFSET_W+water_spr.ap_w*i, BOARD_OFFSET_H+water_spr.ap_h*j, 0, "foo\0", 'S', 'A');
+            clunky_element_init(cells[cnt], &water_spr, BOARD_OFFSET_W+water_spr.ap_w*i, BOARD_OFFSET_H+water_spr.ap_h*j, colorScheme, "foo\0", 'S', 'A');
 
             cells[cnt]->z = 1;
 
@@ -136,7 +137,10 @@ int main(int argc, char *argv[]) {
                         struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 0, 0, 0, "ppd\0");
                         printf("<%d, %d>\n", ppd->x, ppd->y);
                         clunky_eec_add_elements(eec, &ppd, 1);
-                }
+                    }
+                    else if (event.input[k] =='`'){
+                        printf("###%s\n", eec->sum.str);
+                    }
                 }
 
             }

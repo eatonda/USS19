@@ -92,6 +92,8 @@ int clunky_eec_free(struct Clunky_Event_Element_Container *eec);
 int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec);
 int clunky_eec_mergesort(struct Clunky_Event_Element_Container *eec);
 int helper_eec_mergesort(struct Clunky_Event_Element **arr, int l, int r);
-
+int helper_eec_text_grow(struct Clunky_Event_Summary *sum);
+int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e);
+int clunky_clear_text(struct Clunky_Event_Summary *sum);
 
 #endif

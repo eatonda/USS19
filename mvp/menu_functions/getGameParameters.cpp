@@ -140,8 +140,8 @@ const int NUM_OF_MENUS = 6;
     title = "BOARD SIZE";
     
     // Note back must be capitalized to BACK for menu function to recognize it properly
-    std::string boardMenuDescriptions [BOARD_MENU_NUM_OF_BUTTONS] = {"25", "50", "75", "BACK"};
-    int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {25, 50, 75};     // Values for numOfShips
+    std::string boardMenuDescriptions [BOARD_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
+    int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
     
     struct Clunky_Texture board_menu_texture;
     clunky_load_texture(toC_String("/menu_functions/menu_assets/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu

@@ -157,6 +157,12 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //and make note that we are using 0 cells and snaps
     eec->num_ele = 0;
     eec->num_snaps = 0;
+   
+    //we want to capture text
+    eec->sum.collect_string = 1;
+    eec->sum.str = (char *) malloc(sizeof(char) * 32);
+    eec->sum.str_used = 0;
+    eec->sum.str_len = 32;
 
 
 
@@ -413,6 +419,9 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     //clear the previous eid in case there isnt a new one this itteration
     summary->event_type = 'N';
 
+    //get any text
+    clunky_capture_text(&(eec->sum), e);
+
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
         //check to see if the element is being interacted with
@@ -640,3 +649,60 @@ struct Clunky_Event_Element *clunky_dragable_element_init(struct Clunky_Sprite *
 
     return ele;
 }
+
+int helper_eec_text_grow(struct Clunky_Event_Summary *sum){
+    //create a temporary hold array
+    char *hold = sum->str;
+
+    //double the size of the array
+    sum->str_len *= 2;
+
+    //reallocate the mem
+    sum->str = (char *)malloc(sizeof(char) * sum->str_len);
+
+    //copy over the old data
+    for (int i = 0; i < sum->str_used; i++) sum->str[i] = hold[i];
+
+    //free the hold array
+    free(hold);
+
+    return 0;
+}
+
+
+int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e){
+    //first, make sure that we WANT to capture text
+    if (!sum->collect_string) return 0;
+
+    //check to see if there was a keydown event
+    if (e->num_input){
+        for ( int i = 0; i < e->num_input; i++){
+            //check to see if we need to grow the array
+            if (sum->str_used >= sum->str_len) helper_eec_text_grow(sum);
+
+            //check to see if its a valid character A-Z, ' ', 0-9
+            if (e->input[i] >= 48 && e->input[i] <= 57){
+                //Number inpit
+                sum->str[sum->str_used++] = e->input[i];
+            }
+            else if (e->input[i] >= 65 && e->input[i] <= 90){
+                //A-Z
+                sum->str[sum->str_used++] = e->input[i];
+            }
+            else if (e->input[i] == ' '){
+                //space
+                sum->str[sum->str_used++] = e->input[i];
+            }
+        }
+    }
+
+
+    return 0;
+}
+
+int clunky_clear_text(struct Clunky_Event_Summary *sum){
+    //just set used to 0
+    sum->str_used = 0;
+    return 0;
+}
+    
