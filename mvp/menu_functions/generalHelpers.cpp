@@ -36,3 +36,73 @@ int getMiddle(int imageDimension, int windowDimension) {
     
     return (windowMiddle - imageMiddle) + ceiling;   //Center based off of center of image
 }
+
+
+
+/*  clunkifyStr
+ Description: Replaces invalid characters with white space characters ' ' or capitalized characters
+ Parameters: std::string* str
+ Preconditions: str != NULL
+ */
+void clunkifyStr(char* str){
+    assert(str != NULL);
+    
+    int ascii;
+    
+    // Convert to capital letters
+    for (int i = 0; i < strlen(str); i++){
+        ascii = (int)str[i];
+        
+        if (ascii >= 97 && ascii <= 122) {  //if lower case letter
+            ascii -= 32;    // Convert to capital letter
+            str[i] = (char)ascii;
+        }
+    }
+    
+    //Trace Statement
+  
+        printf("%s\n", str);
+    
+    
+    for(int i = 0; i < strlen(str); i++){
+        ascii = (int)str[i];
+        if (ascii < 65 || ascii > 90) {
+            if (str[i] != '.' && str[i] != '(' && str[i] != ')' && str[i] != ':' && str[i] != '?' && str[i] != ' ' && ascii < 48 && ascii > 57 ) {
+                // Convert invalid character to white space
+                str[i] = (char)32;
+            }
+        }
+    
+    }
+}
+
+
+/*  fileToStrings
+ Description: This function converts a text file's contents into a vector of strings.
+ Parameters: std::string path, std::vector<std::string> &vect
+ Preconditions: vector != NULL, text must be Clunky_Text characters
+ */
+void fileToStrings(std::string path, std::vector<char*> &vect){
+    
+    
+    std::string line;   // Holds read in line of text from file
+    char* cString;
+    
+    std::ifstream inputFile;
+    inputFile.open(path);   //Open text file
+    
+    if (inputFile) {
+        // If file opens successfully read in contents
+        while(getline(inputFile, line)){
+            std::cout << line << std::endl; //Trace statement for debugging
+            cString = toC_String(line); // Convert to a c style string
+            clunkifyStr(cString); //Remove invalid characters
+            
+            printf("clunkified string %s\n", cString);   //Trace Statement
+            
+            vect.push_back(cString);   //Add clunky string to vect
+        }
+    } else {
+        std::cout << "Error cannot open " << path << std::endl;
+    }
+}

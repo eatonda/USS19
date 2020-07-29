@@ -44,6 +44,7 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
 
     //set the default z value to 0
     b->z = 0;
+    b->z_init = 0;
 
     //copy over the sprite address
     b->s = s;
@@ -404,7 +405,7 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
 
 
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
-    int i, status;
+    int i, status, clicked = 0;
     //first, for legibility, I'm going to create a pointer reference towards the eec's summary element
     //this is just to try to make the code have fewer de-references
     //because theres going to be a lot going on in this function
@@ -415,11 +416,17 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     //we need to now loop through every element in the eec
     for (i = 0; i < eec->num_ele; i++){
         //check to see if the element is being interacted with
-        if (eec->elements[i]->type != 'S'){
+        if (eec->elements[i]->type != 'S' && !clicked){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
+
+            if (status == 2){
+                clicked = 1;
+                eec->elements[i]->z = 100;
+            }
         }
         else{
             status = 0;
+            eec->elements[i]->z = eec->elements[i]->z_init;
         }
 
         //if the element was clicked, status == 2, make note of the eid for the summary
@@ -485,11 +492,13 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 break;
             default:
                 break;
-         }
+        }
+
 
         //now render the element to the window
         clunky_element_render(eec->elements[i], w);
     }
+    clunky_eec_mergesort(eec);
 
     return 0;
 }
@@ -510,6 +519,84 @@ int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec){
     eec->num_ele--;
 
     return 0;
+}
+
+
+int merge(struct Clunky_Event_Element **arr, int l, int m, int r){
+    int i, j, k; 
+    int n1 = m - l + 1; 
+    int n2 = r - m; 
+  
+    /* create temp arrays */
+    struct Clunky_Event_Element *L[n1], *R[n2]; 
+  
+    /* Copy data to temp arrays L[] and R[] */
+    for (i = 0; i < n1; i++) 
+        L[i] = arr[l + i]; 
+    for (j = 0; j < n2; j++) 
+        R[j] = arr[m + 1 + j]; 
+  
+    /* Merge the temp arrays back into arr[l..r]*/
+    i = 0; // Initial index of first subarray 
+    j = 0; // Initial index of second subarray 
+    k = l; // Initial index of merged subarray 
+    while (i < n1 && j < n2) { 
+        if (L[i]->z <= R[j]->z) { 
+            arr[k] = L[i]; 
+            i++; 
+        } 
+        else { 
+            arr[k] = R[j]; 
+            j++; 
+        } 
+        k++; 
+    } 
+  
+    /* Copy the remaining elements of L[], if there 
+       are any */
+    while (i < n1) { 
+        arr[k] = L[i]; 
+        i++; 
+        k++; 
+    } 
+  
+    /* Copy the remaining elements of R[], if there 
+       are any */
+    while (j < n2) { 
+        arr[k] = R[j]; 
+        j++; 
+        k++; 
+    } 
+
+
+    return 0;
+
+}
+
+int helper_eec_mergesort(struct Clunky_Event_Element **arr, int l, int r){
+
+    if (l < r) { 
+        // Same as (l+r)/2, but avoids overflow for 
+        // large l and h 
+        int m = l + (r - l) / 2; 
+  
+        // Sort first and second halves 
+        helper_eec_mergesort(arr, l, m); 
+        helper_eec_mergesort(arr, m + 1, r); 
+  
+        merge(arr, l, m, r); 
+    } 
+
+    return 0;
+
+}
+
+int clunky_eec_mergesort(struct Clunky_Event_Element_Container *eec){
+    //sort the elements array
+    helper_eec_mergesort(eec->elements, 0, eec->num_ele-1);
+
+    return 0;
+
 }
         
 

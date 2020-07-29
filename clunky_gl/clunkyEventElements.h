@@ -59,6 +59,7 @@ struct Clunky_Event_Element{
     //the z coordinate for use with rendering on top of other sprites
     //and for selecting only the top element
     int z;
+    int z_init;
 
     int w;
     int h;
@@ -89,5 +90,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 int clunky_eec_grow(struct Clunky_Event_Element_Container *eec);
 int clunky_eec_free(struct Clunky_Event_Element_Container *eec);
 int clunky_eec_remove(int indx, struct Clunky_Event_Element_Container *eec);
+int clunky_eec_mergesort(struct Clunky_Event_Element_Container *eec);
+int helper_eec_mergesort(struct Clunky_Event_Element **arr, int l, int r);
+
 
 #endif
