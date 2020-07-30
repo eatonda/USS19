@@ -423,7 +423,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     clunky_capture_text(&(eec->sum), e);
 
     //we need to now loop through every element in the eec
-    for (i = 0; i < eec->num_ele; i++){
+    for (i = eec->num_ele-1; i > 0; i--){
         //check to see if the element is being interacted with
         if (eec->elements[i]->type != 'S' && !clicked){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
@@ -506,10 +506,12 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 break;
         }
 
-
+    }
+    for (i = 0; i < eec->num_ele; i++){
         //now render the element to the window
         clunky_element_render(eec->elements[i], w);
     }
+    
     clunky_eec_mergesort(eec);
 
     return 0;
