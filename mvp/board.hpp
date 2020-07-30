@@ -16,6 +16,7 @@ class Board{
         int board_size;
         int color_theme;
         int num_ships;
+        float board_scale;
     public:
         Board(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window);
         int run();

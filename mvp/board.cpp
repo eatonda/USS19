@@ -3,6 +3,7 @@
 #include "board.hpp"
 #include "../clunky_gl/clunkyCore.h"
 #include "../clunky_gl/clunkyEventElements.h"
+#include "../clunky_gl/clunkyHash.h"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 600;
@@ -43,15 +44,13 @@ int Board::init(){
     water_spr->sprite_row = 0;
     water_spr->sprite_column = -1;
 
-    float board_scale = 1.;
-
     struct Clunky_Texture *buttonT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/PlanButton.bmp", buttonT, this->window);
     struct Clunky_Sprite *button  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     clunky_init_sprite(1, 2, buttonT, button);
     struct Clunky_Event_Element **spawn = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *spawn = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*spawn, button, 60, 500, 0, "spawn\0", 'B', 'N');
+    clunky_element_init(*spawn, button, 60, 500, 0, "plan\0", 'B', 'N');
 
 
     struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -70,10 +69,10 @@ int Board::init(){
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 60, 436, 1, "fire\0", 'B', 'N');
 
-    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
-    struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 1, pp_tex, pp_spr);
+//    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+//    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
+//    struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+ //   clunky_init_sprite(1, 1, pp_tex, pp_spr);
 
     struct Clunky_Texture *frameT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/Frame.bmp", frameT, this->window);
@@ -84,10 +83,10 @@ int Board::init(){
     clunky_element_init(*frame, frameS, (WINDOW_WIDTH - 550)/2, (WINDOW_HEIGHT - 550)/2, 0, "frame\0", 'T', 'N');
 
 
-    board_scale = 500. / ((float) water_spr->ap_w *(float) this->board_size);
+    this->board_scale = 500. / ((float) water_spr->ap_w *(float) this->board_size);
 
-    clunky_sprite_scale(board_scale, water_spr);
-    clunky_sprite_scale(board_scale, pp_spr);
+    clunky_sprite_scale(this->board_scale, water_spr);
+    //clunky_sprite_scale(board_scale, pp_spr);
 
      struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * this->board_size * this->board_size);
     int cnt = 0;
@@ -118,6 +117,14 @@ int Board::init(){
 }
 
 int Board::run(){
+
+    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
+    struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(1, 1, pp_tex, pp_spr);
+    clunky_sprite_scale(this->board_scale, pp_spr);
+
+
     // Run game loop
         int cont = 1, k;
         while(cont){
@@ -136,6 +143,23 @@ int Board::run(){
                     //SDL events
                     //'q' -> SDL_QUIT
                     if (this->event->input[k] == 'q') cont = 0;
+                }
+            }
+
+            //check for any eec events
+            if (this->eec->sum.event_type != 'N'){
+                //check for a button click
+                if (this->eec->sum.event_type == 'C'){
+                    //check to see if it was the Planning Pin buttong
+                    if (this->eec->sum.eid_one == clunky_hash_gen("plan\0")){
+                        //spawn in a new planning pin
+                        struct Clunky_Event_Element **pin = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+                        *pin = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+                        clunky_element_init(*pin, pp_spr, 60 - (pp_spr->ap_w /2), 500 - (pp_spr->ap_h / 2), 0, "frame\0", 'D', 'N');
+                        (*pin)->misc = 1;
+                        clunky_event_element_update_z(*pin, 5, this->eec);
+                        clunky_eec_add_elements(this->eec, pin, 1);
+                    }
                 }
             }
 
