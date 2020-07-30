@@ -51,7 +51,7 @@ int Board::init(){
     clunky_init_sprite(1, 2, buttonT, button);
     struct Clunky_Event_Element **spawn = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *spawn = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*spawn, button, 10, 500, 0, "spawn\0", 'B', 'N');
+    clunky_element_init(*spawn, button, 60, 500, 0, "spawn\0", 'B', 'N');
 
 
     struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -60,7 +60,7 @@ int Board::init(){
     clunky_init_sprite(1, 2, buttonAT, buttonA);
     struct Clunky_Event_Element **aim = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *aim = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*aim, buttonA, 74, 500, 0, "aim\0", 'B', 'N');
+    clunky_element_init(*aim, buttonA, 124, 500, 0, "aim\0", 'B', 'T');
 
     struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
@@ -68,7 +68,7 @@ int Board::init(){
     clunky_init_sprite(2, 2, buttonFT, buttonF);
     struct Clunky_Event_Element **fire = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*fire, buttonF, 10, 436, 1, "fire\0", 'B', 'N');
+    clunky_element_init(*fire, buttonF, 60, 436, 1, "fire\0", 'B', 'N');
 
     struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);

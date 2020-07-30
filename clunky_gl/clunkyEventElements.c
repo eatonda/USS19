@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include <stdio.h>
 #include "clunkyEventElements.h"
 
@@ -126,9 +125,21 @@ unsigned long clunky_element_update_OLD(struct Clunky_Event_Element *b, int num,
 }
 
 int clunky_element_render(struct Clunky_Event_Element *b, struct Clunky_Window *w){
-    if (b->interact == 1 && b->effect != 'R' && b->effect != 'H'){
+    if (b->interact == 1 && b->effect != 'R' && b->effect != 'H' && b->effect != 'T'){
         //render the unclicked version
         clunky_render_sprite(b->x, b->y, b->row, 0, b->s, w);
+    }
+    else if (b->effect == 'T'){
+        //render the toggle
+        if(b->interact == 2){
+            if (b->misc){
+                b->misc = 0;
+            }
+            else{
+                b->misc = 1;
+            }
+        }
+        clunky_render_sprite(b->x, b->y, b->row, b->misc, b->s, w);
     }
     else if (b->effect == 'A'){
         //render the elements sprite at the respectful animation cell
@@ -501,6 +512,13 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 }
                 
 
+                break;
+            case 'T':
+                //if clicked, toggle the sprite
+                if (status == 2){
+                    if (eec->elements[i]->misc) eec->elements[i]->misc = 0;
+                    else eec->elements[i]->misc = 1;
+                }
                 break;
             default:
                 break;
