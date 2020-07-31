@@ -55,6 +55,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     //set the clicked status to false
     b->interact = 0;
 
+    //set ignore to 0
+    b->ignore = 0;
+
     //set the row number
     b->row = row;
 
@@ -435,6 +438,9 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
 
     //we need to now loop through every element in the eec
     for (i = eec->num_ele-1; i > 0; i--){
+        //check to see if we are ignoring to update this element
+        if (eec->elements[i]->ignore) continue;
+
         //check to see if the element is being interacted with
         if (eec->elements[i]->type != 'S' && !clicked){
             status = clunky_mouse_interaction_helper(eec->elements[i], e);
@@ -458,7 +464,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
             //set the EID_One to the eid of the clicked element, and the type to 'C'
             summary->eid_one = eec->elements[i]->eid;
             summary->event_type = 'C';
-            printf("<<%d, %d>>\n", eec->elements[i]->x, eec->elements[i]->y);
+            printf("<<%d, %d>>\ %s\n", eec->elements[i]->x, eec->elements[i]->y,  eec->elements[i]->name);
         }
 
         //some elements require extra proccessing than just hovered or clicked
@@ -738,4 +744,13 @@ int clunky_event_element_update_z(struct Clunky_Event_Element *ele, int z, struc
     clunky_eec_mergesort(eec);
     return 0;
 }
+
+int clunky_indx_from_eid(unsigned long eid, struct Clunky_Event_Element_Container *eec){
+    for (int i = 0; i < eec->num_ele; i++){
+        if (eec->elements[i]->eid == eid) return i;
+    }
+
+    return -1;
+}
     
+

@@ -67,6 +67,7 @@ struct Clunky_Event_Element{
     int interact; // 0: No, 1: Hover, 2: Clicked
     int misc; //a misc variable to be used differently depending on the type
               //of element. EX: draging status
+    int ignore; 
 
     int row;
     int col_max;
@@ -96,5 +97,6 @@ int helper_eec_mergesort(struct Clunky_Event_Element **arr, int l, int r);
 int helper_eec_text_grow(struct Clunky_Event_Summary *sum);
 int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e);
 int clunky_clear_text(struct Clunky_Event_Summary *sum);
+int clunky_indx_from_eid(unsigned long eid, struct Clunky_Event_Element_Container *eec);
 
 #endif

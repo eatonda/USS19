@@ -95,7 +95,7 @@ int Board::init(){
 //            printf("<%d, %d>\n", i, j);
             cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
 
-            clunky_element_init(cells[cnt], water_spr, BOARD_OFFSET_W+water_spr->ap_w*i, BOARD_OFFSET_H+water_spr->ap_h*j, this->color_theme, "foo\0", 'S', 'A');
+            clunky_element_init(cells[cnt], water_spr, BOARD_OFFSET_W+water_spr->ap_w*i, BOARD_OFFSET_H+water_spr->ap_h*j, this->color_theme, "water\n", 'S', 'A');
 
             cells[cnt]->z = 1;
 
@@ -132,7 +132,7 @@ int Board::run(){
     struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/Selector.bmp", sel_tex, this->window);
     struct Clunky_Sprite *sel_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(2, 2, sel_tex, sel_spr);
+    clunky_init_sprite(3, 2, sel_tex, sel_spr);
     clunky_sprite_scale(this->board_scale, sel_spr);
 
     //need a fire and aim button for the move_eev
@@ -164,10 +164,12 @@ int Board::run(){
 
     struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * this->board_size * this->board_size);
     int cnt = 0;
+    char name[2] = {'0', '\0'};
     for (int i = 0; i < this->board_size; i++){
         for (int j = 0; j < this->board_size; j++){
+            name[0] = '0' + cnt;
             cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
-            clunky_element_init(cells[cnt], sel_spr, BOARD_OFFSET_W+sel_spr->ap_w*i, BOARD_OFFSET_H+sel_spr->ap_h*j, 0, "foo\0", 'B', 'A');
+            clunky_element_init(cells[cnt], sel_spr, BOARD_OFFSET_W+sel_spr->ap_w*i, BOARD_OFFSET_H+sel_spr->ap_h*j, 0, name, 'B', 'A');
             cells[cnt]->z = 1;
             cnt++;
         }
@@ -180,6 +182,7 @@ int Board::run(){
 
     // Run game loop
         int cont = 1, k;
+        int sel_indx = -1;
         while(cont){
             //first thing: check to see if there have been any new events!
             clunky_event(this->event);
@@ -218,6 +221,13 @@ int Board::run(){
                             //====================================
                             //Aim Selector Screen
                             //====================================
+                            //
+
+                            //if a cell is selected, animate the fire button
+                            if (sel_indx != -1) (*fire)->effect = 'A';
+                            else (*fire)->effect = 'N';
+                                
+
                             for (int i = 0; i < eec->num_ele; i++){
                                 //now render the element to the window
                                 clunky_element_render(this->eec->elements[i], this->window);
@@ -246,8 +256,40 @@ int Board::run(){
                             if (move_eec->sum.event_type != 'N'){
                                 //check for a button click
                                 if (move_eec->sum.event_type == 'C'){
+            //                        indx = clunky_indx_from_eid(move_eec->sum.eid_one, move_eec);
                                     if (move_eec->sum.eid_one == clunky_hash_gen("aim\0")){
+                                        //set all cells that have been revliusly selected, back to unselected
+                                        for (int j = 0; j < this->board_size * this->board_size; j++){
+                                            if (cells[j]->row == 1) cells[j]->row = 0;
+                                        }
+                                        sel_indx = -1;
                                         break;
+                                    }
+                                    else if (move_eec->sum.eid_one == clunky_hash_gen("fire\0")){
+                                        if (sel_indx != -1){
+                                            printf("FIRE!\n");
+                                            //set the ignore flag and change the row
+                                            move_eec->elements[sel_indx]->row = 2;
+                                            move_eec->elements[sel_indx]->ignore = 1;
+
+                                            sel_indx = -1;
+
+                                            //break
+                                            break;
+                                        }
+                                    }
+                                    else{
+                                        //this should be a selection cell
+                                        //set all cells that have been revliusly selected, back to unselected
+                                        for (int j = 0; j < this->board_size * this->board_size; j++){
+                                            if (cells[j]->row == 1) cells[j]->row = 0;
+                                        }
+                                        //get the index
+                                        sel_indx = clunky_indx_from_eid(move_eec->sum.eid_one, move_eec);
+                                        printf("SELECTED CELL #%d\n", move_eec->elements[sel_indx]->name[0] - '0');
+                                        
+                                        //set the row to select
+                                        move_eec->elements[sel_indx]->row = 1;
                                     }
                                 }
                             }
