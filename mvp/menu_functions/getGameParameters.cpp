@@ -304,6 +304,7 @@ const int NUM_OF_MENUS = 6;
         // Also note that when back is encountered 0 is returend
         // Also note if SDL_Quit is encountered -1 is returned
         menuFlag = menus[i]->run(event, &navigation);
+        printf("++++++%d\n", menuFlag);
         //std::cout << menuFlag;
         if (menuFlag > 0) {
             switch (navigation) {

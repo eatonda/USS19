@@ -16,9 +16,9 @@
 #include "menuHelpers.hpp"
 
 
-#include "../clunky_gl/clunkyCore.h"
-#include "../clunky_gl/clunkyHash.h"
-#include "../clunky_gl/clunkyEventElements.h"
+#include "../../clunky_gl/clunkyCore.h"
+#include "../../clunky_gl/clunkyHash.h"
+#include "../../clunky_gl/clunkyEventElements.h"
 
 
 class Menu {
