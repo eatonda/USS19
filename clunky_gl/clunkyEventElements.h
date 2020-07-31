@@ -13,6 +13,9 @@ struct Clunky_Event_Summary{
 
     unsigned long eid_one;
     unsigned long eid_two;
+
+    int uid_one;
+    int uid_two;
     char event_type;
 
 };
@@ -28,6 +31,8 @@ struct Clunky_Event_Element_Container{
     struct Clunky_Event_Element **snaps;
     int num_snaps;
     int len_snaps;
+
+    int uid_mstr;
 
     struct Clunky_Event_Summary sum;
 
@@ -52,6 +57,7 @@ struct Clunky_Event_Element{
                 //[R] -> Hover + Toggle
 
     unsigned long eid;
+    int uid;
     char name[256];
     int x;
     int y;
@@ -97,6 +103,6 @@ int helper_eec_mergesort(struct Clunky_Event_Element **arr, int l, int r);
 int helper_eec_text_grow(struct Clunky_Event_Summary *sum);
 int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e);
 int clunky_clear_text(struct Clunky_Event_Summary *sum);
-int clunky_indx_from_eid(unsigned long eid, struct Clunky_Event_Element_Container *eec);
+int clunky_indx_from_uid(int uid, struct Clunky_Event_Element_Container *eec);
 
 #endif

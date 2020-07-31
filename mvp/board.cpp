@@ -298,7 +298,7 @@ int Board::run(){
                                             if (cells[j]->row == 1) cells[j]->row = 0;
                                         }
                                         //get the index
-                                        sel_indx = clunky_indx_from_eid(move_eec->sum.eid_one, move_eec);
+                                        sel_indx = clunky_indx_from_uid(move_eec->sum.uid_one, move_eec);
                                         printf("SELECTED CELL #%d\n", move_eec->elements[sel_indx]->name[0] - '0');
                                         
                                         //set the row to select
@@ -318,7 +318,7 @@ int Board::run(){
                     if (this->eec->sum.eid_two == clunky_hash_gen("remPlan\0")){
                         //delete the planning pin
                         //
-                        int indx = clunky_indx_from_eid(this->eec->sum.eid_one, this->eec);
+                        int indx = clunky_indx_from_uid(this->eec->sum.uid_one, this->eec);
                         clunky_eec_remove(indx, this->eec);
                    }
 

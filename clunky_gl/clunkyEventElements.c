@@ -67,6 +67,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     //generate the BID
     b->eid = clunky_hash_gen(b_name);
 
+    //set the UID to -1, since this element is not in a eec
+    b->uid = -1;
+
     //copy over the name
     for (i = 0; i < 256; i++)  b->name[i] = '\0';
     for (i = 0; b_name[i] != '\0'; i++){
@@ -171,6 +174,9 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //and make note that we are using 0 cells and snaps
     eec->num_ele = 0;
     eec->num_snaps = 0;
+
+    //set the UID master counter to 0
+    eec->uid_mstr = 0;
    
     //we want to capture text
     eec->sum.collect_string = 1;
@@ -308,7 +314,10 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
     //now copy over the memory addresses!
     for (i = 0; i < num_ele; i++){
         //insert the current element into the appropreit spot
+        //set the UID for the ele
+        ele[i]->uid = eec->uid_mstr++;
         insertion_helper(eec, ele[i]);
+
         //if it is a snap-to element, add it to the spacial map
         if (ele[i]->type == 'S'){
             eec->snaps[eec->num_snaps++] = ele[i];
@@ -463,6 +472,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
         if (status == 2){
             //set the EID_One to the eid of the clicked element, and the type to 'C'
             summary->eid_one = eec->elements[i]->eid;
+            summary->uid_one = eec->elements[i]->uid;
             summary->event_type = 'C';
             printf("<<%d, %d>>\ %s\n", eec->elements[i]->x, eec->elements[i]->y,  eec->elements[i]->name);
         }
@@ -505,6 +515,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                             summary->event_type = 'S';
                             summary->eid_one = eec->elements[i]->eid;
                             summary->eid_two = eec->snaps[over_indx]->eid;
+                            summary->uid_one = eec->elements[i]->uid;
+                            summary->uid_two = eec->snaps[over_indx]->uid;
 
                         }
                     }
@@ -745,9 +757,9 @@ int clunky_event_element_update_z(struct Clunky_Event_Element *ele, int z, struc
     return 0;
 }
 
-int clunky_indx_from_eid(unsigned long eid, struct Clunky_Event_Element_Container *eec){
+int clunky_indx_from_uid(int uid, struct Clunky_Event_Element_Container *eec){
     for (int i = 0; i < eec->num_ele; i++){
-        if (eec->elements[i]->eid == eid) return i;
+        if (eec->elements[i]->uid == uid) return i;
     }
 
     return -1;
