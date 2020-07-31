@@ -443,6 +443,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                 clicked = 1;
                 //if its a draggable element, change its z
                 if (eec->elements[i]->type == 'D'){
+                    printf("MOVING TO TOP\n");
                     eec->elements[i]->z = 100;
                 }
             }
@@ -525,12 +526,13 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
         }
 
     }
+    clunky_eec_mergesort(eec);
     for (i = 0; i < eec->num_ele; i++){
         //now render the element to the window
         clunky_element_render(eec->elements[i], w);
     }
     
-    clunky_eec_mergesort(eec);
+//    clunky_eec_mergesort(eec);
 
     return 0;
 }

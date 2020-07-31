@@ -56,10 +56,10 @@ int Board::init(){
     struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
     struct Clunky_Sprite *buttonA  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 2, buttonAT, buttonA);
+    clunky_init_sprite(2, 2, buttonAT, buttonA);
     struct Clunky_Event_Element **aim = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *aim = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*aim, buttonA, 124, 500, 0, "aim\0", 'B', 'T');
+    clunky_element_init(*aim, buttonA, 124, 500, 0, "aim\0", 'B', 'N');
 
     struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
@@ -67,7 +67,7 @@ int Board::init(){
     clunky_init_sprite(2, 2, buttonFT, buttonF);
     struct Clunky_Event_Element **fire = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
-    clunky_element_init(*fire, buttonF, 60, 436, 1, "fire\0", 'B', 'N');
+    clunky_element_init(*fire, buttonF, 60, 436, 0, "fire\0", 'B', 'N');
 
 //    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
 //    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
@@ -124,6 +124,59 @@ int Board::run(){
     clunky_init_sprite(1, 1, pp_tex, pp_spr);
     clunky_sprite_scale(this->board_scale, pp_spr);
 
+    //setup the EEC user move colector overlay
+    struct Clunky_Event_Element_Container *move_eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
+    clunky_eec_init(move_eec);
+
+    //need to create the selector sprite sheets
+    struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/Selector.bmp", sel_tex, this->window);
+    struct Clunky_Sprite *sel_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(2, 2, sel_tex, sel_spr);
+    clunky_sprite_scale(this->board_scale, sel_spr);
+
+    //need a fire and aim button for the move_eev
+    struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
+    struct Clunky_Sprite *buttonA  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(2, 2, buttonAT, buttonA);
+    struct Clunky_Event_Element **aim = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *aim = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*aim, buttonA, 124, 500, 1, "aim\0", 'B', 'N');
+    (*aim)->misc = 1;
+
+    struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
+    struct Clunky_Sprite *buttonF = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+    clunky_init_sprite(2, 2, buttonFT, buttonF);
+    struct Clunky_Event_Element **fire = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*fire, buttonF, 60, 436, 1, "fire\0", 'B', 'N');
+
+    //the aim cursor
+    struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/Crosshairs.bmp", cur_tex, this->window);
+    struct Clunky_Sprite *cur_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(1, 1, cur_tex, cur_spr);
+
+    clunky_eec_add_elements(move_eec, aim, 1);
+    clunky_eec_add_elements(move_eec, fire, 1);
+
+    struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * this->board_size * this->board_size);
+    int cnt = 0;
+    for (int i = 0; i < this->board_size; i++){
+        for (int j = 0; j < this->board_size; j++){
+            cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+            clunky_element_init(cells[cnt], sel_spr, BOARD_OFFSET_W+sel_spr->ap_w*i, BOARD_OFFSET_H+sel_spr->ap_h*j, 0, "foo\0", 'B', 'A');
+            cells[cnt]->z = 1;
+            cnt++;
+        }
+    }
+
+    //============
+    //Add the elements to the EEC
+    clunky_eec_add_elements(move_eec, cells,this->board_size * this->board_size);
+
 
     // Run game loop
         int cont = 1, k;
@@ -159,6 +212,50 @@ int Board::run(){
                         (*pin)->misc = 1;
                         clunky_event_element_update_z(*pin, 5, this->eec);
                         clunky_eec_add_elements(this->eec, pin, 1);
+                    }
+                    else if (this->eec->sum.eid_one == clunky_hash_gen("aim\0")){
+                        while(cont){
+                            //====================================
+                            //Aim Selector Screen
+                            //====================================
+                            for (int i = 0; i < eec->num_ele; i++){
+                                //now render the element to the window
+                                clunky_element_render(this->eec->elements[i], this->window);
+                            }
+                            clunky_event(this->event);
+                            clunky_eec_update(move_eec, this->event, this->window);
+
+                            //render the courser
+                            clunky_render_sprite(this->event->mx - cur_spr->ap_w/2, this->event->my - cur_spr->ap_h/2, 0, 0, cur_spr, this->window);
+
+                            if (this->event->num_input != 0){
+                                //print any keypresses and check for any SDL specific events
+                                //(such as SDL_QUIT)
+                                for(k = 0; k < this->event->num_input; k++){
+                                    printf(">>%c\n", this->event->input[k]);
+
+                                    //all user keypressed are represented by either a number or
+                                    //a capital letter. lowercase letters I've reserved for
+                                    //SDL events
+                                    //'q' -> SDL_QUIT
+                                    if (this->event->input[k] == 'q') cont = 0;
+                                    }
+                            }
+
+                            
+                            if (move_eec->sum.event_type != 'N'){
+                                //check for a button click
+                                if (move_eec->sum.event_type == 'C'){
+                                    if (move_eec->sum.eid_one == clunky_hash_gen("aim\0")){
+                                        break;
+                                    }
+                                }
+                            }
+
+
+                            //Update the window!
+                            clunky_present_window(this->window);
+                        }
                     }
                 }
             }
