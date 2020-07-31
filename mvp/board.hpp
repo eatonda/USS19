@@ -17,6 +17,9 @@ class Board{
         int color_theme;
         int num_ships;
         float board_scale;
+
+        int **player_board;
+        int **ai_board;
     public:
         Board(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window);
         int run();

@@ -19,6 +19,19 @@ Board::Board(int size, int color, int ships, struct Clunky_Event *event, struct 
     this->event = event;
     printf("2\n");
 
+    //create the board arrays
+    this->player_board = (int **) malloc(sizeof(int *) * size);
+    this->ai_board = (int **) malloc(sizeof(int *) * size);
+    for (int i = 0; i < size; i++){
+        this->player_board[i] = (int *) malloc(sizeof(int ) * size);
+        this->ai_board[i] = (int *) malloc(sizeof(int *) * size);
+
+        for (int j = 0; j < size; j++){
+            this->player_board[i][j] = -1;
+            this->ai_board[i][j] = -1;
+        }
+    }
+
     //init the EEC
     this->eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
     clunky_eec_init(this->eec);
@@ -133,6 +146,13 @@ int Board::run(){
     struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     clunky_init_sprite(1, 1, pp_tex, pp_spr);
     clunky_sprite_scale(this->board_scale, pp_spr);
+
+    //missed pin
+    struct Clunky_Texture *mp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/Pins.bmp", mp_tex, this->window);
+    struct Clunky_Sprite *mp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(2, 1, mp_tex, mp_spr);
+    clunky_sprite_scale(this->board_scale, mp_spr);
 
     //setup the EEC user move colector overlay
     struct Clunky_Event_Element_Container *move_eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
@@ -284,6 +304,25 @@ int Board::run(){
                                             //set the ignore flag and change the row
                                             move_eec->elements[sel_indx]->row = 2;
                                             move_eec->elements[sel_indx]->ignore = 1;
+
+                                            int cell_num = move_eec->elements[sel_indx]->name[0] - '0';
+
+                                            //get the row & col
+                                            int row = cell_num % this->board_size;
+                                            int col = cell_num / this->board_size;
+
+                                            //spawn in a miss pin
+                                            struct Clunky_Event_Element **pin = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+                                            *pin = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+                                            clunky_element_init(*pin, mp_spr, BOARD_OFFSET_W+mp_spr->ap_w*col, BOARD_OFFSET_H+mp_spr->ap_h*row, 0, "miss\0", 'B', 'N');
+                                            (*pin)->ignore = 1;
+                                            clunky_event_element_update_z(*pin, 4, this->eec);
+                                            clunky_eec_add_elements(this->eec, pin, 1);
+                                            //add a miss pin
+                                            this->player_board[row][col] = 0;
+
+
+                                            printf("R:%d, C:%d\n", row, col);
 
                                             sel_indx = -1;
 
