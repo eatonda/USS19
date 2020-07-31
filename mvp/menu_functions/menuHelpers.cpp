@@ -64,6 +64,8 @@ int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOf
                 return i;
         }
     }
+
+    return -2;
 }
     
 
