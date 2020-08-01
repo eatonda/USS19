@@ -109,6 +109,7 @@ int main(int argc, char *argv[]){
                 //SDL events
                 //'q' -> SDL_QUIT
                 if (event.input[k] == 'q') cont = 0;
+                if (event.input[k] == '`') printf("##%s\n", eec->sum.str);
             }
 
         }
