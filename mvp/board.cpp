@@ -91,6 +91,21 @@ int Board::init(){
     *deletePlan = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*deletePlan, dps, 84, 436, 0, "remPlan\0", 'S', 'N');
 
+    /*
+    //Ship Element
+    struct Clunky_Texture *ships_t = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/Ships.bmp", ships_t, this->window);
+    struct Clunky_Sprite *ships_s = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(2, 10, ships_t, ships_s);
+    clunky_render_sprite(40, 500, 1, 5, ships_s, this->window);
+    struct Clunky_Event_Element *ship = clunky_dragable_element_init(ships_s, 500, 200, 0, "ship");
+    /**shipItems = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*shipItems, ships_s, 500, 500, 0, "remPlan\0", 'S', 'N');*/
+
+    //clunky_render_sprite(40, 500, 1, 5, ships_s, this->window);*/
+
+
+
 //    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
 //    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
 //    struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
@@ -134,6 +149,8 @@ int Board::init(){
     clunky_eec_add_elements(this->eec, spawn, 1);
     clunky_eec_add_elements(this->eec, aim, 1);
     clunky_eec_add_elements(this->eec, deletePlan, 1);
+    //clunky_eec_add_elements(this->eec, &ship, 1);
+
 //    clunky_eec_add_elements(this->eec, fire, 1);
     clunky_eec_add_elements(this->eec, frame, 1);
     clunky_event_element_update_z(*frame, -1, this->eec);
