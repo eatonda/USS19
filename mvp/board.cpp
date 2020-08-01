@@ -6,9 +6,9 @@
 #include "../clunky_gl/clunkyHash.h"
 
 const int WINDOW_WIDTH = 1000;
-const int WINDOW_HEIGHT = 600;
+const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
-const int BOARD_OFFSET_H = 50;
+const int BOARD_OFFSET_H = 100;
 
 Board::Board(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window){
     printf("1\n");
@@ -102,7 +102,12 @@ int Board::init(){
     clunky_init_sprite(1, 1, frameT, frameS);
     struct Clunky_Event_Element **frame = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *frame = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    struct Clunky_Event_Element **frameP = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *frameP = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*frame, frameS, (WINDOW_WIDTH - 550)/2, (WINDOW_HEIGHT - 550)/2, 0, "frame\0", 'T', 'N');
+    clunky_element_init(*frameP, frameS, (WINDOW_WIDTH - 550)/2 + 525, (WINDOW_HEIGHT - 550)/2 , 0, "frame\0", 'T', 'N');
+    (*frame)->ignore = 1;
+    (*frameP)->ignore = 1;
 
 
     this->board_scale = 500. / ((float) water_spr->ap_w *(float) this->board_size);
@@ -132,6 +137,8 @@ int Board::init(){
 //    clunky_eec_add_elements(this->eec, fire, 1);
     clunky_eec_add_elements(this->eec, frame, 1);
     clunky_event_element_update_z(*frame, -1, this->eec);
+    clunky_eec_add_elements(this->eec, frameP, 1);
+    clunky_event_element_update_z(*frameP, -1, this->eec);
 
 
 
@@ -211,6 +218,12 @@ int Board::run(){
     //Add the elements to the EEC
     clunky_eec_add_elements(move_eec, cells,this->board_size * this->board_size);
 
+    //create our text elements
+    struct Clunky_Text *plyr_txt = clunky_get_text((WINDOW_WIDTH - 550)/2 + 700, 10, 200, 100, 1., this->window);
+    clunky_replace_text(plyr_txt, "YOUR SHIPS\0");
+    struct Clunky_Text *ai_txt = clunky_get_text((WINDOW_WIDTH - 550)/2 +175, 10, 200, 100, 1., this->window);
+    clunky_replace_text(ai_txt, "ENEMY SHIPS\0");
+
 
     // Run game loop
         int cont = 1, k;
@@ -219,6 +232,9 @@ int Board::run(){
             //first thing: check to see if there have been any new events!
             clunky_event(this->event);
             clunky_eec_update(this->eec, this->event, this->window);
+
+            clunky_render_text(plyr_txt, this->window);
+            clunky_render_text(ai_txt, this->window);
 
             if (this->event->num_input != 0){
                 //print any keypresses and check for any SDL specific events

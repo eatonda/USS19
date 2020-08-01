@@ -12,8 +12,8 @@
 
 #include "board.hpp"
 
-const int WINDOW_WIDTH = 1000;
-const int WINDOW_HEIGHT = 600;
+const int WINDOW_WIDTH = 1350;
+const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 50;
 
