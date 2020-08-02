@@ -4,6 +4,7 @@
 #include "../clunky_gl/clunkyCore.h"
 #include "../clunky_gl/clunkyEventElements.h"
 #include "../clunky_gl/clunkyHash.h"
+#include "ship.h"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 700;
@@ -147,12 +148,28 @@ int Board::init(){
 }
 
 int Board::empty(){
+    //now lets declare our Event Element Container (EEC)
+    struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
+
+    //init the eec
+    clunky_eec_init(eec);
+
+    //get the ship assets
+    struct Ship_Assets s;
+    init_ship(&s, this->window);
+
+    generate_ship(3, 1, eec, s);
+    generate_ship(4, 1, eec, s);
+
     int cont = 1, k;
     int sel_indx = -1;
     while(cont){
+        printf("Start\n");
         //first thing: check to see if there have been any new events!
         clunky_event(this->event);
-        clunky_eec_update(this->eec, this->event, this->window);
+        printf("EVENTED\n");
+        clunky_eec_update(eec, this->event, this->window);
+        printf("UPDATED\n");
 
         if (this->event->num_input != 0){
             //print any keypresses and check for any SDL specific events
