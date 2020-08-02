@@ -156,7 +156,7 @@ int Board::printShips(){
 
     //get the ship assets
     struct Ship_Assets s;
-    init_ship(&s, this->window);
+    init_ship(this->board_scale, &s, this->window);
 
     //Ship sizes
     int shipSizes [] = {5, 4, 3, 2, 2, 3, 4};
@@ -184,24 +184,49 @@ int Board::printShips(){
 
     water_spr->sprite_row = 0;
     water_spr->sprite_column = -1;
+    clunky_sprite_scale(this->board_scale, water_spr);
 
-    struct Clunky_Event_Element *cells = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+    struct Clunky_Texture *startBtnT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/StartButton.bmp", startBtnT, this->window);
 
-    clunky_element_init(cells, water_spr, BOARD_OFFSET_W+water_spr->ap_w, BOARD_OFFSET_H+water_spr->ap_h, this->color_theme, "water\n", 'S', 'A');
-    clunky_eec_add_elements(eec, &cells,1);
-    clunky_event_element_update_z(cells, -1, eec);
+    //From the trexture we can create a sprite.
+    //Clunky Sprites allow for the rendering of partial sections of
+    //the texture, instead of the entire texture at once
+    struct Clunky_Sprite *startBtnS = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    //when initing a sprite, we need to give it how many ROWS and COLUMNS there
+    //are on the sprite sheet. it will do the rest
+    clunky_init_sprite(1, 2, startBtnT, startBtnS);
+    struct Clunky_Event_Element **start = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *start = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*start, startBtnS, 900, 300, 0, "start\0", 'B', 'N');
 
+
+
+    struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * this->board_size * this->board_size);
+    int cnt = 0;
+    char name[2] = {'0', '\0'};
+    for (int i = 0; i < this->board_size; i++){
+        for (int j = 0; j < this->board_size; j++){
+            name[0] = '0' + cnt;
+            cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+            clunky_element_init(cells[cnt], water_spr, BOARD_OFFSET_W+water_spr->ap_w*i, BOARD_OFFSET_H+water_spr->ap_h*j, 0, name, 'S', 'A');
+            cells[cnt]->z = -1;
+            cnt++;
+        }
+    }
+
+    //============
+    //Add the elements to the EEC
+    clunky_eec_add_elements(eec, cells,this->board_size * this->board_size);
+    clunky_eec_add_elements(eec, start, 1);
 
 
     int cont = 1, k;
     int sel_indx = -1;
     while(cont){
-        printf("Start\n");
         //first thing: check to see if there have been any new events!
         clunky_event(this->event);
-        printf("EVENTED\n");
         clunky_eec_update(eec, this->event, this->window);
-        printf("UPDATED\n");
 
         if (this->event->num_input != 0){
             //print any keypresses and check for any SDL specific events
@@ -214,6 +239,21 @@ int Board::printShips(){
                 //SDL events
                 //'q' -> SDL_QUIT
                 if (this->event->input[k] == 'q') cont = 0;
+            }
+        }
+        if (eec->sum.event_type == 'S'){
+            printf("SNAP!\n");
+            int indx = clunky_indx_from_uid(eec->sum.uid_one, eec);
+            int length = eec->elements[indx]->name[1]-'0';
+            int offset = eec->elements[indx]->name[0]-'0';
+            indx = clunky_indx_from_uid(eec->sum.uid_two, eec);
+            int cellnum = eec->elements[indx]->name[0]-'0';
+            printf("$$%d, %d, %d\n", length, offset, cellnum);
+
+        }
+        else if (eec->sum.event_type == 'C'){
+            if (eec->sum.eid_one == clunky_hash_gen("start\0")){
+                cont = 0;
             }
         }
         //Update the window!

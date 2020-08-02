@@ -16,7 +16,7 @@ struct Ship_Assets{
 
 };
 
-int init_ship(struct Ship_Assets *s, struct Clunky_Window *w);
+int init_ship(float scale, struct Ship_Assets *s, struct Clunky_Window *w);
 
 struct Clunky_Event_Element **generate_ship(int length, int color, struct Clunky_Event_Element_Container *eec, struct Ship_Assets s);
 
