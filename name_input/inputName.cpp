@@ -2,9 +2,11 @@
 #include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <iostream>
-#include "clunkyCore.h"
-#include "clunkyHash.h"
-#include "clunkyEventElements.h"
+#include <cassert>
+#include <cstring>
+#include "../clunky_gl/clunkyCore.h"
+#include "../clunky_gl/clunkyHash.h"
+#include "../clunky_gl/clunkyEventElements.h"
 
 int main(int argc, char *argv[]){
 
@@ -49,20 +51,14 @@ int main(int argc, char *argv[]){
         printf("%c, (%d, %d)\n", text2->str[i], text2->str_row[i], text2->str_col[i]);
     }
 
-    
 
-    // string for name input
-    std::string inputName = "TEXT";
-    // Start accepting text input
-    SDL_StartTextInput();
-
-   
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
         clunky_eec_update(eec, &event, &window);
         clunky_render_text(text, &window);
         clunky_render_text(text2, &window);
+        //clunky_render_text(text3, &window);
 
         if (event.num_input != 0){
             //print any keypresses and check for any SDL specific events 
@@ -75,6 +71,9 @@ int main(int argc, char *argv[]){
                 //SDL events
                 //'q' -> SDL_QUIT
                 if (event.input[k] == 'q') cont = 0;
+
+                if (event.input[k] == '`') printf("Name: %s\n", eec->sum.str);
+            
             }
 
         }
