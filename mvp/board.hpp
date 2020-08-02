@@ -24,6 +24,7 @@ class Board{
         Board(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window);
         int run();
         int init();
+        int empty();
 };
 
 

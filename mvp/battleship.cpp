@@ -41,7 +41,8 @@ int main(int argc, char *argv[]) {
         printf("Made the board\n");
         b->init();
         printf("Board Init'd\n");
-        b->run();
+//        b->run();
+        b->empty();
 
     }
 

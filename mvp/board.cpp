@@ -146,6 +146,34 @@ int Board::init(){
 
 }
 
+int Board::empty(){
+    int cont = 1, k;
+    int sel_indx = -1;
+    while(cont){
+        //first thing: check to see if there have been any new events!
+        clunky_event(this->event);
+        clunky_eec_update(this->eec, this->event, this->window);
+
+        if (this->event->num_input != 0){
+            //print any keypresses and check for any SDL specific events
+            //(such as SDL_QUIT)
+            for(k = 0; k < this->event->num_input; k++){
+                printf(">>%c\n", this->event->input[k]);
+
+                //all user keypressed are represented by either a number or
+                //a capital letter. lowercase letters I've reserved for
+                //SDL events
+                //'q' -> SDL_QUIT
+                if (this->event->input[k] == 'q') cont = 0;
+            }
+        }
+        //Update the window!
+        clunky_present_window(this->window);
+    }
+
+    return 0;
+}
+
 int Board::run(){
 
     struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));

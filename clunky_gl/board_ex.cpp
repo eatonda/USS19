@@ -91,12 +91,10 @@ int main(int argc, char *argv[]){
     //attempt at testing grouping
     int gid = clunky_create_group(500, 200, eec);
     printf("^^%d\n", gid);
-    printf("%d, %d\n", eec->num_groups, eec->groups[gid].num_ele);
     eec_addto_group(ele1, gid, 0, 0, eec);
     eec_addto_group(ele2, gid, -100, 0, eec);
     eec_addto_group(ele3, gid, -200, 0, eec);
 
-    printf("%d, %d\n", eec->num_groups, eec->groups[gid].num_ele);
 
     //create a clunky text object!
     struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 0.5, &window);

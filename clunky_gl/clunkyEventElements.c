@@ -196,7 +196,6 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //init the groups
     for (int i = 0; i < 16; i++){
         eec->groups[i].calling_uid = -1;
-        eec->groups[i].num_ele = 0;
     }
 
     eec->num_groups = 0;
@@ -805,8 +804,6 @@ int eec_addto_group(struct Clunky_Event_Element *ele, int gid, int x_off, int y_
     //first, make sure the GID is valid
     if (gid < 0 || gid >= eec->num_groups) return -1;
 
-    //make sure there is space in the group (bc im lazy and hared coded this)
-    if (eec->groups[gid].num_ele >= 16) return -1;
 
     //change the elements gid
     ele->gid = gid;

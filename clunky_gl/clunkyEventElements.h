@@ -8,7 +8,6 @@ struct Clunky_Movement_Group{
     int calling_uid;
     int gx;
     int gy;
-    int num_ele;
 };
 
 struct Clunky_Event_Summary{
