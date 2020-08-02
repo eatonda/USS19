@@ -739,6 +739,8 @@ int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e
         }
     }
 
+    sum->str[sum->str_used] = '\0';
+
 
     return 0;
 }

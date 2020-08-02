@@ -4,6 +4,16 @@
 #ifndef CLUNKYEVENTELEMENTS_H
 #define CLUNKYEVENTELEMENTS_H
 
+struct Clunky_Movement_Group{
+    int calling_uid;
+    int mx;
+    int my;
+
+    int offset[16];
+    int lookup[16];
+    int num_ele;
+};
+
 struct Clunky_Event_Summary{
 
     char *str;
