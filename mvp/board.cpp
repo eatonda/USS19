@@ -169,14 +169,17 @@ int Board::placeShips(){
     clunky_init_sprite(2, 10, shipT, ship_S);
 
     struct Clunky_Event_Element **ships= (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
-    *ships = clunky_dragable_element_init(ship_S, 400, 400, 1, "ship");
-    //clunky_element_init(*ships, ship_S, 100, 436, 0, "ship\0", 'D', 'N');
-    //struct Clunky_Event_Element *ship = clunky_dragable_element_init(&shipS, 500, 200, 0, "ship");
+    *ships = clunky_dragable_element_init(ship_S, 400, 400, 0, "ship");
     clunky_event_element_update_z(*ships, 3, this->eec);
 
-    (ship_S)->sprite_column = 4;
+    struct Clunky_Event_Element **ships_m= (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *ships_m = clunky_dragable_element_init(ship_S, 500, 500, 0, "ship");
+    clunky_event_element_update_z(*ships_m, 3, this->eec);
+
+    //(ship_S)->sprite_column = 10;
 
     clunky_eec_add_elements(this->eec, ships, 1);
+    clunky_eec_add_elements(this->eec, ships_m, 1);
 
     /*
     struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
