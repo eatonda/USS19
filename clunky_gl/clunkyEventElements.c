@@ -61,6 +61,9 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     //set the row number
     b->row = row;
 
+    //defgault GID
+    b->gid = -1;
+
     //get the max column count
     b->col_max = s->texture->width  / s->cell.w;
 
@@ -190,6 +193,14 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     eec->elements = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_ele);
     eec->snaps = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * eec->len_snaps);
 
+    //init the groups
+    for (int i = 0; i < 16; i++){
+        eec->groups[i].calling_uid = -1;
+        eec->groups[i].num_ele = 0;
+    }
+
+    eec->num_groups = 0;
+
     return 0;
 }
 
@@ -273,6 +284,7 @@ int insertion_helper(struct Clunky_Event_Element_Container *eec, struct Clunky_E
         //add the element to the head position
         eec->num_ele++;
         eec->elements[0] = ele;
+        return 0;
     }
 
     //if the number of elements currently in the array + 1 (the new element) >= length
@@ -324,6 +336,8 @@ int clunky_eec_add_elements(struct Clunky_Event_Element_Container *eec, struct C
             if ( eec->num_snaps  >= eec->len_snaps ) clunky_eec_grow(eec);
         }
     }
+
+    printf("--%d\n", eec->num_ele);
 
 
     return 0;
@@ -446,7 +460,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     clunky_capture_text(&(eec->sum), e);
 
     //we need to now loop through every element in the eec
-    for (i = eec->num_ele-1; i > 0; i--){
+    for (i = eec->num_ele-1; i >= 0; i--){
         //check to see if we are ignoring to update this element
         if (eec->elements[i]->ignore) continue;
 
@@ -528,6 +542,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                     //update the x, y coords of the element
                     eec->elements[i]->x = e->mx - e->dx;
                     eec->elements[i]->y = e->my - e->dy;
+
+                    eec_update_group(eec->elements[i], eec);
                 }
                 
 
@@ -547,8 +563,12 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
     clunky_eec_mergesort(eec);
     for (i = 0; i < eec->num_ele; i++){
         //now render the element to the window
+        group_element_update(eec->elements[i], eec);
         clunky_element_render(eec->elements[i], w);
     }
+
+    //set the calling UID's to -1
+    for (int j = 0; j < eec->num_groups; j++) eec->groups[j].calling_uid = -1;
     
 //    clunky_eec_mergesort(eec);
 
@@ -767,4 +787,73 @@ int clunky_indx_from_uid(int uid, struct Clunky_Event_Element_Container *eec){
     return -1;
 }
     
+int clunky_create_group(int x, int y, struct Clunky_Event_Element_Container *eec){
+    //if there is currently no more spcace for groups 
+    //since we're curently hard coding the limit
+    //return -1
+    if (eec->num_groups >= 16) return -1;
 
+    eec->groups[eec->num_groups].gx = x;
+    eec->groups[eec->num_groups].gy = y;
+
+    //other wise return the next gid and incriment the coutner
+    return eec->num_groups++;
+}
+
+int eec_addto_group(struct Clunky_Event_Element *ele, int gid, int x_off, int y_off, struct Clunky_Event_Element_Container *eec){
+    printf("ADD TO GROUP START\n");
+    //first, make sure the GID is valid
+    if (gid < 0 || gid >= eec->num_groups) return -1;
+
+    //make sure there is space in the group (bc im lazy and hared coded this)
+    if (eec->groups[gid].num_ele >= 16) return -1;
+
+    //change the elements gid
+    ele->gid = gid;
+    ele->gx_off = x_off;
+    ele->gy_off = y_off;
+
+
+    printf("ADD TO GROUP END %d\n", ele->uid);
+
+    return 0;
+}
+
+int eec_update_group(struct Clunky_Event_Element *ele,struct Clunky_Event_Element_Container *eec){
+    printf("EUG START GID: %d\n", ele->gid);
+    //make sure the element is in a group
+    if (ele->gid < 0) return -1;
+
+    eec->groups[ele->gid].gx = ele->x - ele->gx_off; 
+    eec->groups[ele->gid].gy = ele->y - ele->gy_off;
+    eec->groups[ele->gid].calling_uid = ele->uid;
+
+    printf("EUG END\n");
+
+    return 1;
+}
+
+int group_element_update(struct Clunky_Event_Element *ele,struct Clunky_Event_Element_Container *eec){
+//    printf("GEU START\n");
+    //check to see if the element is in a group
+    if (ele->gid < 0 || ele->gid > eec->num_groups) return -1;
+    
+    //check to see if there is a group movement update
+    if (eec->groups[ele->gid].calling_uid < 0) return -1;
+
+    //check to see if this element triggered the move
+    if (eec->groups[ele->gid].calling_uid == ele->uid){
+        //reset the calling uid
+      //  eec->groups[gid].calling_uid = -1;
+        return 0;
+    }
+
+    //ok, at this point we need to update x/y positions of the element!
+    ele->x = eec->groups[ele->gid].gx + ele->gx_off;
+    ele->y = eec->groups[ele->gid].gy + ele->gy_off;
+
+  //  printf("GEU END\n");
+
+    return 1;
+
+}

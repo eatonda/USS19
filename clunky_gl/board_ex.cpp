@@ -66,7 +66,9 @@ int main(int argc, char *argv[]){
 
     struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 500, 200, 0, "ppd");
 
-
+    struct Clunky_Event_Element *ele1 = clunky_dragable_element_init(&pp_spr, 500, 200, 0, "ppd");
+    struct Clunky_Event_Element *ele2 = clunky_dragable_element_init(&pp_spr, 400, 200, 0, "ppd");
+    struct Clunky_Event_Element *ele3 = clunky_dragable_element_init(&pp_spr, 300, 200, 0, "ppd");
 
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
@@ -74,12 +76,27 @@ int main(int argc, char *argv[]){
     //init the eec
     clunky_eec_init(eec);
     printf(">>>>>\n");
-    clunky_eec_add_elements(eec, cells, 25);
-    clunky_eec_add_elements(eec, &ppd, 1);
+//    clunky_eec_add_elements(eec, cells, 25);
+//    clunky_eec_add_elements(eec, &ppd, 1);    
+    clunky_eec_add_elements(eec, &ele1, 1);
+    clunky_eec_add_elements(eec, &ele2, 1);
+    clunky_eec_add_elements(eec, &ele3, 1);
     printf("ASASASASAS\n");
     //now we can begin our main loop!
     cont = 1;
     unsigned long bid;
+
+
+
+    //attempt at testing grouping
+    int gid = clunky_create_group(500, 200, eec);
+    printf("^^%d\n", gid);
+    printf("%d, %d\n", eec->num_groups, eec->groups[gid].num_ele);
+    eec_addto_group(ele1, gid, 0, 0, eec);
+    eec_addto_group(ele2, gid, -100, 0, eec);
+    eec_addto_group(ele3, gid, -200, 0, eec);
+
+    printf("%d, %d\n", eec->num_groups, eec->groups[gid].num_ele);
 
     //create a clunky text object!
     struct Clunky_Text *text = clunky_get_text(10, 10, 512, 64, 0.5, &window);
@@ -127,7 +144,7 @@ int main(int argc, char *argv[]){
             }
         }
 
-
+        printf("=%d, %d =%d, %d =%d, %d | %d\n", ele1->x, ele1->y, ele2->x, ele2->y, ele3->x, ele3->y, eec->num_ele);
         //Update the window!
         clunky_present_window(&window);
     }

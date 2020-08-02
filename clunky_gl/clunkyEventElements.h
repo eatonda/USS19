@@ -6,11 +6,8 @@
 
 struct Clunky_Movement_Group{
     int calling_uid;
-    int mx;
-    int my;
-
-    int offset[16];
-    int lookup[16];
+    int gx;
+    int gy;
     int num_ele;
 };
 
@@ -43,6 +40,9 @@ struct Clunky_Event_Element_Container{
     int len_snaps;
 
     int uid_mstr;
+
+    struct Clunky_Movement_Group groups[16];
+    int num_groups;
 
     struct Clunky_Event_Summary sum;
 
@@ -88,6 +88,10 @@ struct Clunky_Event_Element{
     int row;
     int col_max;
 
+    int gid;
+    int gx_off;
+    int gy_off;
+
 };
 
 //clunky event elements
@@ -114,5 +118,11 @@ int helper_eec_text_grow(struct Clunky_Event_Summary *sum);
 int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e);
 int clunky_clear_text(struct Clunky_Event_Summary *sum);
 int clunky_indx_from_uid(int uid, struct Clunky_Event_Element_Container *eec);
+
+//EEC groups functions
+int clunky_create_group(int x, int y, struct Clunky_Event_Element_Container *eec); //allocates space, returns GID
+int eec_addto_group(struct Clunky_Event_Element *ele, int gid, int x_off, int y_off, struct Clunky_Event_Element_Container *eec);
+int eec_update_group(struct Clunky_Event_Element *ele,struct Clunky_Event_Element_Container *eec);
+int group_element_update(struct Clunky_Event_Element *ele,struct Clunky_Event_Element_Container *eec);
 
 #endif
