@@ -39,26 +39,32 @@ int main(int argc, char *argv[]){
     unsigned long bid;
 
     //create a clunky text object!
-    struct Clunky_Text *text = clunky_get_text(130, 50, 512, 64, 1., &window);
-    clunky_replace_text(text, "PLEASE ENTER YOUR NAME\0");
-    for (int i = 0; i < text->str_used; i++){
-        printf("%c, (%d, %d)\n", text->str[i], text->str_row[i], text->str_col[i]);
+    struct Clunky_Text *text1 = clunky_get_text(225, 25, 512, 64, 1., &window);
+    clunky_replace_text(text1, "GAME OVER!\0");
+    for (int i = 0; i < text1->str_used; i++){
+        printf("%c, (%d, %d)\n", text1->str[i], text1->str_row[i], text1->str_col[i]);
     }
 
+
     struct Clunky_Text *text2 = clunky_get_text(130, 125, 512, 64, 1., &window);
-    clunky_replace_text(text2, "NAME:\0");
+    clunky_replace_text(text2, "PLEASE ENTER YOUR NAME\0");
     for (int i = 0; i < text2->str_used; i++){
         printf("%c, (%d, %d)\n", text2->str[i], text2->str_row[i], text2->str_col[i]);
     }
 
+    struct Clunky_Text *text3 = clunky_get_text(130, 200, 512, 64, 1., &window);
+    clunky_replace_text(text3, "NAME:\0");
+    for (int i = 0; i < text3->str_used; i++){
+        printf("%c, (%d, %d)\n", text3->str[i], text3->str_row[i], text3->str_col[i]);
+    }
 
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
         clunky_eec_update(eec, &event, &window);
-        clunky_render_text(text, &window);
+        clunky_render_text(text1, &window);
         clunky_render_text(text2, &window);
-        //clunky_render_text(text3, &window);
+        clunky_render_text(text3, &window);
 
         if (event.num_input != 0){
             //print any keypresses and check for any SDL specific events 
@@ -72,22 +78,30 @@ int main(int argc, char *argv[]){
                 //'q' -> SDL_QUIT
                 if (event.input[k] == 'q') cont = 0;
 
+                // Prints input into console
                 if (event.input[k] == '`') printf("Name: %s\n", eec->sum.str);
-            
             }
-
         }
- 
+
+        char* name = eec->sum.str;
+
+        // Create text
+        struct Clunky_Text *text4 = clunky_get_text(225, 200, 512, 64, 1., &window);
+        clunky_replace_text(text4, name);
+
+        // Render name to window
+        clunky_render_text(text4, &window);
+
         //Update the window!
         clunky_present_window(&window);
     }
-
 
     //Quit SDL subsystems
     SDL_Quit();
 
     return 0;
 }
+
 
         
 
