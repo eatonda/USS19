@@ -7,8 +7,11 @@
 
 struct Ship_Assets{
 
-    struct Clunky_Sprite *sprite;
-    struct Clunky_Texture *texture;
+    struct Clunky_Sprite *spriteD;
+    struct Clunky_Texture *textureD;
+
+    struct Clunky_Sprite *spriteL;
+    struct Clunky_Texture *textureL;
 
 
 };

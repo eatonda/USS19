@@ -159,7 +159,7 @@ int Board::empty(){
     init_ship(&s, this->window);
 
     generate_ship(3, 1, eec, s);
-    generate_ship(4, 1, eec, s);
+    generate_ship(4, 0, eec, s);
 
     int cont = 1, k;
     int sel_indx = -1;
