@@ -147,7 +147,7 @@ int Board::init(){
 
 }
 
-int Board::empty(){
+int Board::printShips(){
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
 
@@ -158,8 +158,18 @@ int Board::empty(){
     struct Ship_Assets s;
     init_ship(&s, this->window);
 
-    generate_ship(3, 1, eec, s);
-    generate_ship(4, 0, eec, s);
+    //Ship sizes
+    int shipSizes [] = {5, 4, 3, 2, 2, 3, 4};
+
+    struct Clunky_Event_Element **ships = NULL;
+
+    //Generating the ships
+    for(int i = 0; i < this->num_ships; i++){
+        ships = generate_ship(shipSizes[i], 1, eec, s);
+        for(int j = 0; j < shipSizes[i]; j++){
+            ships[j]->y = 64*i;
+        }
+    }
 
     struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
