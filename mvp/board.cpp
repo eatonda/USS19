@@ -161,6 +161,28 @@ int Board::empty(){
     generate_ship(3, 1, eec, s);
     generate_ship(4, 0, eec, s);
 
+    struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
+
+    //From the trexture we can create a sprite.
+    //Clunky Sprites allow for the rendering of partial sections of
+    //the texture, instead of the entire texture at once
+    struct Clunky_Sprite *water_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    //when initing a sprite, we need to give it how many ROWS and COLUMNS there
+    //are on the sprite sheet. it will do the rest
+    clunky_init_sprite(2, 5, water_tex, water_spr);
+
+    water_spr->sprite_row = 0;
+    water_spr->sprite_column = -1;
+
+    struct Clunky_Event_Element *cells = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+
+    clunky_element_init(cells, water_spr, BOARD_OFFSET_W+water_spr->ap_w, BOARD_OFFSET_H+water_spr->ap_h, this->color_theme, "water\n", 'S', 'A');
+    clunky_eec_add_elements(eec, &cells,1);
+    clunky_event_element_update_z(cells, -1, eec);
+
+
+
     int cont = 1, k;
     int sel_indx = -1;
     while(cont){

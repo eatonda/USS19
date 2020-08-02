@@ -531,6 +531,8 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
                             summary->uid_one = eec->elements[i]->uid;
                             summary->uid_two = eec->snaps[over_indx]->uid;
 
+                            eec_update_group(eec->elements[i], eec);
+
                         }
                     }
                 } 
