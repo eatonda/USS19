@@ -83,6 +83,16 @@ int Board::init(){
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 60, 436, 0, "fire\0", 'B', 'N');
 
+	// pause button element
+	struct Clunky_Texture *buttonPT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/PauseButton.bmp", buttonPT, this->window);
+    struct Clunky_Sprite *buttonP = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+    clunky_init_sprite(1, 2, buttonPT, buttonP);
+    struct Clunky_Event_Element **pause = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *pause = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*pause, buttonP, 676, 640, 0, "pause\0", 'B', 'N');
+
+
     //Delete Planning Pin Element
     struct Clunky_Texture *dpt = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/DelPlan.bmp", dpt, this->window);
@@ -135,6 +145,7 @@ int Board::init(){
     clunky_eec_add_elements(this->eec, spawn, 1);
     clunky_eec_add_elements(this->eec, aim, 1);
     clunky_eec_add_elements(this->eec, deletePlan, 1);
+	clunky_eec_add_elements(this->eec, pause, 1);
 //    clunky_eec_add_elements(this->eec, fire, 1);
     clunky_eec_add_elements(this->eec, frame, 1);
     clunky_event_element_update_z(*frame, -1, this->eec);
@@ -308,6 +319,15 @@ int Board::run(){
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 20, 436, 1, "fire\0", 'B', 'N');
 
+	// pause button element
+	struct Clunky_Texture *buttonPT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/PauseButton.bmp", buttonPT, this->window);
+    struct Clunky_Sprite *buttonP = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+    clunky_init_sprite(1, 2, buttonPT, buttonP);
+    struct Clunky_Event_Element **pause = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *pause = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*pause, buttonP, 676, 640, 0, "pause\0", 'B', 'N');
+	
 
     //the aim cursor
     struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -317,6 +337,7 @@ int Board::run(){
 
     clunky_eec_add_elements(move_eec, aim, 1);
     clunky_eec_add_elements(move_eec, fire, 1);
+	clunky_eec_add_elements(move_eec, pause, 1);
 
     struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * this->board_size * this->board_size);
     int cnt = 0;
