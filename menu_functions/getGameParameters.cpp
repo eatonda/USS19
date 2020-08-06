@@ -7,25 +7,14 @@
  */
 
 #include "getGameParameters.hpp"
-
-int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme) {
-
 /* Constants for all menu buttons */
 const int NUM_OF_SPRITE_COLS = 2;
 const int BUTTON_WIDTH = 165;
 const int BUTTON_HEIGHT = 160;
-    
-/* Constants for MAIN MENU */
-const int MAIN_MENU_NUM_OF_BUTTONS = 4;
 
-/* Constants for COLOR MENU */
-const int COLOR_MENU_NUM_OF_BUTTONS = 3;
-    
-/* Constants for SHIP MENU */
-const int SHIP_MENU_NUM_OF_BUTTONS = 4;
-    
-/* Constants for Board MENU */
-const int BOARD_MENU_NUM_OF_BUTTONS = 4;
+int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme) {
+
+
     
 /* Constants for Help MENU */
 const int HELP_MENU_NUM_OF_BUTTONS = 3;
@@ -33,132 +22,12 @@ const int HELP_MENU_NUM_OF_BUTTONS = 3;
 /* Constant for menus array */
 const int NUM_OF_MENUS = 6;
    
+    Menu* mainMenu = _getMainMenu(window);
+    Menu* colorThemeMenu = _getColorThemeMenu(window);
+    Menu* numOfShipsMenu = _getNumberOfShipsMenu(window);
+    Menu* boardDimensionsMenu = _getBoardDimensionsMenu(window);
+    
     std::string title;  // String used to initialize each menu clunky_text object
-    
-    
-                            /* CREATE MAIN MENU */
-
-    // Options for main menu
-    title = "MAIN MENU";
-    
-    
-    std::string mainMenuDescriptions [MAIN_MENU_NUM_OF_BUTTONS] = {"start", "leaderboard", "user manual", "quit"};
-    
-    int MAIN_MENU_VALUES[MAIN_MENU_NUM_OF_BUTTONS] = {0, 1, 2, 3};     // Navigates Main menu
-    int navigation; // Holds value for navigation sake
-
-    int x = getMiddle(BUTTON_WIDTH, window->width);  // Get x coordinate that centers the button
-    
-    int xCoordinates [MAIN_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
-    
-    int yOffset = window->height * 0.15;    // button height offset from other buttons in main menu, relative to window height
-    
-    int y = window->height * 0.35;        //Starting button height, relative positioning
-    
-    int yCoordinates [MAIN_MENU_NUM_OF_BUTTONS];   // Stores y coordinates for buttons of the main menu
-    for (int i = 0; i < MAIN_MENU_NUM_OF_BUTTONS; i++){
-        yCoordinates[i] = y;
-        y+= yOffset;
-    }
-
-    struct Clunky_Texture main_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/menu_assets/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
-    
-    struct Clunky_Sprite mmb;   //stores sprite image of main menu buttons
-    clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &main_menu_texture, &mmb); // Initialize sprite
-
-    struct Clunky_Event_Element_Container* main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, &mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
-    
-    
-    struct Clunky_Text* mainMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for mainMenu title
-    
-    clunky_add_text(mainMenuTitle, toC_String(title));   // Add text to clunky_text
-    
-    
-    /* Initialize a Menu object for the mainMenu*/
-    Menu* mainMenu =  new Menu(window, main_menu, MAIN_MENU_NUM_OF_BUTTONS, MAIN_MENU_VALUES, mainMenuDescriptions, mainMenuTitle);
-    
-    
-    
-                        /* CREATE COLOR MENU */
-    // For simplicity all menus will have the same y and x coordinates but they can be customized
-    
-    title = "COLOR THEME";
-    
-    // Note back must be capitalized to BACK for menu function to recognize it properly
-    std::string colorMenuDescriptions [COLOR_MENU_NUM_OF_BUTTONS] = {"0", "1", "BACK"};
-    int COLOR_MENU_VALUES [COLOR_MENU_NUM_OF_BUTTONS] = {0, 1};     // Values for color are either 0 for light and 1 for dark
-    
-
-    struct Clunky_Texture color_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/menu_assets/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
-    
-    
-    struct Clunky_Sprite cmb;   //stores sprite image of color menu buttons
-    clunky_init_sprite(COLOR_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &color_menu_texture, &cmb); // Initialize sprite
-
-    struct Clunky_Event_Element_Container* color_menu = buttonSetup(COLOR_MENU_NUM_OF_BUTTONS, colorMenuDescriptions, &cmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
-    
-    struct Clunky_Text* colorMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
-    
-    clunky_add_text(colorMenuTitle, toC_String(title));   // Add text to clunky_text
-    
-    /* Initialize a Menu object for the colorMenu*/
-    Menu* colorMenu =  new Menu(window, color_menu, COLOR_MENU_NUM_OF_BUTTONS, COLOR_MENU_VALUES, colorMenuDescriptions, colorMenuTitle);
-    
-    
-    
-                        /* CREATE SHIP MENU */
-    // For simplicity all menus will have the same y and x coordinates but they can be customized
-    
-    title = "NUMBER OF SHIPS";
-    
-    // Note back must be capitalized to BACK for menu function to recognize it properly
-    std::string shipMenuDescriptions [SHIP_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
-    int SHIP_MENU_VALUES [SHIP_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
-    
-    struct Clunky_Texture ship_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/menu_assets/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
-    
-    
-    struct Clunky_Sprite smb;   //stores sprite image of ship menu buttons
-    clunky_init_sprite(SHIP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &ship_menu_texture, &smb); // Initialize sprite
-
-    struct Clunky_Event_Element_Container* ship_menu = buttonSetup(SHIP_MENU_NUM_OF_BUTTONS, shipMenuDescriptions, &smb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
-    
-    struct Clunky_Text* shipMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for shipMenu title
-    
-    clunky_add_text(shipMenuTitle, toC_String(title));   // Add text to clunky_text
-    
-    /* Initialize a Menu object for the shipMenu*/
-    Menu* shipMenu =  new Menu(window, ship_menu, SHIP_MENU_NUM_OF_BUTTONS, SHIP_MENU_VALUES, shipMenuDescriptions, shipMenuTitle);
-    
-    
-    
-                       /* CREATE BOARD MENU */
-    // For simplicity all menus will have the same y and x coordinates but they can be customized
-    title = "BOARD SIZE";
-    
-    // Note back must be capitalized to BACK for menu function to recognize it properly
-    std::string boardMenuDescriptions [BOARD_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
-    int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
-    
-    struct Clunky_Texture board_menu_texture;
-    clunky_load_texture(toC_String("/menu_functions/menu_assets/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
-    
-    
-    struct Clunky_Sprite bmb;   //stores sprite image of board menu buttons
-    clunky_init_sprite(BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &board_menu_texture, &bmb); // Initialize sprite
-
-    struct Clunky_Event_Element_Container* board_menu = buttonSetup(BOARD_MENU_NUM_OF_BUTTONS, boardMenuDescriptions, &bmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
-    
-    struct Clunky_Text* boardMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
-    
-    clunky_add_text(boardMenuTitle, toC_String(title));   // Add text to clunky_text
-    
-    /* Initialize a Menu object for the boardMenu*/
-    Menu* boardMenu =  new Menu(window, board_menu, BOARD_MENU_NUM_OF_BUTTONS, BOARD_MENU_VALUES, boardMenuDescriptions, boardMenuTitle);
-    
     
                     /* CREATE HELP MENU */
     title = "USER MANUAL";
@@ -174,7 +43,9 @@ const int NUM_OF_MENUS = 6;
     
     // Buttons for pages should be at the bottom of the screen in a single row
     int xOffset = window->width * 0.25;
-    x = window->width * 0.20;
+    int x = window->width * 0.20;
+    int xCoordinates[HELP_MENU_NUM_OF_BUTTONS];
+    int yCoordinates[HELP_MENU_NUM_OF_BUTTONS];
     for (int i = 0; i < HELP_MENU_NUM_OF_BUTTONS; i++){
         xCoordinates[i] = x;
         x+= xOffset;
@@ -282,7 +153,7 @@ const int NUM_OF_MENUS = 6;
     Menu* scoreMenu = new Menu(window, score_menu, HELP_MENU_NUM_OF_BUTTONS, scoreMenuDescriptions, scoreMenuTitle, score_content, 1, linesPerPage);
     
     
-    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu, scoreMenu}; // Holds all menus for easy indexing
+    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorThemeMenu, numOfShipsMenu, boardDimensionsMenu, helpMenu, scoreMenu}; // Holds all menus for easy indexing
                          
                     
     //Flag that determines whether or not to go to next menu or to go back
@@ -295,7 +166,7 @@ const int NUM_OF_MENUS = 6;
     int boardCont = 1;
     
     int i = 0;
-    
+    int navigation = 0;
     
     
   // Menus Main Loop
@@ -407,3 +278,257 @@ const int NUM_OF_MENUS = 6;
 
         
             
+/*  _getMainMenu
+ Description: Returns a pointer to a dynamically allocated Main Menu
+ Parameters: struct Clunky_Window* window
+ Preconditons: window != NULL
+ Returns: Menu*
+ */
+Menu* _getMainMenu(struct Clunky_Window* window) {
+    assert(window != NULL);
+                                            /* CREATE MAIN MENU */
+    const int MAIN_MENU_NUM_OF_BUTTONS = 4;
+
+    // Options for main menu
+    std::string title = "MAIN MENU";
+    
+    
+//
+//    std::string mainMenuDescriptions [MAIN_MENU_NUM_OF_BUTTONS] = {"start", "leaderboard", "user manual", "quit"};
+//
+    std::string* mainMenuDescriptions = new std::string[MAIN_MENU_NUM_OF_BUTTONS];
+    mainMenuDescriptions[0] = "start";
+    mainMenuDescriptions[1] = "leaderboard";
+    mainMenuDescriptions[2] = "user manual";
+    mainMenuDescriptions[3] = "quit";
+
+    for (int i = 0; i < MAIN_MENU_NUM_OF_BUTTONS; i++){
+        std::cout << "get method: " << mainMenuDescriptions[i] << std::endl;
+    }
+    
+
+//    int MAIN_MENU_VALUES[MAIN_MENU_NUM_OF_BUTTONS] = {0, 1, 2, 3};     // Navigates Main menu
+    
+    int* MAIN_MENU_VALUES = new int[MAIN_MENU_NUM_OF_BUTTONS];
+    for (int i = 0; i < MAIN_MENU_NUM_OF_BUTTONS; i++){
+        MAIN_MENU_VALUES[i] = i;
+    }
+    
+    int x = getMiddle(BUTTON_WIDTH, window->width);  // Get x coordinate that centers the button
+    
+    //int xCoordinates [MAIN_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
+    int* xCoordinates = new int[MAIN_MENU_NUM_OF_BUTTONS];
+    int* yCoordinates = new int[MAIN_MENU_NUM_OF_BUTTONS];
+    int yOffset = window->height * 0.15;
+      
+    int y = window->height * 0.35;        //Starting button height, relative positioning
+  
+    //int yCoordinates [MAIN_MENU_NUM_OF_BUTTONS];
+    for (int i = 0; i <MAIN_MENU_NUM_OF_BUTTONS; i++){
+        xCoordinates[i] = x;
+        yCoordinates[i] = y;
+        y+= yOffset;
+    }
+      
+
+    struct Clunky_Texture* main_menu_texture = new struct Clunky_Texture;
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/mainMenuButtons.bmp"), main_menu_texture, window);  // Initialize texture for main menu
+    
+    struct Clunky_Sprite* mmb = new struct Clunky_Sprite;   //stores sprite image of main menu buttons
+    clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, main_menu_texture, mmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    
+    struct Clunky_Text* mainMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for mainMenu title
+    
+    clunky_add_text(mainMenuTitle, toC_String(title));   // Add text to clunky_text
+    
+    
+    /* Initialize a Menu object for the mainMenu*/
+    Menu* mainMenu = new Menu(window, main_menu, MAIN_MENU_NUM_OF_BUTTONS, MAIN_MENU_VALUES, mainMenuDescriptions, mainMenuTitle);
+    
+    
+    return mainMenu;
+    
+}
+
+
+/*  _getColorThemeMenu
+Description: Returns a pointer to a dynamically allocated Color Theme Menu
+Parameters: struct Clunky_Window* window
+Preconditons: window != NULL
+Returns: Menu*
+*/
+Menu* _getColorThemeMenu(struct Clunky_Window* window){
+    assert(window != NULL);
+    
+                                        /* CREATE COLOR MENU */
+    const int COLOR_THEME_MENU_NUM_OF_BUTTONS = 3;
+    
+    std::string title = "COLOR THEME";
+    
+    int x = getMiddle(BUTTON_WIDTH, window->width);  // Get x coordinate that centers the button
+    int xCoordinates [COLOR_THEME_MENU_NUM_OF_BUTTONS] = {x,x,x};
+    
+    int yOffset = window->height * 0.15;
+    
+    int y = window->height * 0.35;        //Starting button height, relative positioning
+    
+    int yCoordinates [COLOR_THEME_MENU_NUM_OF_BUTTONS];
+    for (int i = 0; i <COLOR_THEME_MENU_NUM_OF_BUTTONS; i++){
+        yCoordinates[i] = y;
+        y+= yOffset;
+    }
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    // Values for color are either 0 for light and 1 for dark
+    std::string* colorMenuDescriptions = new std::string[COLOR_THEME_MENU_NUM_OF_BUTTONS];
+    colorMenuDescriptions[0] = "0";
+    colorMenuDescriptions[1] = "1";
+    colorMenuDescriptions[2] = "BACK";
+    
+    
+    int* COLOR_MENU_VALUES = new int[COLOR_THEME_MENU_NUM_OF_BUTTONS];
+    COLOR_MENU_VALUES[0] = 0;
+    COLOR_MENU_VALUES[1] = 1;
+    COLOR_MENU_VALUES[2] = -42; //Filler value
+
+    struct Clunky_Texture* color_menu_texture = new struct Clunky_Texture;
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/colorMenuButtons.bmp"), color_menu_texture, window);  // Initialize texture for color menu
+    
+    
+    struct Clunky_Sprite* cmb = new Clunky_Sprite;   //stores sprite image of color menu buttons
+    clunky_init_sprite(COLOR_THEME_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, color_menu_texture, cmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* color_menu = buttonSetup(COLOR_THEME_MENU_NUM_OF_BUTTONS, colorMenuDescriptions, cmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    struct Clunky_Text* colorMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
+    
+    clunky_add_text(colorMenuTitle, toC_String(title));   // Add text to clunky_text
+    
+    /* Initialize a Menu object for the colorMenu*/
+    Menu* colorMenu =  new Menu(window, color_menu, COLOR_THEME_MENU_NUM_OF_BUTTONS, COLOR_MENU_VALUES, colorMenuDescriptions, colorMenuTitle);
+    
+    return colorMenu;
+}
+
+
+
+/*  _getNumberOfShipsMenu
+Description: Returns a pointer to a dynamically allocated numberOfShips Menu
+Parameters: struct Clunky_Window* window
+Preconditons: window != NULL
+Returns: Menu*
+*/
+Menu* _getNumberOfShipsMenu(struct Clunky_Window* window){
+    assert(window != NULL);
+                                        /* CREATE SHIP MENU */
+    const int SHIP_MENU_NUM_OF_BUTTONS = 4;
+    
+    std::string title = "NUMBER OF SHIPS";
+    
+    int x = getMiddle(BUTTON_WIDTH, window->width);  // Get x coordinate that centers the button
+    int xCoordinates [SHIP_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
+   
+    int yOffset = window->height * 0.15;
+   
+    int y = window->height * 0.35;
+   
+    int yCoordinates [SHIP_MENU_NUM_OF_BUTTONS];
+    for (int i = 0; i < SHIP_MENU_NUM_OF_BUTTONS; i++){
+       yCoordinates[i] = y;
+       y+= yOffset;
+    }
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    std::string* shipMenuDescriptions = new std::string[SHIP_MENU_NUM_OF_BUTTONS];
+    shipMenuDescriptions[0] = "5";
+    shipMenuDescriptions[1] = "7";
+    shipMenuDescriptions[2] = "10";
+    shipMenuDescriptions[3] = "BACK";
+    
+    int* SHIP_MENU_VALUES = new int[SHIP_MENU_NUM_OF_BUTTONS];
+    SHIP_MENU_VALUES[0] = 5;
+    SHIP_MENU_VALUES[1] = 7;
+    SHIP_MENU_VALUES[2] = 10;     // Values for numOfShips
+
+    struct Clunky_Texture* ship_menu_texture = new struct Clunky_Texture;
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/shipMenuButtons.bmp"), ship_menu_texture, window);
+    
+    struct Clunky_Sprite* smb = new struct Clunky_Sprite;
+    clunky_init_sprite(SHIP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, ship_menu_texture, smb);
+
+    struct Clunky_Event_Element_Container* ship_menu = buttonSetup(SHIP_MENU_NUM_OF_BUTTONS, shipMenuDescriptions, smb, xCoordinates, yCoordinates);
+    
+    struct Clunky_Text* shipMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);
+    
+    clunky_add_text(shipMenuTitle, toC_String(title));
+    
+    /* Initialize a Menu object for the shipMenu*/
+    Menu* shipMenu =  new Menu(window, ship_menu, SHIP_MENU_NUM_OF_BUTTONS, SHIP_MENU_VALUES, shipMenuDescriptions, shipMenuTitle);
+    
+    return shipMenu;
+    
+}
+
+
+/*  _getBoardDimensionsMenu
+Description: Returns a pointer to a dynamically allocated Board Dimensions  Menu
+Parameters: struct Clunky_Window* window
+Preconditons: N/A
+Returns: Menu*
+*/
+Menu* _getBoardDimensionsMenu(struct Clunky_Window* window){
+                                    /* CREATE BOARD MENU */
+    const int BOARD_MENU_NUM_OF_BUTTONS = 4;
+    
+    std::string title = "BOARD SIZE";
+    
+    int x = getMiddle(BUTTON_WIDTH, window->width);
+    int xCoordinates [BOARD_MENU_NUM_OF_BUTTONS] = {x,x,x,x};
+    
+     int yOffset = window->height * 0.15;
+    
+     int y = window->height * 0.35;
+    
+     int yCoordinates [BOARD_MENU_NUM_OF_BUTTONS];
+     for (int i = 0; i < BOARD_MENU_NUM_OF_BUTTONS; i++){
+        yCoordinates[i] = y;
+        y+= yOffset;
+     }
+     
+    
+    // Note back must be capitalized to BACK for menu function to recognize it properly
+    std::string* boardMenuDescriptions = new std::string[BOARD_MENU_NUM_OF_BUTTONS];
+    boardMenuDescriptions[0] = "5";
+    boardMenuDescriptions[1] = "7";
+    boardMenuDescriptions[2] = "10";
+    boardMenuDescriptions[3] = "BACK";
+    
+    // Values for both width and height, square board.
+    int* BOARD_MENU_VALUES = new int[BOARD_MENU_NUM_OF_BUTTONS];
+    BOARD_MENU_VALUES[0] = 5;
+    BOARD_MENU_VALUES[1] = 7;
+    BOARD_MENU_VALUES[2] = 10;
+    
+    
+    struct Clunky_Texture* board_menu_texture = new struct Clunky_Texture;
+    clunky_load_texture(toC_String("/menu_functions/menu_assets/boardMenuButtons.bmp"), board_menu_texture, window);  // Initialize texture for board menu
+    
+    
+    struct Clunky_Sprite* bmb = new struct Clunky_Sprite;   //stores sprite image of board menu buttons
+    clunky_init_sprite(BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, board_menu_texture, bmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* board_menu = buttonSetup(BOARD_MENU_NUM_OF_BUTTONS, boardMenuDescriptions, bmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    struct Clunky_Text* boardMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for colorMenu title
+    
+    clunky_add_text(boardMenuTitle, toC_String(title));   // Add text to clunky_text
+    
+    /* Initialize a Menu object for the boardMenu*/
+    Menu* boardMenu =  new Menu(window, board_menu, BOARD_MENU_NUM_OF_BUTTONS, BOARD_MENU_VALUES, boardMenuDescriptions, boardMenuTitle);
+    
+    return boardMenu;
+}
+
