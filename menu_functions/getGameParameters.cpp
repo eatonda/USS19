@@ -23,7 +23,8 @@ int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event,
     Menu* colorThemeMenu = _getColorThemeMenu(window);
     Menu* numberOfShipsMenu = _getNumberOfShipsMenu(window);
     Menu* boardDimensionsMenu = _getBoardDimensionsMenu(window);
-    Menu* userManual = _getUserManual(window);
+    //Menu* userManual = _getUserManual(window);
+    
     Menu* leaderboard = _getLeaderBoard(window);
     
     Menu* menus[NUM_OF_MENUS] = {mainMenu, colorThemeMenu, numberOfShipsMenu, boardDimensionsMenu, userManual, leaderboard};
@@ -184,7 +185,7 @@ Menu* _getMainMenu(struct Clunky_Window* window) {
 
 //    int MAIN_MENU_VALUES[MAIN_MENU_NUM_OF_BUTTONS] = {0, 1, 2, 3};     // Navigates Main menu
     
-    int* MAIN_MENU_VALUES = (int*)malloc(sizeof(int) * MAIN_MENU_NUM_OF_BUTTONS);
+    int* MAIN_MENU_VALUES = new int[MAIN_MENU_NUM_OF_BUTTONS];
     for (int i = 0; i < MAIN_MENU_NUM_OF_BUTTONS; i++){
         MAIN_MENU_VALUES[i] = i;
     }
@@ -476,7 +477,6 @@ Menu* _getUserManual(struct Clunky_Window* window){
         printf(">>%d, %d\n", i, manualStrings->size());  // Trace statement
         user_manual_content[i] = clunky_get_text(window->width * 0.05, lineY, window->width * 0.9, window->height * 0.10, 1.0, window);
         //printf("===\n");
-        //clunky_add_text(content[i], toC_String(words[i]));
         clunky_add_text(user_manual_content[i], manualStrings->at(i));
         //printf("++++\n");
         lineY+= lineOffset;
