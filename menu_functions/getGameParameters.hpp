@@ -10,17 +10,17 @@
 
 int getGameParameters( struct Clunky_Window* window, struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme); //Runs menus required to initialize game parameters in main via reference
 
-Menu* _getMainMenu();
+Menu* _getMainMenu(struct Clunky_Window* window);
 
-Menu* _getColorThemeMenu();
+Menu* _getColorThemeMenu(struct Clunky_Window* window);
 
-Menu* _getNumberOfShipsMenu();
+Menu* _getNumberOfShipsMenu(struct Clunky_Window* window);
 
-Menu* _getBoardDimensionsMenu();
+Menu* _getBoardDimensionsMenu(struct Clunky_Window* window);
 
-Menu* _getUserManual();
+Menu* _getUserManual(struct Clunky_Window* window);
 
-Menu* _getLeaderBoard();
+Menu* _getLeaderBoard(struct Clunky_Window* window);
 
 
 
