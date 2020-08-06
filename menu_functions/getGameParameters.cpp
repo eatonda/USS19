@@ -23,7 +23,7 @@ int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event,
     Menu* colorThemeMenu = _getColorThemeMenu(window);
     Menu* numberOfShipsMenu = _getNumberOfShipsMenu(window);
     Menu* boardDimensionsMenu = _getBoardDimensionsMenu(window);
-    //Menu* userManual = _getUserManual(window);
+    Menu* userManual = _getUserManual(window);
     
     Menu* leaderboard = _getLeaderBoard(window);
     
