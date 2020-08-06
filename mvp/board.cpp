@@ -5,6 +5,7 @@
 #include "../clunky_gl/clunkyEventElements.h"
 #include "../clunky_gl/clunkyHash.h"
 #include "ship.h"
+#include "pause_menu/pauseMenu.hpp"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 700;
@@ -484,7 +485,7 @@ int Board::run(){
                                             break;
                                         }
                                     }
-                                    else{
+									else{
                                         //this should be a selection cell
                                         //set all cells that have been revliusly selected, back to unselected
                                         for (int j = 0; j < this->board_size * this->board_size; j++){
@@ -505,6 +506,11 @@ int Board::run(){
                             clunky_present_window(this->window);
                         }
                     }
+					else if (this->eec->sum.eid_one == clunky_hash_gen("pause\0")){
+						printf("Pause button clicked\n");
+						getPauseSelection(this->window, this->event); 
+					}
+
                 }
                 else if (this->eec->sum.event_type == 'S'){
                     printf("SNAP!\n");
