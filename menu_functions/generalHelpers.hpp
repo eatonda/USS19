@@ -17,7 +17,7 @@ int getMiddle(int imageDimension, int windowDimension); //Calculates middle of s
 
 void clunkifyStr(char* str); //Replaces invalid characters with white space characters ' '
 
-void fileToStrings(std::string path, std::vector<char*> &vector);  //Converts a text file into an vector of c strings
+void fileToStrings(std::string path, std::vector<char*> *vector);  //Converts a text file into an vector of c strings
 
 #endif /* generalHelpers_hpp */
 

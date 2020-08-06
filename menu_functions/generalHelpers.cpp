@@ -82,7 +82,7 @@ void clunkifyStr(char* str){
  Parameters: std::string path, std::vector<std::string> &vect
  Preconditions: vector != NULL, text must be Clunky_Text characters
  */
-void fileToStrings(std::string path, std::vector<char*> &vect){
+void fileToStrings(std::string path, std::vector<char*> *vect){
     
     
     std::string line;   // Holds read in line of text from file
@@ -100,7 +100,7 @@ void fileToStrings(std::string path, std::vector<char*> &vect){
             
             printf("clunkified string %s\n", cString);   //Trace Statement
             
-            vect.push_back(cString);   //Add clunky string to vect
+            vect->push_back(cString);   //Add clunky string to vect
         }
     } else {
         std::cout << "Error cannot open " << path << std::endl;

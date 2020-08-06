@@ -100,6 +100,13 @@ void Menu::_displayPage(struct Clunky_Event* event, int pageNum){
 */
 int Menu::run(struct Clunky_Event* event, int* userInput) {
     int userChoice = -2;    //Stores user's selection
+    
+    for(int i = 0; i < 4; i++) {
+        std::cout << "RUN: " << optionNames[i] << std::endl;
+        std::cout << "Value:" << values[i] << std::endl;
+    }
+    
+    std::cout << "Number Of Options: " << numOfOptions << std::endl;    
 
     while(true) {
         

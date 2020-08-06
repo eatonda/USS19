@@ -51,6 +51,7 @@ int _getMouseClick(struct Clunky_Event_Element_Container* menuOptions, int numOf
     
     for (int i = 0; i < numOfOptions; i++) {
         if (menuOptions->sum.event_type != 'N' && menuOptions->sum.eid_one == clunky_hash_gen(toC_String(optionNames[i]))) {
+            std::cout << "MATCH\n\n";
             // Check for back option
             if (optionNames[i] == "BACK" || optionNames[i] == "MAIN MENU") {
                 return numOfOptions;    // To signal back was selected
