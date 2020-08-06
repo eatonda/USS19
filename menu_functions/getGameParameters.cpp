@@ -7,25 +7,14 @@
  */
 
 #include "getGameParameters.hpp"
-
-int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme) {
-
 /* Constants for all menu buttons */
 const int NUM_OF_SPRITE_COLS = 2;
 const int BUTTON_WIDTH = 165;
 const int BUTTON_HEIGHT = 160;
-    
-/* Constants for MAIN MENU */
-const int MAIN_MENU_NUM_OF_BUTTONS = 4;
 
-/* Constants for COLOR MENU */
-const int COLOR_MENU_NUM_OF_BUTTONS = 3;
-    
-/* Constants for SHIP MENU */
-const int SHIP_MENU_NUM_OF_BUTTONS = 4;
-    
-/* Constants for Board MENU */
-const int BOARD_MENU_NUM_OF_BUTTONS = 4;
+int getGameParameters(struct Clunky_Window* window,  struct Clunky_Event* event, int* dimensions, int* numOfShips, int* colorTheme) {
+
+
     
 /* Constants for Help MENU */
 const int HELP_MENU_NUM_OF_BUTTONS = 3;
@@ -33,12 +22,12 @@ const int HELP_MENU_NUM_OF_BUTTONS = 3;
 /* Constant for menus array */
 const int NUM_OF_MENUS = 6;
    
+    Menu* mainMenu = _getMainMenu(window);
+    Menu* colorThemeMenu = _getColorThemeMenu(window);
+    Menu* numOfShipsMenu = _getNumberOfShipsMenu(window);
+    Menu* boardDimensionsMenu = _getBoardDimensionsMenu(window);
+    
     std::string title;  // String used to initialize each menu clunky_text object
-    
-    
-                            /* CREATE MAIN MENU */
-
-   
     
                     /* CREATE HELP MENU */
     title = "USER MANUAL";
@@ -54,7 +43,9 @@ const int NUM_OF_MENUS = 6;
     
     // Buttons for pages should be at the bottom of the screen in a single row
     int xOffset = window->width * 0.25;
-    x = window->width * 0.20;
+    int x = window->width * 0.20;
+    int xCoordinates[HELP_MENU_NUM_OF_BUTTONS];
+    int yCoordinates[HELP_MENU_NUM_OF_BUTTONS];
     for (int i = 0; i < HELP_MENU_NUM_OF_BUTTONS; i++){
         xCoordinates[i] = x;
         x+= xOffset;
@@ -162,7 +153,7 @@ const int NUM_OF_MENUS = 6;
     Menu* scoreMenu = new Menu(window, score_menu, HELP_MENU_NUM_OF_BUTTONS, scoreMenuDescriptions, scoreMenuTitle, score_content, 1, linesPerPage);
     
     
-    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu, scoreMenu}; // Holds all menus for easy indexing
+    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorThemeMenu, numOfShipsMenu, boardDimensionsMenu, helpMenu, scoreMenu}; // Holds all menus for easy indexing
                          
                     
     //Flag that determines whether or not to go to next menu or to go back
@@ -175,7 +166,7 @@ const int NUM_OF_MENUS = 6;
     int boardCont = 1;
     
     int i = 0;
-    
+    int navigation = 0;
     
     
   // Menus Main Loop
