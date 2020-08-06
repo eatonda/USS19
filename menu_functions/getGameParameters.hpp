@@ -18,6 +18,10 @@ Menu* _getNumberOfShipsMenu();
 
 Menu* _getBoardDimensionsMenu();
 
+Menu* _getUserManual();
+
+Menu* _getLeaderBoard();
+
 
 
 
