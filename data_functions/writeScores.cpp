@@ -16,14 +16,12 @@ void writeScores(std::vector<std::vector<std::string>> scores) {
 
 	const std::string scoreFilePath = "../data/high_scores/scores.txt";
 
-	// open the high scores file to overwrite it with the new high scores
 	std::ofstream scoresFile;
 
-	// delete the contents of the file and write in the new scores
+	// open the high scores file and allow overwriting
 	scoresFile.open(scoreFilePath, std::ofstream::out | std::ofstream::trunc);
 
-	// this function does nothing if the scores file could not be
-	// successfully opened
+	// write in new scores	
 	if (scoresFile.is_open()) {
 
 		// write in each of the scores
