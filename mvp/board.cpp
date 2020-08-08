@@ -508,7 +508,11 @@ int Board::run(){
                     }
 					else if (this->eec->sum.eid_one == clunky_hash_gen("pause\0")){
 						printf("Pause button clicked\n");
-						getPauseSelection(this->window, this->event); 
+						int pauseVal = getPauseSelection(this->window, this->event); 
+						// 1 indicates game restart, 2 indicates exit game
+						if (pauseVal == 1 || pauseVal == 2) {
+							return pauseVal;
+						}
 					}
 
                 }
