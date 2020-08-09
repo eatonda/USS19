@@ -44,8 +44,8 @@ GameCore::GameCore(int size, int color, int ships, struct Clunky_Event *event, s
 int GameCore::init(){
     //setup the board elements
     //Now we will load the texture that contains all of our main menu buttons
-    struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
+    // struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
 
     //From the trexture we can create a sprite.
     //Clunky Sprites allow for the rendering of partial sections of
@@ -53,41 +53,41 @@ int GameCore::init(){
     struct Clunky_Sprite *water_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(2, 5, water_tex, water_spr);
+    clunky_init_sprite(2, 5, "./clunky_assets/Water.bmp", water_spr, this->window);
 
     water_spr->sprite_row = 0;
     water_spr->sprite_column = -1;
 
-    struct Clunky_Texture *buttonT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/PlanButton.bmp", buttonT, this->window);
+    // struct Clunky_Texture *buttonT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/PlanButton.bmp", buttonT, this->window);
     struct Clunky_Sprite *button  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 2, buttonT, button);
+    clunky_init_sprite(1, 2, "./clunky_assets/PlanButton.bmp", button, this->window);
     struct Clunky_Event_Element **spawn = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *spawn = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*spawn, button, 20, 436, 0, "plan\0", 'B', 'N');
 
 
-    struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
+    // struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
     struct Clunky_Sprite *buttonA  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(2, 2, buttonAT, buttonA);
+    clunky_init_sprite(2, 2, "./clunky_assets/AimButton.bmp", buttonA, this->window);
     struct Clunky_Event_Element **aim = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *aim = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*aim, buttonA, 144, 436, 0, "aim\0", 'B', 'N');
 
-    struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
+    // struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
     struct Clunky_Sprite *buttonF = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
-    clunky_init_sprite(2, 2, buttonFT, buttonF);
+    clunky_init_sprite(2, 2, "./clunky_assets/FireButton.bmp", buttonF, this->window);
     struct Clunky_Event_Element **fire = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 60, 436, 0, "fire\0", 'B', 'N');
 
     //Delete Planning Pin Element
-    struct Clunky_Texture *dpt = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/DelPlan.bmp", dpt, this->window);
+    // struct Clunky_Texture *dpt = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/DelPlan.bmp", dpt, this->window);
     struct Clunky_Sprite *dps = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
-    clunky_init_sprite(1, 1, dpt, dps);
+    clunky_init_sprite(1, 1, "./clunky_assets/DelPlan.bmp", dps, this->window);
     struct Clunky_Event_Element **deletePlan = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *deletePlan = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*deletePlan, dps, 84, 436, 0, "remPlan\0", 'S', 'N');
@@ -97,10 +97,10 @@ int GameCore::init(){
 //    struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
  //   clunky_init_sprite(1, 1, pp_tex, pp_spr);
 
-    struct Clunky_Texture *frameT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Frame.bmp", frameT, this->window);
+    // struct Clunky_Texture *frameT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Frame.bmp", frameT, this->window);
     struct Clunky_Sprite *frameS  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 1, frameT, frameS);
+    clunky_init_sprite(1, 1, "./clunky_assets/Frame.bmp", frameS, this->window);
     struct Clunky_Event_Element **frame = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *frame = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     struct Clunky_Event_Element **frameP = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
@@ -171,8 +171,8 @@ int GameCore::printShips(){
         }
     }
 
-    struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
+    // struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Water.bmp", water_tex, this->window);
 
     //From the trexture we can create a sprite.
     //Clunky Sprites allow for the rendering of partial sections of
@@ -180,14 +180,14 @@ int GameCore::printShips(){
     struct Clunky_Sprite *water_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(2, 5, water_tex, water_spr);
+    clunky_init_sprite(2, 5, "./clunky_assets/Water.bmp", water_spr, this->window);
 
     water_spr->sprite_row = 0;
     water_spr->sprite_column = -1;
     clunky_sprite_scale(this->board_scale, water_spr);
 
-    struct Clunky_Texture *startBtnT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/StartButton.bmp", startBtnT, this->window);
+    // struct Clunky_Texture *startBtnT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/StartButton.bmp", startBtnT, this->window);
 
     //From the trexture we can create a sprite.
     //Clunky Sprites allow for the rendering of partial sections of
@@ -195,7 +195,7 @@ int GameCore::printShips(){
     struct Clunky_Sprite *startBtnS = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(1, 2, startBtnT, startBtnS);
+    clunky_init_sprite(1, 2, "./clunky_assets/StartButton.bmp", startBtnS, this->window);
     struct Clunky_Event_Element **start = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *start = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*start, startBtnS, 900, 300, 0, "start\0", 'B', 'N');
@@ -249,6 +249,7 @@ int GameCore::printShips(){
             indx = clunky_indx_from_uid(eec->sum.uid_two, eec);
             int cellnum = eec->elements[indx]->name[0]-'0';
             printf("$$%d, %d, %d\n", length, offset, cellnum);
+            //HERE !!
 
         }
         else if (eec->sum.event_type == 'C'){
@@ -265,17 +266,17 @@ int GameCore::printShips(){
 
 int GameCore::run(){
 
-    struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
+    // struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);
     struct Clunky_Sprite *pp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 1, pp_tex, pp_spr);
+    clunky_init_sprite(1, 1, "./clunky_assets/PlanningPin.bmp", pp_spr, this->window);
     clunky_sprite_scale(this->board_scale, pp_spr);
 
     //missed pin
-    struct Clunky_Texture *mp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Pins.bmp", mp_tex, this->window);
+    // struct Clunky_Texture *mp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Pins.bmp", mp_tex, this->window);
     struct Clunky_Sprite *mp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(2, 1, mp_tex, mp_spr);
+    clunky_init_sprite(2, 1, "./clunky_assets/Pins.bmp", mp_spr, this->window);
     clunky_sprite_scale(this->board_scale, mp_spr);
 
     //setup the EEC user move colector overlay
@@ -283,37 +284,37 @@ int GameCore::run(){
     clunky_eec_init(move_eec);
 
     //need to create the selector sprite sheets
-    struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Selector.bmp", sel_tex, this->window);
+    // struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Selector.bmp", sel_tex, this->window);
     struct Clunky_Sprite *sel_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(3, 2, sel_tex, sel_spr);
+    clunky_init_sprite(3, 2, "./clunky_assets/Selector.bmp", sel_spr, this->window);
     clunky_sprite_scale(this->board_scale, sel_spr);
 
     //aim button element
-    struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
+    // struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, this->window);
     struct Clunky_Sprite *buttonA  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(2, 2, buttonAT, buttonA);
+    clunky_init_sprite(2, 2, "./clunky_assets/AimButton.bmp", buttonA, this->window);
     struct Clunky_Event_Element **aim = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *aim = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*aim, buttonA, 144, 436, 1, "aim\0", 'B', 'N');
     (*aim)->misc = 1;
 
     //fire button element
-    struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
+    // struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, this->window);
     struct Clunky_Sprite *buttonF = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
-    clunky_init_sprite(2, 2, buttonFT, buttonF);
+    clunky_init_sprite(2, 2, "./clunky_assets/FireButton.bmp", buttonF, this->window);
     struct Clunky_Event_Element **fire = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 20, 436, 1, "fire\0", 'B', 'N');
 
 
     //the aim cursor
-    struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
-    clunky_load_texture("./clunky_assets/Crosshairs.bmp", cur_tex, this->window);
+    // struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    // clunky_load_texture("./clunky_assets/Crosshairs.bmp", cur_tex, this->window);
     struct Clunky_Sprite *cur_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
-    clunky_init_sprite(1, 1, cur_tex, cur_spr);
+    clunky_init_sprite(1, 1, "./clunky_assets/Crosshairs.bmp", cur_spr, this->window);
 
     clunky_eec_add_elements(move_eec, aim, 1);
     clunky_eec_add_elements(move_eec, fire, 1);

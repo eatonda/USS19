@@ -45,13 +45,12 @@ int getPauseSelection(struct Clunky_Window* window, struct Clunky_Event* event) 
 	}
 
 	struct Clunky_Texture pause_menu_texture;
-	clunky_load_texture(toC_String("./clunky_assets/pauseMenuButtons.bmp"),
-		&pause_menu_texture, window);	
+	// clunky_load_texture(toC_String("./clunky_assets/pauseMenuButtons.bmp"),
+	// 	&pause_menu_texture, window);	
 
 	// stores sprite image of pause menu buttons
 	struct Clunky_Sprite pmb;
-	clunky_init_sprite(NUM_BUTTONS, NUM_OF_SPRITE_COLS, &pause_menu_texture,
-		&pmb);
+	clunky_init_sprite(NUM_BUTTONS, NUM_OF_SPRITE_COLS, "./clunky_assets/pauseMenuButtons.bmp", &pmb, window);
 
 	// store menu as an array of Clunky_Button
 	struct Clunky_Event_Element_Container* pause_menu =
@@ -93,11 +92,11 @@ int getPauseSelection(struct Clunky_Window* window, struct Clunky_Event* event) 
     // Note main menu must be capitalized to MAIN MENU for menu function to recognize it properly
     std::string helpMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS", "NEXT"};
     
-    struct Clunky_Texture help_menu_texture;
-    clunky_load_texture(toC_String("./clunky_assets/pauseUserManualButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu
+    // struct Clunky_Texture help_menu_texture;
+    // clunky_load_texture(toC_String("./clunky_assets/pauseUserManualButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu
     
     struct Clunky_Sprite hmb;   //stores sprite image of help menu buttons
-    clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &help_menu_texture, &hmb); // Initialize sprite
+    clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS,"./clunky_assets/pauseUserManualButtons.bmp", &hmb, window); // Initialize sprite
     
     // Buttons for pages should be at the bottom of the screen in a single row
     int xOffset = window->width * 0.25;
