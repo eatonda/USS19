@@ -12,17 +12,17 @@
 
 int init_ship(float scale, struct Ship_Assets *s, struct Clunky_Window *w){
 
-    s->textureL = (struct Clunky_Texture *) malloc (sizeof(struct Clunky_Texture));
+    // s->textureL = (struct Clunky_Texture *) malloc (sizeof(struct Clunky_Texture));
     s->spriteL = (struct Clunky_Sprite *) malloc (sizeof(struct Clunky_Sprite));
 
-    clunky_load_texture("./clunky_assets/LightShip.bmp", s->textureL, w);
-    clunky_init_sprite(10, 1, s->textureL, s->spriteL);
+    // clunky_load_texture("./clunky_assets/LightShip.bmp", s->textureL, w);
+    clunky_init_sprite(10, 1, "./clunky_assets/LightShip.bmp", s->spriteL, w);
 
-    s->textureD = (struct Clunky_Texture *) malloc (sizeof(struct Clunky_Texture));
+    // s->textureD = (struct Clunky_Texture *) malloc (sizeof(struct Clunky_Texture));
     s->spriteD = (struct Clunky_Sprite *) malloc (sizeof(struct Clunky_Sprite));
 
-    clunky_load_texture("./clunky_assets/DarkShip.bmp", s->textureD, w);
-    clunky_init_sprite(10, 1, s->textureD, s->spriteD);
+    // clunky_load_texture("./clunky_assets/DarkShip.bmp", s->textureD, w);
+    clunky_init_sprite(10, 1,"./clunky_assets/DarkShip.bmp", s->spriteD, w);
 
     clunky_sprite_scale(scale, s->spriteD);
     clunky_sprite_scale(scale, s->spriteL);

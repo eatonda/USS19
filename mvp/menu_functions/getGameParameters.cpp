@@ -61,11 +61,11 @@ const int NUM_OF_MENUS = 6;
         y+= yOffset;
     }
 
-    struct Clunky_Texture main_menu_texture;
-    clunky_load_texture(toC_String("./menu_functions/menu_assets/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
+    // struct Clunky_Texture main_menu_texture;
+    // clunky_load_texture(toC_String("./menu_functions/menu_assets/mainMenuButtons.bmp"), &main_menu_texture, window);  // Initialize texture for main menu
     
     struct Clunky_Sprite mmb;   //stores sprite image of main menu buttons
-    clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &main_menu_texture, &mmb); // Initialize sprite
+    clunky_init_sprite(MAIN_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, "./menu_functions/menu_assets/mainMenuButtons.bmp", &mmb, window); // Initialize sprite
 
     struct Clunky_Event_Element_Container* main_menu = buttonSetup(MAIN_MENU_NUM_OF_BUTTONS, mainMenuDescriptions, &mmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
@@ -90,12 +90,12 @@ const int NUM_OF_MENUS = 6;
     int COLOR_MENU_VALUES [COLOR_MENU_NUM_OF_BUTTONS] = {0, 1};     // Values for color are either 0 for light and 1 for dark
     
 
-    struct Clunky_Texture color_menu_texture;
-    clunky_load_texture(toC_String("./menu_functions/menu_assets/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
+    // struct Clunky_Texture color_menu_texture;
+    // clunky_load_texture(toC_String("./menu_functions/menu_assets/colorMenuButtons.bmp"), &color_menu_texture, window);  // Initialize texture for color menu
     
     
     struct Clunky_Sprite cmb;   //stores sprite image of color menu buttons
-    clunky_init_sprite(COLOR_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &color_menu_texture, &cmb); // Initialize sprite
+    clunky_init_sprite(COLOR_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS,"./menu_functions/menu_assets/colorMenuButtons.bmp", &cmb, window); // Initialize sprite
 
     struct Clunky_Event_Element_Container* color_menu = buttonSetup(COLOR_MENU_NUM_OF_BUTTONS, colorMenuDescriptions, &cmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
@@ -117,12 +117,12 @@ const int NUM_OF_MENUS = 6;
     std::string shipMenuDescriptions [SHIP_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
     int SHIP_MENU_VALUES [SHIP_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
     
-    struct Clunky_Texture ship_menu_texture;
-    clunky_load_texture(toC_String("./menu_functions/menu_assets/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
+    // struct Clunky_Texture ship_menu_texture;
+    // clunky_load_texture(toC_String("./menu_functions/menu_assets/shipMenuButtons.bmp"), &ship_menu_texture, window);  // Initialize texture for ship menu
     
     
     struct Clunky_Sprite smb;   //stores sprite image of ship menu buttons
-    clunky_init_sprite(SHIP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &ship_menu_texture, &smb); // Initialize sprite
+    clunky_init_sprite(SHIP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS,"./menu_functions/menu_assets/shipMenuButtons.bmp", &smb, window); // Initialize sprite
 
     struct Clunky_Event_Element_Container* ship_menu = buttonSetup(SHIP_MENU_NUM_OF_BUTTONS, shipMenuDescriptions, &smb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
@@ -143,12 +143,12 @@ const int NUM_OF_MENUS = 6;
     std::string boardMenuDescriptions [BOARD_MENU_NUM_OF_BUTTONS] = {"5", "7", "10", "BACK"};
     int BOARD_MENU_VALUES [BOARD_MENU_NUM_OF_BUTTONS] = {5, 7, 10};     // Values for numOfShips
     
-    struct Clunky_Texture board_menu_texture;
-    clunky_load_texture(toC_String("./menu_functions/menu_assets/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
+    // struct Clunky_Texture board_menu_texture;
+    // clunky_load_texture(toC_String("./menu_functions/menu_assets/boardMenuButtons.bmp"), &board_menu_texture, window);  // Initialize texture for board menu
     
     
     struct Clunky_Sprite bmb;   //stores sprite image of board menu buttons
-    clunky_init_sprite(BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &board_menu_texture, &bmb); // Initialize sprite
+    clunky_init_sprite(BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS,"./menu_functions/menu_assets/boardMenuButtons.bmp", &bmb, window); // Initialize sprite
 
     struct Clunky_Event_Element_Container* board_menu = buttonSetup(BOARD_MENU_NUM_OF_BUTTONS, boardMenuDescriptions, &bmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
     
@@ -166,11 +166,11 @@ const int NUM_OF_MENUS = 6;
     // Note main menu must be capitalized to MAIN MENU for menu function to recognize it properly
     std::string helpMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS", "NEXT"};
     
-    struct Clunky_Texture help_menu_texture;
-    clunky_load_texture(toC_String("./menu_functions/menu_assets/pageMenuButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu
+    // struct Clunky_Texture help_menu_texture;
+    // clunky_load_texture(toC_String("./menu_functions/menu_assets/pageMenuButtons.bmp"), &help_menu_texture, window);  // Initialize texture for board menu
     
     struct Clunky_Sprite hmb;   //stores sprite image of help menu buttons
-    clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &help_menu_texture, &hmb); // Initialize sprite
+    clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS,"./menu_functions/menu_assets/pageMenuButtons.bmp", &hmb, window); // Initialize sprite
     
     // Buttons for pages should be at the bottom of the screen in a single row
     int xOffset = window->width * 0.25;
@@ -230,11 +230,11 @@ const int NUM_OF_MENUS = 6;
         // Note main menu must be capitalized to MAIN MENU for menu function to recognize it properly
         std::string scoreMenuDescriptions [HELP_MENU_NUM_OF_BUTTONS] = {"MAIN MENU", "PREVIOUS", "NEXT"};
         
-        struct Clunky_Texture score_menu_texture;
-        clunky_load_texture(toC_String("/menu_functions/menu_assets/pageMenuButtons.bmp"), &score_menu_texture, window);  // Initialize texture for board menu
+        // struct Clunky_Texture score_menu_texture;
+        // clunky_load_texture(toC_String("/menu_functions/menu_assets/pageMenuButtons.bmp"), &score_menu_texture, window);  // Initialize texture for board menu
         
         struct Clunky_Sprite lmb;   //stores sprite image of leader menu buttons
-        clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &score_menu_texture, &lmb); // Initialize sprite
+        clunky_init_sprite(HELP_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, "/menu_functions/menu_assets/pageMenuButtons.bmp", &lmb, window); // Initialize sprite
         
         // Buttons for pages should be at the bottom of the screen in a single row
         // Same xCoordinates as USER MANUAL
