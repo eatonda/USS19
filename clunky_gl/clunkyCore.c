@@ -70,7 +70,6 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 		exit(1);
 	}
 
-    printf("+++++====+++++\n");
 	
 	//now we can init the window
 	window->window = NULL;
@@ -82,7 +81,6 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
                 exit(1);
 	}
 
-    printf("+++++====+++++\n");
 
 	//now lets create the rederer
 	window->render = NULL;
@@ -96,7 +94,6 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
                 exit(1);
 	}
 
-    printf("+++++====+++++\n");
 
 	 //remember the width and height
 	 window->width = width_p;
@@ -109,20 +106,19 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
      //set the sustained click to 0
      e->lcs = 0;
     
-    printf("+++++====+++++\n");
 
     //===========================================================
     //create the text texture and sprite
     //first, allocate the memory for the text object, the texture, and the sprite
-    struct Clunky_Texture *texture = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    //struct Clunky_Texture *texture = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     window->sprite = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
 
     //load the alpha-numeric texture
-    clunky_load_texture("./clunky_assets/AlphaNumeric.bmp", texture, window);
+    //clunky_load_texture("./clunky_assets/AlphaNumeric.bmp", texture, window);
 
     //now convert it into a sprite 
     //7 rows, 6 columns
-    clunky_init_sprite(7, 6, texture, window->sprite);
+    clunky_init_sprite(7, 6, "./clunky_assets/AlphaNumeric.bmp", window->sprite, window);
 	
 	 return 0;
 }
@@ -229,32 +225,62 @@ int clunky_free_texture(struct Clunky_Texture *texture){
 	return 0;
 }
 
-int clunky_init_sprite(int rows, int cols, struct Clunky_Texture *texture, struct Clunky_Sprite *sprite){
-	//link the textures memory
-	sprite->texture = texture;
+int clunky_init_sprite(int rows, int cols, char *path, struct Clunky_Sprite *sprite, struct Clunky_Window *window){
+     //alright, lets see how to do this
+    //Load image into a surface, then convert the surface into a texture
+    SDL_Surface* loadedSurface = SDL_LoadBMP( path );
+    if( loadedSurface == NULL ){
+        fprintf(stderr, "Uh oh! could load image: %s\n", path);
+        exit(1);
+    }
+
+    //now convert that surface into a texture
+    sprite->texture = NULL;
+    sprite->texture = SDL_CreateTextureFromSurface( window->render, loadedSurface );
+
+    if(sprite->texture == NULL){
+        fprintf(stderr, "Uh oh! couldnt convert surface to texture! %s\n", path);
+        exit(1);
+    }
+
+    SDL_FreeSurface( loadedSurface );
+
+
+    int w, h;
+    //get the dimensions of the texture
+    SDL_QueryTexture(sprite->texture, NULL, NULL, &(w), &(h));
+
+    sprite->render_area.w = w;
+    sprite->render_area.h = h;
+    sprite->render_area.x = 0;
+    sprite->render_area.y = 0;
 
 	//setup the sprite rendering rect
 	sprite->cell.x = 0;
 	sprite->cell.y = 0;
-	sprite->cell.w = texture->width/cols;
-	sprite->cell.h = texture->height/rows;
+	sprite->cell.w = w/cols;
+	sprite->cell.h = h/rows;
+
+    sprite->max_row = rows;
+    sprite->max_col = cols;
 
     sprite->w = sprite->cell.w;
     sprite->h = sprite->cell.h;
     sprite->ap_w = sprite->cell.w;
     sprite->ap_h = sprite->cell.h;
+    sprite->scale = 1.;
 
 	return 0;
 }
 
 int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *sprite, struct Clunky_Window *window){
 	//first, we need to verify that the specified row/column fits within the texture!
-	if (((col+1) * sprite->cell.w) > sprite->texture->width){
+	if (col > sprite->max_col){
 		//uh oh! we are running out of the sprite sheet!
 		fprintf(stderr, "Sprite render out of bounds! column: %d\n", col);
 		return -1;
 	}
-	else if (((row+1) * sprite->cell.h) > sprite->texture->height){
+	else if (row > sprite->max_row){
 		//uh oh! we are running out of the sprite sheet!
                 fprintf(stderr, "Sprite render out of bounds! row: %d\n", row);
                 return -1;
@@ -264,13 +290,13 @@ int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *s
 	sprite->cell.x = col * sprite->cell.w;
 	sprite->cell.y = row *sprite->cell.h;
 	//now we need to set up the destination rect
-	sprite->texture->render_area.x = x;
-    sprite->texture->render_area.y = y;
-    sprite->texture->render_area.w = sprite->ap_w;
-    sprite->texture->render_area.h = sprite->ap_h;
+	sprite->render_area.x = x;
+    sprite->render_area.y = y;
+    sprite->render_area.w = sprite->ap_w;
+    sprite->render_area.h = sprite->ap_h;
 
         //now we can finally render
-    SDL_RenderCopy(window->render, sprite->texture->texture, &(sprite->cell), &(sprite->texture->render_area));
+    SDL_RenderCopy(window->render, sprite->texture, &(sprite->cell), &(sprite->render_area));
 
 	return 0;
 }
@@ -756,7 +782,7 @@ int clunky_render_text(struct Clunky_Text *txt, struct Clunky_Window *w){
 
 int clunky_sprite_scale(float scale, struct Clunky_Sprite *sprite){
     //update the scale, width, and height of the sprite
-    sprite->texture->scale = scale;
+    sprite->scale = scale;
     sprite->ap_w = sprite->w * scale;
     sprite->ap_h = sprite->h * scale;
 

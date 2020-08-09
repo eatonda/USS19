@@ -26,8 +26,8 @@ int main(int argc, char *argv[]){
     clunky_init(&window, &event, 1000, 700);
 
     //Now we will load the texture that contains all of our main menu buttons
-    struct Clunky_Texture water_tex;
-    clunky_load_texture("./clunky_assets/Water.bmp", &water_tex, &window);
+//    struct Clunky_Texture water_tex;
+  //  clunky_load_texture("./clunky_assets/Water.bmp", &water_tex, &window);
 
     //From the trexture we can create a sprite. 
     //Clunky Sprites allow for the rendering of partial sections of
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]){
     struct Clunky_Sprite water_spr;
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
-    clunky_init_sprite(2, 5, &water_tex, &water_spr);
+    clunky_init_sprite(2, 5, "./clunky_assets/Water.bmp", &water_spr, &window);
 
     water_spr.sprite_row = 0;
     water_spr.sprite_column = -1;
@@ -59,20 +59,20 @@ int main(int argc, char *argv[]){
     }
 
      //Now we will load the texture that contains all of our main menu buttons
-    struct Clunky_Texture pp_tex;
-    clunky_load_texture("./clunky_assets/PlanningPin.bmp", &pp_tex, &window);
+    //struct Clunky_Texture pp_tex;
+    //clunky_load_texture("./clunky_assets/PlanningPin.bmp", &pp_tex, &window);
     struct Clunky_Sprite pp_spr;
-    clunky_init_sprite(1, 1, &pp_tex, &pp_spr);
+    clunky_init_sprite(1, 1, "./clunky_assets/PlanningPin.bmp", &pp_spr, &window);
 
-     struct Clunky_Texture p_tex;
-    clunky_load_texture("./clunky_assets/Pins.bmp", &p_tex, &window);
+//     struct Clunky_Texture p_tex;
+//    clunky_load_texture("./clunky_assets/Pins.bmp", &p_tex, &window);
     struct Clunky_Sprite p_spr;
-    clunky_init_sprite(2, 1, &p_tex, &p_spr);
+    clunky_init_sprite(2, 1, "./clunky_assets/Pins.bmp", &p_spr, &window);
 
-    struct Clunky_Texture d_tex;
-    clunky_load_texture("./clunky_assets/DelPlan.bmp", &d_tex, &window);
+//    struct Clunky_Texture d_tex;
+//    clunky_load_texture("./clunky_assets/DelPlan.bmp", &d_tex, &window);
     struct Clunky_Sprite d_spr;
-    clunky_init_sprite(1, 1, &d_tex, &d_spr);
+    clunky_init_sprite(1, 1, "./clunky_assets/DelPlan.bmp", &d_spr, &window);
 
     struct Clunky_Event_Element *ppd = clunky_dragable_element_init(&pp_spr, 500, 200, 0, "ppd");
 

@@ -41,10 +41,16 @@ struct Clunky_Texture{
 };
 
 struct Clunky_Sprite{
-	struct Clunky_Texture *texture;
+    SDL_Texture *texture;
+    SDL_Rect render_area;
 	SDL_Rect cell;
 
-    //the actual width and height
+    int max_row;
+    int max_col;
+
+    float scale;
+
+    //the actual width and height of the sprite cell
     int w;
     int h;
 
@@ -116,7 +122,7 @@ int clunky_present_window(struct Clunky_Window *window);
 //=====================
 //sprites and textures
 int clunky_load_texture(char *path, struct Clunky_Texture *texture, struct Clunky_Window *window);
-int clunky_init_sprite(int rows, int cols, struct Clunky_Texture *texture, struct Clunky_Sprite *sprite);
+int clunky_init_sprite(int rows, int cols, char *path, struct Clunky_Sprite *sprite, struct Clunky_Window *window);
 int clunky_free_texture(struct Clunky_Texture *texture);
 int clunky_render_texture(int x, int y, struct Clunky_Texture *texture, struct Clunky_Window *window);
 int clunky_render_sprite(int x, int y, int row, int col, struct Clunky_Sprite *sprite, struct Clunky_Window *window);

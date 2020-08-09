@@ -65,7 +65,7 @@ unsigned long clunky_element_init(struct Clunky_Event_Element *b, struct Clunky_
     b->gid = -1;
 
     //get the max column count
-    b->col_max = s->texture->width  / s->cell.w;
+    b->col_max = s->max_col;
 
     //generate the BID
     b->eid = clunky_hash_gen(b_name);
