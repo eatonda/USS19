@@ -28,8 +28,14 @@ int main(int argc, char *argv[]) {
     int boardSize = -1;     // Square board thus w = h
     int colorScheme = -1;   // Color scheme is either 0(light) or 1(dark)
 
-    
-    if (getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
+
+	bool gameRunning = false;
+   
+	if (getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
+		gameRunning = true;
+	}	
+ 
+    while (gameRunning) {
         
         /* Trace Statement showing instantiated parameters */
         std::cout << " Parameters Instantiated via getGameParameters()\n";
@@ -42,8 +48,22 @@ int main(int argc, char *argv[]) {
         b->init();
         printf("Board Init'd\n");
         b->printShips();
-        b->run();
+        int runVal = b->run();
+		
+		// a runVal of 2 indicates the game has been exited from the pause menu, return to
+		// the start screen
+		if (runVal == 2) {
+			if (!getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
+				gameRunning = false;
+			}				
+		}
+		// runVal of 1 indicates the game has been restarted with the same setup (hence we don't need
+		// to return to the start menu)
+		else if (runVal != 1) {
+			gameRunning = false;
+		}
 
+		delete(b);
     }
 
     return 0;

@@ -35,8 +35,7 @@ bool enterScore(int numRounds, int boardRows, int boardCols,
 	std::string playerName) {
 
 	const int NUM_HIGH_SCORES = 10;
-
-	// calculate the player's score
+	
 	int score = calcScore(numRounds, boardRows, boardCols);
 
 	// get the list of current high scores
@@ -51,6 +50,7 @@ bool enterScore(int numRounds, int boardRows, int boardCols,
 		highScores.push_back(scoreRow);	
 		scoreAdded = true;
 	}	
+	// since vector is already sorted, sufficient to check last element
 	else if (score > std::stoi(highScores[highScores.size() - 1][1])) {
 		highScores.pop_back();
 		highScores.push_back(scoreRow);
@@ -59,14 +59,13 @@ bool enterScore(int numRounds, int boardRows, int boardCols,
 
 	if (scoreAdded) {
 
-		// sort the new scores vector in descending order
+		// sort the modified scores vector in descending order
 		std::sort(highScores.begin(), highScores.end(), [] 
 			(const std::vector<std::string> &a, 
 			const std::vector<std::string> &b) {
 				return std::stoi(a[1]) > std::stoi(b[1]);
 		});
-
-		// write the sorted vector to the scores file
+	
 		writeScores(highScores);	
 	}
 
