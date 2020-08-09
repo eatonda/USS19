@@ -10,7 +10,7 @@
 #include "../clunky_gl/clunkyHash.h"
 #include "../clunky_gl/clunkyEventElements.h"
 
-#include "board.hpp"
+#include "gameCore.hpp"
 
 const int WINDOW_WIDTH = 1350;
 const int WINDOW_HEIGHT = 700;
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
         
-        Board *b = new Board(boardSize, colorScheme, numOfShips, &event, &window);
+        GameCore *b = new GameCore(boardSize, colorScheme, numOfShips, &event, &window);
         printf("Made the board\n");
         b->init();
         printf("Board Init'd\n");

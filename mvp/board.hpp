@@ -7,24 +7,19 @@
 
 class Board{
     private:
-        struct Clunky_Window* window; // Reference to main's window
+    //we should probs put the eec in here?
+    struct Clunky_Event_Element_Container* eec;
+    struct Clunky_Event_Element *ele;
+    int num_ele;
+    int len_ele;
+    int grow_ele();
 
-        struct Clunky_Event_Element_Container* eec;    // Pointer to container of button elements
+    int rotation;
 
-        struct Clunky_Event *event;
-
-        int board_size;
-        int color_theme;
-        int num_ships;
-        float board_scale;
-
-        int **player_board;
-        int **ai_board;
     public:
-        Board(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window);
+        Board(int size, int color, int ships);
         int run();
         int init();
-        int printShips();
 };
 
 
