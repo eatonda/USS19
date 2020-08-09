@@ -444,6 +444,64 @@ float EE_Overlap_Helper(struct Clunky_Event_Element *a, struct Clunky_Event_Elem
 
 }
 
+int draggable_ee_handler(int i, int status, struct Clunky_Event_Element_Container *eec, struct Clunky_Event_Summary *summary,struct Clunky_Event *e){
+     //Ok, first, we need to see if the element was interacted with.
+                //If so, we need to set the dragging (misc) status to indicate that
+                if (status == 2) eec->elements[i]->misc = 1;
+                //else if misc already is 1, and lcs is not true (i.e. the player let go of the
+                //element) then set the misc status back to 0
+                else if (e->lcs == 0 && eec->elements[i]->misc){
+                    eec->elements[i]->misc = 0;
+
+                    //if there are any snap_to elements, calculate the overlap
+                    if (eec->num_snaps){
+                        //get the elements
+                        float over_max = 0.;
+                        int over_indx = 0;
+                        for (int indx = 0; indx < eec->num_snaps; indx++){
+                            float over = EE_Overlap_Helper(eec->elements[i], eec->snaps[indx]);
+                            if (over > over_max){
+                                over_max = over;
+                                over_indx = indx;
+                            }
+                        }
+
+                            //choose the best non-zero overlap
+                            if (over_max > 0.05){
+                                //snap the elements together!
+                                //center->center
+                            eec->elements[i]->x = eec->snaps[over_indx]->x + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_w - eec->elements[i]->s->ap_w));
+                            eec->elements[i]->y = eec->snaps[over_indx]->y + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_h - eec->elements[i]->s->ap_h));
+
+                            //made a reference to this snap event
+                            //event type(S)nap
+                            summary->event_type = 'S';
+                            summary->eid_one = eec->elements[i]->eid;
+                            summary->eid_two = eec->snaps[over_indx]->eid;
+                            summary->uid_one = eec->elements[i]->uid;
+                            summary->uid_two = eec->snaps[over_indx]->uid;
+
+                            eec_update_group(eec->elements[i], eec);
+
+                        }
+                    }
+                }
+
+                //if the misc status is set to true, then the element is being dragged
+                //thus we need to update its x/y location
+                if (eec->elements[i]->misc){
+                    //update the x, y coords of the element
+                    eec->elements[i]->x = e->mx - e->dx;
+                    eec->elements[i]->y = e->my - e->dy;
+
+                    eec_update_group(eec->elements[i], eec);
+                }
+
+    return 0;
+}
+
+
+
 
 
 int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_Event *e, struct Clunky_Window *w){
@@ -495,58 +553,7 @@ int clunky_eec_update(struct Clunky_Event_Element_Container *eec, struct Clunky_
         switch(eec->elements[i]->type){
             case 'D': //Draggable Element
 
-                //Ok, first, we need to see if the element was interacted with.
-                //If so, we need to set the dragging (misc) status to indicate that
-                if (status == 2) eec->elements[i]->misc = 1;
-                //else if misc already is 1, and lcs is not true (i.e. the player let go of the
-                //element) then set the misc status back to 0
-                else if (e->lcs == 0 && eec->elements[i]->misc){
-                    eec->elements[i]->misc = 0;
-
-                    //if there are any snap_to elements, calculate the overlap
-                    if (eec->num_snaps){
-                        //get the elements
-                        float over_max = 0.;
-                        int over_indx = 0;
-                        for (int indx = 0; indx < eec->num_snaps; indx++){
-                            float over = EE_Overlap_Helper(eec->elements[i], eec->snaps[indx]);
-                            if (over > over_max){
-                                over_max = over;
-                                over_indx = indx;
-                            }
-                        }
-                            
-                            //choose the best non-zero overlap
-                            if (over_max > 0.05){
-                                //snap the elements together!
-                                //center->center
-                            eec->elements[i]->x = eec->snaps[over_indx]->x + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_w - eec->elements[i]->s->ap_w));
-                            eec->elements[i]->y = eec->snaps[over_indx]->y + (int)( 0.5 * (float) (eec->snaps[over_indx]->s->ap_h - eec->elements[i]->s->ap_h));
-
-                            //made a reference to this snap event
-                            //event type(S)nap
-                            summary->event_type = 'S';
-                            summary->eid_one = eec->elements[i]->eid;
-                            summary->eid_two = eec->snaps[over_indx]->eid;
-                            summary->uid_one = eec->elements[i]->uid;
-                            summary->uid_two = eec->snaps[over_indx]->uid;
-
-                            eec_update_group(eec->elements[i], eec);
-
-                        }
-                    }
-                } 
-
-                //if the misc status is set to true, then the element is being dragged
-                //thus we need to update its x/y location
-                if (eec->elements[i]->misc){
-                    //update the x, y coords of the element
-                    eec->elements[i]->x = e->mx - e->dx;
-                    eec->elements[i]->y = e->my - e->dy;
-
-                    eec_update_group(eec->elements[i], eec);
-                }
-                
+                draggable_ee_handler(i, status, eec, summary,e);
 
                 break;
             case 'T':
