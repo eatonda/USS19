@@ -35,31 +35,31 @@ int main(int argc, char *argv[]){
     unsigned long bid;
 
     //create a clunky text object!
-    struct Clunky_Text *text1 = clunky_get_text(225, 25, 512, 64, 1., &window);
-    clunky_replace_text(text1, "GAME OVER!\0");
-    for (int i = 0; i < text1->str_used; i++){
-        printf("%c, (%d, %d)\n", text1->str[i], text1->str_row[i], text1->str_col[i]);
+    struct Clunky_Text *gameOverText = clunky_get_text(225, 25, 512, 64, 1., &window);
+    clunky_replace_text(gameOverText, "GAME OVER!\0");
+    for (int i = 0; i < gameOverText->str_used; i++){
+        printf("%c, (%d, %d)\n", gameOverText->str[i], gameOverText->str_row[i], gameOverText->str_col[i]);
     }
 
-    struct Clunky_Text *text2 = clunky_get_text(130, 125, 512, 64, 1., &window);
-    clunky_replace_text(text2, "PLEASE ENTER YOUR NAME\0");
-    for (int i = 0; i < text2->str_used; i++){
-        printf("%c, (%d, %d)\n", text2->str[i], text2->str_row[i], text2->str_col[i]);
+    struct Clunky_Text *promptText = clunky_get_text(130, 125, 512, 64, 1., &window);
+    clunky_replace_text(promptText, "PLEASE ENTER YOUR NAME\0");
+    for (int i = 0; i < promptText->str_used; i++){
+        printf("%c, (%d, %d)\n", promptText->str[i], promptText->str_row[i], promptText->str_col[i]);
     }
 
-    struct Clunky_Text *text3 = clunky_get_text(130, 200, 512, 64, 1., &window);
-    clunky_replace_text(text3, "NAME:\0");
-    for (int i = 0; i < text3->str_used; i++){
-        printf("%c, (%d, %d)\n", text3->str[i], text3->str_row[i], text3->str_col[i]);
+    struct Clunky_Text *inputText = clunky_get_text(130, 200, 512, 64, 1., &window);
+    clunky_replace_text(inputText, "NAME:\0");
+    for (int i = 0; i < inputText->str_used; i++){
+        printf("%c, (%d, %d)\n", inputText->str[i], inputText->str_row[i], inputText->str_col[i]);
     }
 
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(&event);
         clunky_eec_update(eec, &event, &window);
-        clunky_render_text(text1, &window);
-        clunky_render_text(text2, &window);
-        clunky_render_text(text3, &window);
+        clunky_render_text(gameOverText, &window);
+        clunky_render_text(promptText, &window);
+        clunky_render_text(inputText, &window);
 
         //
         if (event.num_input != 0){
@@ -79,11 +79,11 @@ int main(int argc, char *argv[]){
         char* name = eec->sum.str;
 
         // Create text
-        struct Clunky_Text *text4 = clunky_get_text(225, 200, 512, 64, 1., &window);
-        clunky_replace_text(text4, name);
+        struct Clunky_Text *nameText = clunky_get_text(225, 200, 512, 64, 1., &window);
+        clunky_replace_text(nameText, name);
 
         // Render name to window
-        clunky_render_text(text4, &window);
+        clunky_render_text(nameText, &window);
 
         //Update the window!
         clunky_present_window(&window);
