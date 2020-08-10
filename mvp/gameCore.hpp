@@ -28,6 +28,7 @@ class GameCore{
         GameCore(int size, int color, int ships, struct Clunky_Event *event, struct Clunky_Window* window);
         int run();
         int init();
+        int shipArr(int **);
         int printShips();
 };
 

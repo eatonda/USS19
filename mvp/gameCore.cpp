@@ -5,6 +5,7 @@
 #include "../clunky_gl/clunkyEventElements.h"
 #include "../clunky_gl/clunkyHash.h"
 #include "ship.h"
+#include <iostream>
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 700;
@@ -149,6 +150,18 @@ int GameCore::init(){
 
 }
 
+int GameCore::shipArr(int ** arr){
+    //Constantly updates a 2D array whenever a snap event occurs
+    for(int i = 0; i < this->board_size; i++){
+        for(int j = 0; j < this->board_size; j++){
+            std::cout << arr[i][j] << " ";
+        }
+        std::cout << '\n';
+    }
+    
+    return 0;
+}
+
 int GameCore::printShips(){
     //now lets declare our Event Element Container (EEC)
     struct Clunky_Event_Element_Container *eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
@@ -225,6 +238,16 @@ int GameCore::printShips(){
 
     int cont = 1, k;
     int sel_indx = -1;
+
+    int **shipArray = (int **) malloc (sizeof(int *));
+
+    for(int i = 0; i < this->board_size; i++){
+        shipArray[i] = (int *) malloc (sizeof(int));
+        for(int j = 0; j < this->board_size; j++){
+            shipArray[i][j] = -1;
+        }
+    }
+
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(this->event);
@@ -251,7 +274,9 @@ int GameCore::printShips(){
             indx = clunky_indx_from_uid(eec->sum.uid_two, eec);
             int cellnum = eec->elements[indx]->name[0]-'0';
             printf("$$%d, %d, %d\n", length, offset, cellnum);
+
             //HERE !!
+            shipArr(shipArray);
 
         }
         else if (eec->sum.event_type == 'C'){
