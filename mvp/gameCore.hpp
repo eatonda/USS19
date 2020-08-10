@@ -2,6 +2,8 @@
 #include "../clunky_gl/clunkyCore.h"
 #include "../clunky_gl/clunkyEventElements.h"
 
+#include "board.hpp"
+
 #ifndef GAMECORE_H
 #define GAMECORE_H
 
@@ -17,6 +19,8 @@ class GameCore{
         int color_theme;
         int num_ships;
         float board_scale;
+
+        class Board *b;
 
         int **player_board;
         int **ai_board;

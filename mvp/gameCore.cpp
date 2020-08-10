@@ -39,6 +39,8 @@ GameCore::GameCore(int size, int color, int ships, struct Clunky_Event *event, s
 
     printf("3\n");
 
+    this->b = NULL;
+
 }
 
 int GameCore::init(){
@@ -265,6 +267,18 @@ int GameCore::printShips(){
 }
 
 int GameCore::run(){
+
+    int **s = (int **)malloc(sizeof(int *));
+    for (int i = 0; i < this->board_size; i++){
+        s[i] = (int *) malloc (sizeof(int));
+        for (int j = 0; j < this->board_size; j++){
+            s[i][j] = -1;
+        }
+    }
+
+    printf("HERE\n");
+
+//    this->b = new Board(BOARD_OFFSET_W, BOARD_OFFSET_H, this->board_size, 0, s, this->window, this->event);
 
     // struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     // clunky_load_texture("./clunky_assets/PlanningPin.bmp", pp_tex, this->window);

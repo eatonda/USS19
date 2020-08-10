@@ -14,7 +14,7 @@ const int BOARD_OFFSET_H = 100;
 
 
 
-Board::Board(int size, int color, int **ships, struct Clunky_Window *w, struct Clunky_Event *e){
+Board::Board(int x, int y, int size, int color, int **ships, struct Clunky_Window *w, struct Clunky_Event *e){
 
     //make note of the size and color
     this->size = size;
@@ -94,7 +94,7 @@ int ship_rotation_helper(int rotation, int row){
     //if the range is between 0 and 3: ship front
     if (row >= 0 && row <= 3){
         //if we have a positive rotation, incriment the row, wrapping back to 0 after 3
-        if (roation > 0){
+        if (rotation > 0){
             //see if we need to wrap around to 0
             if (row == 3) return 0;
             //otherwise incriment the row
@@ -111,7 +111,7 @@ int ship_rotation_helper(int rotation, int row){
     //if the range is between 4 and 7: Ship rear
     else if (row >= 4 && row <= 7){
         //if we have a positive rotation, incriment the row, wrapping back to 0 after 3
-        if (roation > 0){
+        if (rotation > 0){
             //see if we need to wrap around to 0
             if (row == 7) return 4;
             //otherwise incriment the row
@@ -134,7 +134,7 @@ int ship_rotation_helper(int rotation, int row){
     return -1;
 }
 
-int Board::roate(int dir){
+int Board::rotate(int dir){
  
     //need temporary hold arrays
     int **pinH = this->pins;
@@ -159,7 +159,7 @@ int Board::roate(int dir){
     //rotate the boards
     //if we have a positive roation value, rotate clockwise
     //otherwise anti-clockwise
-    if ( rotation > 0){
+    if ( dir > 0){
         //[j][size-k]
         for (int k = this->size; k >= 0; k--){
             for (int j = 0; j < this->size; j++){
@@ -191,4 +191,24 @@ int Board::roate(int dir){
     return 0;
 }
 
+int Board::render(){
+    //render the ships, then the pins, to the screen
+    for(int i = 0; i < this->size; i++){
+        for(int j = 0; j < this->size; j++){
+            if ( this->ships[i][j] >= 0){
+                //render the ship
+                clunky_render_sprite(this->x + i * this->ship_spr->ap_w, this->y + j * this->ship_spr->ap_h, this->ships[i][j], 0, this->ship_spr, this->w);
+            }
+            if (this->pins[i][j] >= 0){
+                //render the pin
+                clunky_render_sprite(this->x + i * this->pin_spr->ap_w, this->y + j * this->pin_spr->ap_h, this->pins[i][j], 0, this->pin_spr, this->w);
+            }
+        }
+    }
 
+    return 0;
+}
+
+int Board::move(int x, int y){
+    return 0;
+}

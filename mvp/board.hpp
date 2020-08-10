@@ -26,10 +26,13 @@ class Board{
     int size;
     int theme;
 
+    int x;
+    int y;
+
     int init(int **ships);
 
     public:
-        Board(int size, int color, int **ships, struct Clunky_Window *w, struct Clunky_Event *e);
+        Board(int x, int y, int size, int color, int **ships, struct Clunky_Window *w, struct Clunky_Event *e);
         int render();
         int move(int x, int y);
         int rotate(int dir);
