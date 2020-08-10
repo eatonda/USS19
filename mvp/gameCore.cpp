@@ -239,14 +239,14 @@ int GameCore::printShips(){
     int cont = 1, k;
     int sel_indx = -1;
 
-    int **shipArray = (int **) malloc (sizeof(int *));
+    // int **shipArray = (int **) malloc (sizeof(int *));
 
-    for(int i = 0; i < this->board_size; i++){
-        shipArray[i] = (int *) malloc (sizeof(int));
-        for(int j = 0; j < this->board_size; j++){
-            shipArray[i][j] = -1;
-        }
-    }
+    // for(int i = 0; i < this->board_size; i++){
+    //     shipArray[i] = (int *) malloc (sizeof(int));
+    //     for(int j = 0; j < this->board_size; j++){
+    //         shipArray[i][j] = -1;
+    //     }
+    // }
 
     while(cont){
         //first thing: check to see if there have been any new events!
@@ -276,7 +276,7 @@ int GameCore::printShips(){
             printf("$$%d, %d, %d\n", length, offset, cellnum);
 
             //HERE !!
-            shipArr(shipArray);
+            // shipArr(shipArray);
 
         }
         else if (eec->sum.event_type == 'C'){
