@@ -7,19 +7,32 @@
 
 class Board{
     private:
+    struct Clunky_Window *w;
+    struct Clunky_Event *e;
+
     //we should probs put the eec in here?
     struct Clunky_Event_Element_Container* eec;
-    struct Clunky_Event_Element *ele;
-    int num_ele;
-    int len_ele;
-    int grow_ele();
 
-    int rotation;
+    struct Clunky_Sprite *pin_spr;
+    struct Clunky_Sprite *ship_spr;
+
+    int **pins;
+    int **ships;
+
+    int hits_to_win;
+    int hits;
+
+
+    int size;
+    int theme;
+
+    int init(int **ships);
 
     public:
-        Board(int size, int color, int ships);
-        int run();
-        int init();
+        Board(int size, int color, int **ships, struct Clunky_Window *w, struct Clunky_Event *e);
+        int render();
+        int move(int x, int y);
+        int rotate(int dir);
 };
 
 
