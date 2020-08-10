@@ -9,39 +9,29 @@
 
 int main(int argc, char *argv[]){
 
-    //dec common use variables
     int i, j, k;
     int cont;
 
     //create a clunky window object.
-    //this will be the window that we will render to
     struct Clunky_Window window;
 
     //we need to create our event handler!
     struct Clunky_Event event;
 
-    //now we will init the window, this will set the width and height of the
-    //window, as well as call the nessisary SDL2 function calls for us
-    //this has to be done first, as it inits SDL2 functions
+    //now we will init the window
     clunky_init(&window, &event, 640, 480);
 
-    //Now we will load the texture that contains all of our main menu buttons
+    //load the texture that contains all of our main menu buttons
     struct Clunky_Texture water_tex;
     clunky_load_texture("./clunky_assets/Water.bmp", &water_tex, &window);
 
-    //From the trexture we can create a sprite. 
-    //Clunky Sprites allow for the rendering of partial sections of
-    //the texture, instead of the entire texture at once
     struct Clunky_Sprite water_spr;
-    //when initing a sprite, we need to give it how many ROWS and COLUMNS there
-    //are on the sprite sheet. it will do the rest
     clunky_init_sprite(1, 5, &water_tex, &water_spr);
 
     water_spr.sprite_row = 0;
     water_spr.sprite_column = -1;
     clunky_sprite_scale(1.75, &water_spr);
 
-    //create a 5x5 board for now
     char names[] = "cell_x_\0";
     int cnt = 0;
     struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * 25);

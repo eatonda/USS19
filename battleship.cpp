@@ -36,11 +36,8 @@ int main(int argc, char *argv[]) {
     clunky_load_texture("./clunky_assets/cross.bmp", &pp, &window);
 
     //From the trexture we can create a sprite. 
-    //Clunky Sprites allow for the rendering of partial sections of
-    //the texture, instead of the entire texture at once
     struct Clunky_Sprite water_spr;
-    //when initing a sprite, we need to give it how many ROWS and COLUMNS there
-    //are on the sprite sheet. it will do the rest
+    //when initing a sprite, we need to give it rows and cols
     clunky_init_sprite(1, 5, &water_tex, &water_spr);
 
     printf("2\n");
@@ -59,7 +56,6 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
         
-        //I need the board size to be a bit smaller while I work on this
         boardSize = 5;
         
         // Instantiate game objects
@@ -77,9 +73,6 @@ int main(int argc, char *argv[]) {
                 for(k = 0; k < event.num_input; k++){
                     printf(">>%c\n", event.input[k]);
 
-                    //all user keypressed are represented by either a number or
-                    //a capital letter. lowercase letters I've reserved for
-                    //SDL events
                     //'q' -> SDL_QUIT
                     if (event.input[k] == 'q') cont = 0;
                 }
