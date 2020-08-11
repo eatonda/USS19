@@ -45,9 +45,9 @@ int main(int argc, char *argv[]) {
         
         GameCore *b = new GameCore(boardSize, colorScheme, numOfShips, &event, &window);
         printf("Made the board\n");
-        b->init();
+//        b->init();
         printf("Board Init'd\n");
-        b->printShips();
+//        b->printShips();
         int runVal = b->run();
 		
 		// a runVal of 2 indicates the game has been exited from the pause menu, return to

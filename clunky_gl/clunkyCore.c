@@ -62,7 +62,8 @@ int clunky_event(struct Clunky_Event *event){
 int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_p, int height_p){
 
     printf("+++++====+++++\n");
-	//we need to initilizse SDL
+    printf("!!!\n");
+    //we need to initilizse SDL
 	//use SDL's fucntions to do so
 	if ( SDL_Init(SDL_INIT_VIDEO) < 0 ){
 		//there was an issue setting up the window
@@ -70,7 +71,7 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
 		exit(1);
 	}
 
-	
+	printf("?????\n");
 	//now we can init the window
 	window->window = NULL;
 	window->window = SDL_CreateWindow( "USS-19 Presents: Battleship!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width_p, height_p, SDL_WINDOW_SHOWN );
@@ -120,7 +121,8 @@ int clunky_init(struct Clunky_Window *window, struct Clunky_Event *e, int width_
     //7 rows, 6 columns
     clunky_init_sprite(7, 6, "./clunky_assets/AlphaNumeric.bmp", window->sprite, window);
 	
-	 return 0;
+	printf("ENDWINDOW\n");
+    return 0;
 }
 
 int clunky_update_renderer(struct Clunky_Window *window){

@@ -390,8 +390,8 @@ int GameCore::run(){
             clunky_event(this->event);
             clunky_eec_update(this->eec, this->event, this->window);
 
-            clunky_render_text(plyr_txt, this->window);
-            clunky_render_text(ai_txt, this->window);
+    //        clunky_render_text(plyr_txt, this->window);
+    //        clunky_render_text(ai_txt, this->window);
 
             if (this->event->num_input != 0){
                 //print any keypresses and check for any SDL specific events
