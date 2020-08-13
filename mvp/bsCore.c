@@ -99,8 +99,6 @@ int rotate(struct BSCore *c, int dir){
     
     if( dir > 0){
         //CW
-        c->rotation++;
-//        if ( c->rotation % 2 == 0){
             //Even
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
@@ -112,26 +110,9 @@ int rotate(struct BSCore *c, int dir){
                     c->player_board[c->board_size - 1 - k][j] = ship_rotation_helper(dir, shipH[j][k]);
                 }
             }
-  /*      }
-        else{
-            //Odd
-            for (int k = 0; k < c->board_size; k++){
-                for (int j = 0; j < c->board_size; j++){
-                    //copy over and rotate the pins
-                    c->pins[k][c->board_size - 1 - j] = pinH[j][k];
-
-                    //copy over and rotate the ship peices
-                    //Will need to also update the spite row after the rotation
-                    c->player_board[k][c->board_size - 1 - j] = ship_rotation_helper(dir, shipH[j][k]);
-                }
-            }
-        }*/
     }
     else{
         //CCW
-        c->rotation--;
-        
-      //  if ( c->rotation % 2 == 0){
             //Even
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
@@ -143,29 +124,18 @@ int rotate(struct BSCore *c, int dir){
                     c->player_board[k][c->board_size - 1 - j] = ship_rotation_helper(dir, shipH[j][k]);
                 }
             }
-    //    }
-/*        else{
-            //Odd
-            for (int k = 0; k < c->board_size; k++){
-                for (int j = 0; j < c->board_size; j++){
-                    //copy over and rotate the pins
-                    c->pins[c->board_size - 1 - k][j] = pinH[j][k];
-
-                    //copy over and rotate the ship peices
-                    //Will need to also update the spite row after the rotation
-                    c->player_board[c->board_size - 1 - k][j] = ship_rotation_helper(dir, shipH[j][k]);
-                }
-            }
-        }*/
     }
 
     //free the temp arrays
+    printf("Free-ing [] Rotation\n");
     for (int i = 0; i < c->board_size; i++){
         free(shipH[i]);
         free(pinH[i]);
     } 
-//    free(shipH);
-//    free(pinH);
+    printf("Free-ing hold** Rotation\n");
+    free(shipH);
+    free(pinH);
+    printf("Rotation Free-ing Done\n");
 
     return 0;
 }
