@@ -11,6 +11,7 @@
 #include "../clunky_gl/clunkyEventElements.h"
 
 #include "gameCore.hpp"
+#include "bsCore.h"
 
 const int WINDOW_WIDTH = 1350;
 const int WINDOW_HEIGHT = 700;
@@ -43,12 +44,12 @@ int main(int argc, char *argv[]) {
         std::cout << "Square boardSize: " << boardSize << std::endl;
         std::cout << "colorScheme 0(light) or 1(dark): " << colorScheme << std::endl;
         
-        GameCore *b = new GameCore(boardSize, colorScheme, numOfShips, &event, &window);
-        printf("Made the board\n");
-        b->init();
-        printf("Board Init'd\n");
-        b->printShips();
-        int runVal = b->run();
+        struct BSCore *bsc = (struct BSCore *) malloc (sizeof(struct BSCore));
+        bsInit(boardSize, colorScheme, numOfShips, &event, bsc, &window);
+        bsLayout(bsc);
+        bsRun(bsc);
+
+        int runVal = 0;
 		
 		// a runVal of 2 indicates the game has been exited from the pause menu, return to
 		// the start screen
@@ -63,7 +64,6 @@ int main(int argc, char *argv[]) {
 			gameRunning = false;
 		}
 
-		delete(b);
     }
 
     return 0;
