@@ -735,7 +735,9 @@ int helper_eec_text_grow(struct Clunky_Event_Summary *sum){
     for (int i = 0; i < sum->str_used; i++) sum->str[i] = hold[i];
 
     //free the hold array
+    printf("GROWING TEXT\n");
     free(hold);
+    printf("TEXT IS BIG NOW\n");
 
     return 0;
 }

@@ -20,7 +20,7 @@ struct Clunky_Event{
 
         int num_input;
         //just going to hold the character that was entered, capital letters are going to represtn command keypresses
-        char input[5];
+        char input[25];
 
         int mx; //mouse x position
         int my; //mouse y position

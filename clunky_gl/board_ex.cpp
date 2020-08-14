@@ -142,8 +142,11 @@ int main(int argc, char *argv[]){
 
     while(cont && num_hits && ai_hits){
         //first thing: check to see if there have been any new events!
+        printf("Start Loop\n");
         clunky_event(&event);
+        printf("Events Polled\n");
         clunky_eec_update(eec, &event, &window);
+        printf("EEC Updated\n");
         //if there has been a keypress (indicated with num_input != 0)
         //or a mouse click (indicated with lc || rc == 1)
         //then check to see what has happened
