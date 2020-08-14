@@ -575,7 +575,19 @@ int bsLayout(struct BSCore *c){
                 if (c->event->input[k] == 'q') cont = 0;
             }
         }
-        if (eec->sum.event_type == 'S'){
+		// see if a ship has been dropped outside the bounds of the board
+		if (eec->sum.event_type == 'D'){
+			printf("DROP!\n");
+			int indx = clunky_indx_from_uid(eec->sum.uid_one, eec);
+   			int shipGid = eec->elements[indx]->gid;	
+			if (shipPlaced[shipGid]) {
+				placedShips--;
+				shipPlaced[shipGid] = 0;
+				shipPos[shipGid][0] = -1;
+				shipPos[shipGid][1] = -1;
+			}
+		}
+        else if (eec->sum.event_type == 'S'){
             printf("SNAP!\n");
             int indx = clunky_indx_from_uid(eec->sum.uid_one, eec);
             int length = eec->elements[indx]->name[1]-'0';
