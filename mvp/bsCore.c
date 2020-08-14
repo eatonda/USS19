@@ -238,6 +238,18 @@ int loadMedia(struct BSCore *c){
     *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*fire, buttonF, 60, 436, 0, "fire\0", 'B', 'N');
 
+
+	// pause button element
+	struct Clunky_Texture *buttonPT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/PauseButton.bmp", buttonPT, c->window);
+    struct Clunky_Sprite *buttonP = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+    clunky_init_sprite(1, 2, buttonPT, buttonP);
+    struct Clunky_Event_Element **pause = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *pause = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*pause, buttonP, 676, 640, 0, "pause\0", 'B', 'N');
+
+
+
     //Delete Planning Pin Element
     struct Clunky_Texture *dpt = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/DelPlan.bmp", dpt, c->window);
@@ -303,6 +315,7 @@ int loadMedia(struct BSCore *c){
     clunky_eec_add_elements(c->selector, empty_cells, c->board_size * c->board_size);
     clunky_eec_add_elements(c->eec, spawn, 1);
     clunky_eec_add_elements(c->eec, aim, 1);
+	clunky_eec_add_elements(c->eec, pause, 1);
     clunky_eec_add_elements(c->eec, deletePlan, 1);
     clunky_eec_add_elements(c->eec, cw, 1);
     clunky_eec_add_elements(c->eec, ccw, 1);
@@ -937,6 +950,15 @@ int bsRun(struct BSCore *c){
       *fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
       clunky_element_init(*fire, buttonF, 20, 436, 1, "fire\0", 'B', 'N');
 
+      // pause button element
+	  struct Clunky_Texture *buttonPT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+      clunky_load_texture("./clunky_assets/PauseButton.bmp", buttonPT, c->window);
+      struct Clunky_Sprite *buttonP = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+      clunky_init_sprite(1, 2, buttonPT, buttonP);
+      struct Clunky_Event_Element **pause = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+      *pause = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+      clunky_element_init(*pause, buttonP, 100, 100, 0, "pause\0", 'B', 'N');
+
 
       //the aim cursor
       struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -1003,6 +1025,14 @@ int bsRun(struct BSCore *c){
                       else if (c->eec->sum.eid_one == clunky_hash_gen("CCW\0")){
                             rotate(c, -1);
                       }
+					  else if (c->eec->sum.eid_one == clunky_hash_gen("pause\0")){
+						printf("Pause button clicked\n");
+						int pauseVal = getPauseSelection(c->window, c->event); 
+						// 1 indicates game restart, 2 indicates exit game
+						if (pauseVal == 1 || pauseVal == 2) {
+							return pauseVal;
+						}
+					}
                   }
                   else if (c->eec->sum.event_type == 'S'){
                       printf("SNAP!\n");

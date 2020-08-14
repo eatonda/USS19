@@ -2,7 +2,7 @@
 #include "../clunky_gl/clunkyCore.h"
 #include "../clunky_gl/clunkyEventElements.h"
 #include "ship.h"
-
+#include "pause_menu/pauseMenu.hpp"
 
 #ifndef BSCORE_H
 #define BSCORE_H
