@@ -484,6 +484,13 @@ int draggable_ee_handler(int i, int status, struct Clunky_Event_Element_Containe
                             eec_update_group(eec->elements[i], eec);
 
                         }
+                        else{
+                            //a dropped event
+                            summary->eid_one = eec->elements[i]->eid;
+                            summary->uid_one = eec->elements[i]->uid;
+                            eec_update_group(eec->elements[i], eec);
+                            summary->event_type = 'D';
+                        }
                     }
                 }
 
