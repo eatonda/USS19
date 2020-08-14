@@ -59,11 +59,14 @@ int main(int argc, char *argv[]) {
 		// runVal of 0 indicates the game exited normally	
 		// a runVal of 2 indicates the game has been exited from the pause menu
 		if (runVal == 0 || runVal == 2) {
+            printf("runVal is 0 or 2\n");
+            rounds = bsc->turnCnter;
+            isWinner = bsc->winnerFlag;
+            printf("Winner FLag %s", isWinner);
+            gameOver(&window, &event, boardSize, rounds, isWinner);
+            
 			if (!getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
 				gameRunning = false;
-                
-                rounds = bsc->turnCnter;
-                isWinner = bsc->winnerFlag;
 			}				
 		}
 		// runVal of 1 indicates the game has been restarted with the same setup (hence we don't need
@@ -73,7 +76,7 @@ int main(int argc, char *argv[]) {
 		}
 
     }
-    gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
+   
     
 
     return 0;
