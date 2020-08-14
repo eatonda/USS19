@@ -367,13 +367,14 @@ int bsLayout(struct BSCore *c){
     //Ship sizes
     int shipSizes [] = {5, 4, 3, 2, 2, 3, 4, 2, 2, 2};
 
-    struct Clunky_Event_Element **ships = NULL;
+	// will hold the clunky event elements for each of the ships
+    struct Clunky_Event_Element ***ships = (struct Clunky_Event_Element***) malloc(sizeof(struct Clunky_Event_Element**) * c->num_ships);
 
     //Generating the ships
     for(int i = 0; i < c->num_ships; i++){
-        ships = generate_ship(shipSizes[i], 1, eec, s);
+        ships[i] = generate_ship(shipSizes[i], 1, eec, s);
         for(int j = 0; j < shipSizes[i]; j++){
-            ships[j]->y = 64*i;
+            ships[i][j]->y = 64*i;
         }
     }
 
@@ -428,6 +429,57 @@ int bsLayout(struct BSCore *c){
 
     int cont = 1, k;
     int sel_indx = -1;
+
+	// 2D array that will hold the positions of all ships on the board
+	// -1 : no ship in that cell
+	// ship cells are identified by the sprite column of the ship
+	int** boardGrid =  (int**) malloc(sizeof(int*) * c->board_size);
+	for (int i = 0; i < c->board_size; i++) {
+		boardGrid[i] = (int*) malloc(sizeof(int) * c->board_size);
+	}
+
+	// set all cells in the board grid to -1 indicating that no ships have
+	// been placed yet
+	for (int i = 0; i < c->board_size; i++) {
+		for (int j = 0; j < c->board_size; j++) {
+			boardGrid[i][j] = -1;
+		}
+	}
+
+	// array holding the orientation of each ship
+	// 0 - for the 0 offset event element as the leftmost
+	// 1 - 0 offset element as the topmost
+	// 2 - 0 offset element as the rightmost
+	// 3 - 0 offset element as the bottommost
+	// ** SETTING THE DEFAULT TO LEFTMOST. IF WE ADD IN THE ABILITY TO ROTATE SHIPS
+	//		THIS SECTION WILL NEED TO BE MODIFIED **
+	int* orientation = (int*) malloc(sizeof(int) * c->num_ships);
+	for (int i = 0; i < c->num_ships; i++) {
+		orientation[i] = 0;
+	}
+
+	// holds the position of the 0 offset event element of each ship
+	// first index represents the index of the ship. For the second index,
+	// a 0 gives the row of the 0 offset and a 1 gives the column of the 0 offset
+	int** shipPos = (int**) malloc(sizeof(int*) * c->num_ships);
+	for (int i = 0; i < c->num_ships; i++) {
+		shipPos[i] = (int*) malloc(sizeof(int) * 2);
+	}	
+	for (int i = 0; i < c->num_ships; i++) {
+		for (int j = 0; j < 2; j++) {
+			shipPos[i][j] = -1;
+		}
+	}
+
+	// holds a 1 if a ship is placed within the bounds of the board and a 0 otherwise
+	int* shipPlaced = (int*) malloc(sizeof(int) * c->num_ships);
+	for (int i = 0; i < c->num_ships; i++) {
+		shipPlaced[i] = 0;
+	} 
+
+	// holds the number of ships that are currently correctly placed on the board
+	int placedShips = 0;
+
     while(cont){
         //first thing: check to see if there have been any new events!
         clunky_event(c->event);
@@ -451,20 +503,202 @@ int bsLayout(struct BSCore *c){
             int indx = clunky_indx_from_uid(eec->sum.uid_one, eec);
             int length = eec->elements[indx]->name[1]-'0';
             int offset = eec->elements[indx]->name[0]-'0';
+			int shipGid = eec->elements[indx]->gid; 
+			printf("event elem row: %d\n", eec->elements[indx]->row);		
+			printf("event elem gid: %d\n", shipGid);
             indx = clunky_indx_from_uid(eec->sum.uid_two, eec);
             int cellnum = eec->elements[indx]->name[0]-'0';
             printf("$$%d, %d, %d\n", length, offset, cellnum);
 
-        }
+			// find the 0 offset element of the ship and determine if ship is on board
+			int onBoard = 1;
+			int cellRow = cellnum / c->board_size;
+			int cellCol = cellnum % c->board_size;
+			printf("cellRow: %d, cellCol: %d\n", cellRow, cellCol);
+			// 0 offset is bottommost	
+			if (orientation[shipGid] == 3) {
+				cellCol = cellCol - offset;
+				if (cellCol < 0) {
+					onBoard = 0;
+				}
+				else {
+					onBoard = (cellCol + length <= c->board_size);
+				}
+			}
+			// 0 offset is leftmost
+			else if (orientation[shipGid] == 0) {
+				cellRow = cellRow - offset;
+				if (cellRow < 0) {
+					onBoard = 0;
+				}
+				else {
+					onBoard = (cellRow + length <= c->board_size);
+				}
+			}
+			// 0 offset is topmost
+			else if (orientation[shipGid] == 1) {
+				cellCol = cellCol + offset;
+				if (cellCol >= c->board_size) {
+					onBoard = 0;
+				}
+				else {
+					onBoard = (cellCol - length >= -1);
+				}
+			}
+			// 0 offset is rightmost
+			else {
+				cellRow = cellRow + offset;	
+				if (cellRow >= c->board_size) {
+					onBoard = 0;
+				}
+				else {
+					onBoard = (cellRow - length >= -1);	
+				}
+			}
+
+			// the ship was placed within the bounds of the board
+			if (onBoard) {
+				if (!shipPlaced[shipGid]) {
+					placedShips++;
+					shipPlaced[shipGid] = 1;	
+				}
+				shipPos[shipGid][0] = cellRow;
+				shipPos[shipGid][1] = cellCol;
+			}
+			// the ship was not placed within the bounds of the board
+			else {
+				if (shipPlaced[shipGid]) {
+					placedShips--;
+					shipPlaced[shipGid] = 0;
+					shipPos[shipGid][0] = -1;
+					shipPos[shipGid][1] = -1;
+				}	
+			}
+		}
         else if (eec->sum.event_type == 'C'){
             if (eec->sum.eid_one == clunky_hash_gen("start\0")){
-                cont = 0;
+				// only start the game if all the ships are placed correctly
+				printf("Placed ships: %d\n", placedShips);
+				if (placedShips == c->num_ships) {
+					// ensure there is no overlap of any ships on the board
+					int noOverlap = 1;				
+
+					// build up the board, but stop if there is any overlap
+					for (int i = 0; i < c->num_ships; i++) {
+						int zeroOffRow = shipPos[i][0];
+						int zeroOffCol = shipPos[i][1];
+
+						// set as the event element sprite row for each offset
+
+						// ship oriented with 0 offset as bottommost
+						if (orientation[i] == 3) {
+							for (int j = 0; j < shipSizes[i]; j++) {
+								// ensure the grid space isn't already occupied
+								if (boardGrid[zeroOffRow][zeroOffCol + j] == -1) {
+									boardGrid[zeroOffRow][zeroOffCol + j] = ships[i][j]->row;
+								}
+								// the space was already occupied, so the game cannot be started
+								else {
+									printf("Overlap at %d, %d\n", zeroOffRow, zeroOffCol + j);
+									noOverlap = 0;
+									break;
+								}							
+							}
+						}
+						// ship oriented with 0 offset as leftmost
+						else if (orientation[i] == 0) {
+							for (int j = 0; j < shipSizes[i]; j++) {
+								// ensure the grid space isn't already occupied
+								if (boardGrid[zeroOffRow + j][zeroOffCol] == -1) {
+									boardGrid[zeroOffRow + j][zeroOffCol] = ships[i][j]->row;
+								}
+								// the space was already occupied, so the game cannot be started
+								else {
+									noOverlap = 0;
+									break;
+								}							
+							}
+						}
+						// ship oriented with 0 offset as topmost
+						else if (orientation[i] == 1) {
+							for (int j = 0; j < shipSizes[i]; j++) {
+								// ensure the grid space isn't already occupied
+								if (boardGrid[zeroOffRow][zeroOffCol - j] == -1) {
+									boardGrid[zeroOffRow][zeroOffCol - j] = ships[i][j]->row;
+								}
+								// the space was already occupied, so the game cannot be started
+								else {
+									noOverlap = 0;
+									break;
+								}							
+							}
+						}
+						// ship oriented with 0 offset as rightmost
+						else {
+							for (int j = 0; j < shipSizes[i]; j++) {
+								// ensure the grid space isn't already occupied
+								if (boardGrid[zeroOffRow - j][zeroOffCol] == -1) {
+									boardGrid[zeroOffRow - j][zeroOffCol] = ships[i][j]->row;
+								}
+								// the space was already occupied, so the game cannot be started
+								else {
+									noOverlap = 0;
+									break;
+								}							
+							}
+						}			
+
+						if (!noOverlap) {
+							break;
+						}
+					}					
+
+
+					// only start the game if there is no overlap of any ships
+					if (noOverlap) {
+						cont = 0;
+					}
+					// restart the boardGrid to all -1
+					else {
+						for (int i = 0; i < c->board_size; i++) {
+							for (int j = 0; j < c->board_size; j++) {
+								boardGrid[i][j] = -1;
+							}
+						}
+					}
+                }		
             }
         }
         //Update the window!
         clunky_present_window(c->window);
     }
 
+	// free the memory for the ships array (holding the ships event elements. The ship event
+	// elements themselves do not need to be freed here (they are managed by the eec)
+	free(ships);
+	ships = NULL;
+	// free the orientation array
+	free(orientation);
+	orientation = NULL;	
+	// free memory allocated for the ship positions	
+	for (int i = 0; i < c->num_ships; i++) {
+		free(shipPos[i]);
+		shipPos[i] = NULL;
+	}
+	free(shipPos);
+	shipPos = NULL;
+	// free memory that was used for ship placements
+	free(shipPlaced);
+	shipPlaced = NULL;
+
+
+	//********************
+	// we want to return the positions of the ship on the board, but it's commented out
+	// until we can properly deal with it in our main function. The function that takes in the
+	// boardGrid will also need to handle freeing its memory
+	//********************
+
+	// return boardGrid;
 
     return 0;
 }
