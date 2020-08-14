@@ -4,6 +4,9 @@
 
 #include <vector>
 #include <string>
+#include "../../clunky_gl/clunkyCore.h"
+#include "../../clunky_gl/clunkyHash.h"
+#include "../../clunky_gl/clunkyEventElements.h"
 
 // uses the input vector to write in the high scores to the scores.txt file.
 //

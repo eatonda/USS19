@@ -3,6 +3,9 @@
 #define ENTERSCORE_HPP
 
 #include <string>
+#include "../../clunky_gl/clunkyCore.h"
+#include "../../clunky_gl/clunkyHash.h"
+#include "../../clunky_gl/clunkyEventElements.h"
 
 // calculates and returns a player's score
 int calcScore(int numRounds, int boardRows, int boardCols);
