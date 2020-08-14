@@ -58,7 +58,16 @@ int main(int argc, char *argv[]) {
 		// return to the start menu	
 		// runVal of 0 indicates the game exited normally	
 		// a runVal of 2 indicates the game has been exited from the pause menu
-		if (runVal == 0 || runVal == 2) {
+	
+		// the game exited normally, display the end game screen, then start a new game	
+		if (runVal == 0) {
+			rounds = bsc->turnCnter;
+			isWinner = bsc->winnerFlag;
+			gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
+			gameRunning = false;
+		}
+	
+		if (runVal == 2) {
 			if (!getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
 				gameRunning = false;
                 
@@ -73,8 +82,7 @@ int main(int argc, char *argv[]) {
 		}
 
     }
-    gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
-    
+        
 
     return 0;
 }
