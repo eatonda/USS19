@@ -2,6 +2,11 @@
 
 const int LEADERBOARD_MENU_NUM_OF_BUTTONS = 1;
 
+/* Constants for all menu buttons */
+const int NUM_OF_SPRITE_COLS = 2;
+const int BUTTON_WIDTH = 165;
+const int BUTTON_HEIGHT = 160;
+
 void winnerScreen(struct Clunky_Window* window);
 void loserScreen(struct Clunky_Window* window);
 
@@ -42,6 +47,11 @@ void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dim
                 
                 // Buttons for pages should be at the bottom of the screen in a single row
                 // Same xCoordinates as USER MANUAL
+                int xCoordinates[LEADERBOARD_MENU_NUM_OF_BUTTONS];
+                xCoordinates[0] = window->width * 0.20;
+            
+                int yCoordinates[LEADERBOARD_MENU_NUM_OF_BUTTONS];
+                yCoordinates[0] = window->height * 0.95;
                 
                 
                 struct Clunky_Event_Element_Container* score_menu = buttonSetup(LEADERBOARD_MENU_NUM_OF_BUTTONS, scoreMenuDescriptions, &lmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
@@ -50,7 +60,7 @@ void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dim
                 
                 clunky_add_text(scoreMenuTitle, toC_String(title));   // Add text to clunky_text
                 
-                path = "./data/high_scores/scores.txt";
+                std::string path = "./data/high_scores/scores.txt";
                 std::vector<char*> scoreStrings;
                 //printf("|||||||||\n");
                 fileToStrings(path, scoreStrings);    //Get cstring version of text file
@@ -63,10 +73,10 @@ void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dim
 
              
                 struct Clunky_Text* score_content[scoreStrings.size()];
-                lineOffset = window->height * 0.05;
-                lineY = window->height * 0.3;
-                linesPerPage = 10;   //To show multipage functionality
-                count = 0;
+                int lineOffset = window->height * 0.05;
+                int lineY = window->height * 0.3;
+                int linesPerPage = 10;   //To show multipage functionality
+                int count = 0;
                 for(int i = 0; i < scoreStrings.size(); i++) {
                     if (count >= linesPerPage) {
                         count = 0;  //Reset count
