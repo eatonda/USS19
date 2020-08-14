@@ -81,7 +81,7 @@ String inputName(){
                 if (event.input[k] == '`') printf("Name: %s\n", eec->sum.str);
                 
                 // Enter key pressed
-                if (event.input[k] == ) {
+                if (event.input[k] == 'r' ) {
                     printf("Enter was Pressed, returning name");
                     cont = 0;   // Break main loop
                     break;
@@ -103,7 +103,8 @@ String inputName(){
     }
 
     //Quit SDL subsystems
-    SDL_Quit();
+    //SDL_Quit();
+    return name;
 
     return 0;
 }
