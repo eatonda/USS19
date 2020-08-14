@@ -7,7 +7,14 @@ const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 100;
 
 int checkForWin(struct BSCore *c){
-    if ( c->ai_hits >= c->hits_to_win || c->player_hits >= c->hits_to_win) return 1;
+    if ( c->ai_hits >= c->hits_to_win){
+        c->winnerFlag = -1;
+        return -1;
+    }
+    else if ( c->player_hits >= c->hits_to_win){
+        c->winnerFlag = 1;
+        return 1;
+    }
     return 0;
 }
     
@@ -418,6 +425,8 @@ int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BS
     c->hits_to_win = 0;
     c->ai_hits = 0;
     c->player_hits = 0;
+    c->winnerFlag = 0;
+    c->turnCnter = 0;
 
     //create the board arrays
     c->pins = (int **) malloc(sizeof(int *) * size);
@@ -883,7 +892,8 @@ int cell_selector(struct BSCore *c){
                       //get the row & col
                       int row = sel_indx% c->board_size;
                       int col = sel_indx / c->board_size;
-
+                        //incriment the turn counter
+                        c->turnCnter++;
                         //attack the ai
                         move(col, row,c);
                         //if there is a win conditon, quit
