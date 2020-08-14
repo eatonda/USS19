@@ -2,7 +2,7 @@
 
 const int LEADERBOARD_MENU_NUM_OF_BUTTONS = 1;
 
-int gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dimensions, int numOfRounds, int winnerFlag) {
+void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dimensions, int numOfRounds, int winnerFlag) {
     
     int tempValue;
     int CENTER_X = window->width * 0.5;

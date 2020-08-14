@@ -17,7 +17,7 @@
 #include "/data_functions/enterScore.hpp"
 
 
-int gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dimensions, int numOfRounds, int winnerFlag); //Runs game over protocols, such as displaying game over and saving high score.
+void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dimensions, int numOfRounds, int winnerFlag); //Runs game over protocols, such as displaying game over and saving high score.
 
 
 
