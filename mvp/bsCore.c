@@ -1,29 +1,32 @@
 #include "bsCore.h"
+#include "aiBoards.h"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 100;
 
+int checkForWin(struct BSCore *c){
+    if ( c->ai_hits >= c->hits_to_win || c->player_hits >= c->hits_to_win) return 1;
+    return 0;
+}
+    
 
-
-int attack_ai(int row, int col, struct BSCore *c){
+int attack_ai(struct BSCore *c){
     //Find a spot randomly in the players board that hasnt been selected yet
     while(1){
-                        q = rand() % 5;
-                        w = rand() % 5;
-                        if (ai[q][w] == 0){
-                            ai_print[q][w] = 'M';
-                            ai[q][w] = 1;
-                            break;
-                        }
-                        else if (ai[q][w] == 4){
-                            ai_print[q][w] = 'H';
-                            ai[q][w] = 1;
-                            ai_hits--;
-                            break;
-                        }
-                    }
+        int row = rand() % c->board_size;
+        int col = rand() % c->board_size;
+        if (c->player_board[row][col] == -1 && c->pins[row][col] == -1){
+            c->pins[row][col] = 0;
+            break;
+        }
+        else if (c->player_board[row][col] != -1 && c->pins[row][col] == -1){
+            c->pins[row][col] = 1;
+            c->player_hits++;
+            break;
+       }
+    }
 
     return 0;
 }
@@ -57,6 +60,10 @@ int render(struct BSCore *c){
             if (c->ai_pins[i][j] >= 0){
                 //render the pin
                 clunky_render_sprite(BOARD_OFFSET_W + i * c->pin_spr->ap_w, BOARD_OFFSET_H + j * c->pin_spr->ap_h, c->ai_pins[i][j], 0, c->pin_spr, c->window);
+            }
+            if (c->pins[i][j] >= 0){
+                //render the pin
+                clunky_render_sprite(BOARD_OFFSET_W + i * c->pin_spr->ap_w + 525, BOARD_OFFSET_H + j * c->pin_spr->ap_h, c->pins[i][j], 0, c->pin_spr, c->window);
             }
         }
     }
@@ -395,6 +402,9 @@ int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BS
     c->window = window;
     c->event = event;
     c->rotation = 0;
+    c->hits_to_win = 0;
+    c->ai_hits = 0;
+    c->player_hits = 0;
 
     //create the board arrays
     c->pins = (int **) malloc(sizeof(int *) * size);
@@ -453,6 +463,7 @@ int bsLayout(struct BSCore *c){
         for(int j = 0; j < shipSizes[i]; j++){
             ships[i][j]->y = 64*i;
         }
+        c->hits_to_win += shipSizes[i];
     }
 
     struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -788,6 +799,13 @@ int bsLayout(struct BSCore *c){
 	//********************
 
 	// return boardGrid;
+    for (int i = 0; i < c->board_size; i++){
+        for (int j = 0; j < c->board_size; j++){
+            c->player_board[i][j] = boardGrid[i][j];
+        }
+        free(boardGrid[i]);
+    }
+    free(boardGrid);
 
     return 0;
 }
@@ -852,8 +870,14 @@ int cell_selector(struct BSCore *c){
 
                         //attack the ai
                         move(col, row,c);
+                        //if there is a win conditon, quit
+                        if (checkForWin(c)) return 0;
+                        //have the AI attack the player
+                        attack_ai(c);
 
-                      printf("R:%d, C:%d\n", row, col);
+                        //if there is a win conditon, quit
+                        if (checkForWin(c)) return 0;
+
 
 
                       //break
@@ -907,7 +931,7 @@ int cell_selector(struct BSCore *c){
       clunky_present_window(c->window);
   }
 
-  return 0;
+  return 1;
 
 }
 
@@ -1010,7 +1034,7 @@ int bsRun(struct BSCore *c){
                           clunky_eec_add_elements(c->eec, pin, 1);
                       }
                       else if (c->eec->sum.eid_one == clunky_hash_gen("aim\0")){
-                            cell_selector(c);
+                            cont = cell_selector(c);
                       }
                       else if (c->eec->sum.eid_one == clunky_hash_gen("CW\0")){
                             rotate(c, 1);
