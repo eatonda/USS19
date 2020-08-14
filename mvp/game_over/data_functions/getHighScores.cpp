@@ -25,16 +25,16 @@
 //		a single tab followed by the score for that player followed by a 
 //		newline character.
 
-std::vector<std::vector<std::string>> getHighScores() {
+std::vector<std::vector<std::string> > getHighScores() {
 
 	// vector which will hold the player names and respective high scores
-	std::vector<std::vector<std::string>> highScores;
+	std::vector<std::vector<std::string> > highScores;
 
 	// string will hold lines from the scores file
 	std::string line;
 
 	// open the high scores file
-	std::ifstream scoresFile("../data/high_scores/scores.txt");
+	std::ifstream scoresFile("./data/high_scores/scores.txt");
 
 	// if there is an error in opening the high scores file, then
 	// the function will return an empty vector
@@ -59,8 +59,10 @@ std::vector<std::vector<std::string>> getHighScores() {
 			}
 
 			// add the player name and score as a row in the vector
-			std::vector<std::string> newRow = { playerName, score };
-			
+			std::vector<std::string> newRow;
+			newRow.push_back(playerName);
+			newRow.push_back(score);			
+	
 			highScores.push_back(newRow);	
 		}
 	
