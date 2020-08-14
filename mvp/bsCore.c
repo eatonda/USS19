@@ -423,10 +423,10 @@ int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BS
     c->pins = (int **) malloc(sizeof(int *) * size);
     c->player_board = (int **) malloc(sizeof(int *) * size);
     c->ai_pins = (int **) malloc(sizeof(int *) * size);
-    c->ai_board = (int **) malloc(sizeof(int *) * size);
+//    c->ai_board = (int **) malloc(sizeof(int *) * size);
     for (int i = 0; i < size; i++){
         c->player_board[i] = (int *) malloc(sizeof(int ) * size);
-        c->ai_board[i] = (int *) malloc(sizeof(int ) * size);
+  //      c->ai_board[i] = (int *) malloc(sizeof(int ) * size);
         c->pins[i] = (int *) malloc(sizeof(int ) * size);
         c->ai_pins[i] = (int *) malloc(sizeof(int ) * size);
 
@@ -434,7 +434,7 @@ int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BS
             c->pins[i][j] = -1;
             c->ai_pins[i][j] = -1;
             c->player_board[i][j] = -1;
-            c->ai_board[i][j] = -1;
+    //        c->ai_board[i][j] = -1;
         }
     }
 
@@ -466,6 +466,9 @@ int bsLayout(struct BSCore *c){
 
     //Ship sizes
     int shipSizes [] = {5, 4, 3, 2, 2, 3, 4, 2, 2, 2};
+
+    //get the AI board
+    c->ai_board = get_ai_board(c->board_size, c->num_ships);
 
 	// will hold the clunky event elements for each of the ships
     struct Clunky_Event_Element ***ships = (struct Clunky_Event_Element***) malloc(sizeof(struct Clunky_Event_Element**) * c->num_ships);
