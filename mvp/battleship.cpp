@@ -13,6 +13,8 @@
 #include "gameCore.hpp"
 #include "bsCore.h"
 
+#include "./game_over/gameOver.hpp"
+
 const int WINDOW_WIDTH = 1350;
 const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
@@ -29,6 +31,9 @@ int main(int argc, char *argv[]) {
     int boardSize = -1;     // Square board thus w = h
     int colorScheme = -1;   // Color scheme is either 0(light) or 1(dark)
 
+
+    int isWinner = -1;
+    int rounds = -5;
 
 	bool gameRunning = false;
    
@@ -56,6 +61,9 @@ int main(int argc, char *argv[]) {
 		if (runVal == 0 || runVal == 2) {
 			if (!getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
 				gameRunning = false;
+                
+                rounds = bsc->turnCnter;
+                isWinner = bsc->winnerFlag;
 			}				
 		}
 		// runVal of 1 indicates the game has been restarted with the same setup (hence we don't need
@@ -65,6 +73,8 @@ int main(int argc, char *argv[]) {
 		}
 
     }
+    gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
+    
 
     return 0;
 }

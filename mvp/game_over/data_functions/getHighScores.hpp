@@ -28,6 +28,6 @@
 //		a single tab followed by the score for that player followed by a 
 //		newline character.
 
-std::vector<std::vector<std::string>> getHighScores();
+std::vector<std::vector<std::string> > getHighScores();
 
 #endif

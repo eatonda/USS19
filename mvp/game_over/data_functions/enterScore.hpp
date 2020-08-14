@@ -4,14 +4,15 @@
 
 #include <string>
 
-// calculates a player's score and determines if it is a high
-// score. If it is a high score, the score is entered into the 
-// appropriate location in the scores file. If it is a high score
-// this function returns true and returns false otherwise.
-// PRECONDITIONS:
-// 	- this function should only be called if the player won the game 
+// calculates and returns a player's score
+int calcScore(int numRounds, int boardRows, int boardCols);
 
-bool enterScore(int numRounds, int boardRows, int boardCols,
-	std::string playerName);
+// returns true if a given score is a high score and false otherwise
+bool isHighScore(int score);
+
+// attempts to enter a score into the list of high scores, but only
+// if it is a high score. Returns true if the score is a high score
+// and was entered into the high score list and false otherwise
+bool enterScore(int score, std::string playerName);
 
 #endif
