@@ -46,10 +46,9 @@ int main(int argc, char *argv[]) {
         
         struct BSCore *bsc = (struct BSCore *) malloc (sizeof(struct BSCore));
         bsInit(boardSize, colorScheme, numOfShips, &event, bsc, &window);
-        bsLayout(bsc);
-        bsRun(bsc);
+        bsLayout(bsc); 
 
-        int runVal = 0;
+        int runVal = bsRun(bsc);
 		
 		// a runVal of 2 indicates the game has been exited from the pause menu, return to
 		// the start screen
