@@ -5,46 +5,28 @@ const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 100;
 
+
+
 int attack_ai(int row, int col, struct BSCore *c){
     //check to see if there is a pin there
-    if(c->ai_pins[row][col] == -1){
-        //check to see if its a hit
-        if(c->ai_board[row][col] != -1){
-            //its a hit!
-            c->pins[row][col] = 1;
-        }
-        else{
-            c->pins[row][col] = 0;
-        }
-    }
 
     return 0;
 }
 
 int move(int row, int col, struct BSCore *c){
-    //this is to attack the AI
-    //we will be placing pins...
 
-    //If rotation == 0 we dont need to map
-    //1: CW, 3: CCW
-    //2: 180 flip
-    if (c->rotation == 0){
-        //Direct map
-        attack_ai(row, col, c);
+    //check to see if there is a pin there
+    if(c->ai_pins[row][col] == -1){
+        //check to see if its a hit
+        if(c->ai_board[row][col] != -1){
+            //its a hit!
+            c->ai_pins[row][col] = 1;
+            c->ai_hits++;
+        }
+        else{
+            c->ai_pins[row][col] = 0;
+        }
     }
-    else if (c->rotation == 1){
-        //CW
-        attack_ai(c->board_size - 1 - col, row, c); 
-    } 
-    else if (c->rotation == 2){
-        //180
-        attack_ai(c->board_size - 1 - col, c->board_size - 1 - row, c);
-    }
-    else if (c->rotation == 3){
-        //CCW
-        attack_ai(col, c->board_size - 1 - row, c);
-    }
-
 
     return 0;
 }
@@ -55,11 +37,11 @@ int render(struct BSCore *c){
         for(int j = 0; j < c->board_size; j++){
             if ( c->player_board[i][j] >= 0){
                 //render the ship
-                clunky_render_sprite(BOARD_OFFSET_W+c->ship_spr->ap_w*i, BOARD_OFFSET_H + j * c->ship_spr->ap_h, c->player_board[i][j], 0, c->ship_spr, c->window);
+                clunky_render_sprite(BOARD_OFFSET_W+c->ship_spr->ap_w*i + 525, BOARD_OFFSET_H + j * c->ship_spr->ap_h, c->player_board[i][j], 0, c->ship_spr, c->window);
             }
-            if (c->pins[i][j] >= 0){
+            if (c->ai_pins[i][j] >= 0){
                 //render the pin
-                clunky_render_sprite(BOARD_OFFSET_W + i * c->pin_spr->ap_w, BOARD_OFFSET_H + j * c->pin_spr->ap_h, c->pins[i][j], 0, c->pin_spr, c->window);
+                clunky_render_sprite(BOARD_OFFSET_W + i * c->pin_spr->ap_w, BOARD_OFFSET_H + j * c->pin_spr->ap_h, c->ai_pins[i][j], 0, c->pin_spr, c->window);
             }
         }
     }
@@ -113,20 +95,24 @@ int ship_rotation_helper(int rotation, int row){
 
 int rotate(struct BSCore *c, int dir){
     //need temporary hold arrays
-    int **pinH = c->pins;
+    int **pinH = c->ai_pins;
+    int **pinP = c->pins;
     int **shipH = c->player_board;
 
     //now re-allocate the Ship and Pins arrays
     ////Allocate the memory for the Pins array, and set the default value to -1 for all cells
+    c->ai_pins = (int **) malloc(sizeof(int *) * c->board_size);
     c->pins = (int **) malloc(sizeof(int *) * c->board_size);
     c->player_board = (int **) malloc(sizeof(int *) * c->board_size);
 
     //copy over the passed ship placement, and finish allocating memory
     for (int i = 0; i < c->board_size; i++){
+        c->ai_pins[i] = (int *) malloc(sizeof(int) * c->board_size);
         c->pins[i] = (int *) malloc(sizeof(int) * c->board_size);
         c->player_board[i] = (int *) malloc(sizeof(int) * c->board_size);
 
         for (int j = 0; j < c->board_size; j++){
+            c->ai_pins[i][j] = -1;
             c->pins[i][j] = -1;
             c->player_board[i][j] = -1;
         }
@@ -139,7 +125,7 @@ int rotate(struct BSCore *c, int dir){
     //rotate the boards
     //if we have a positive roation value, rotate clockwise
     //otherwise anti-clockwise
-    
+
     if( dir > 0){
         //CW
         if (c->rotation >= 3) c->rotation = 0;
@@ -148,8 +134,9 @@ int rotate(struct BSCore *c, int dir){
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
                     //copy over and rotate the pins
-                    c->pins[c->board_size - 1 - k][j] = pinH[j][k];
-    
+                    c->ai_pins[c->board_size - 1 - k][j] = pinH[j][k];
+                    c->pins[c->board_size - 1 - k][j] = pinP[j][k];
+
                     //copy over and rotate the ship peices
                     //Will need to also update the spite row after the rotation
                     c->player_board[c->board_size - 1 - k][j] = ship_rotation_helper(dir, shipH[j][k]);
@@ -164,7 +151,8 @@ int rotate(struct BSCore *c, int dir){
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
                     //copy over and rotate the pins
-                    c->pins[k][c->board_size - 1 - j] = pinH[j][k];
+                    c->ai_pins[k][c->board_size - 1 - j] = pinH[j][k];
+                    c->pins[k][c->board_size - 1 - j] = pinP[j][k];
 
                     //copy over and rotate the ship peices
                     //Will need to also update the spite row after the rotation
@@ -178,10 +166,12 @@ int rotate(struct BSCore *c, int dir){
     for (int i = 0; i < c->board_size; i++){
         free(shipH[i]);
         free(pinH[i]);
-    } 
+        free(pinP[i]);
+    }
     printf("Free-ing hold** Rotation\n");
     free(shipH);
     free(pinH);
+    free(pinP);
     printf("Rotation Free-ing Done\n");
 
     return 0;
@@ -192,13 +182,17 @@ int loadMedia(struct BSCore *c){
     //Now we will load the texture that contains all of our main menu buttons
     struct Clunky_Texture *water_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/Water.bmp", water_tex, c->window);
+    struct Clunky_Texture *blank_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/BlankCell.bmp", blank_tex, c->window);
 
     //From the trexture we can create a sprite.
     //Clunky Sprites allow for the rendering of partial sections of
     //the texture, instead of the entire texture at once
     struct Clunky_Sprite *water_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    struct Clunky_Sprite *blank_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
     //when initing a sprite, we need to give it how many ROWS and COLUMNS there
     //are on the sprite sheet. it will do the rest
+    clunky_init_sprite(1, 1, blank_tex, blank_spr);
     clunky_init_sprite(2, 5, water_tex, water_spr);
 
     water_spr->sprite_row = 0;
@@ -211,6 +205,22 @@ int loadMedia(struct BSCore *c){
     struct Clunky_Event_Element **spawn = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
     *spawn = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
     clunky_element_init(*spawn, button, 20, 436, 0, "plan\0", 'B', 'N');
+    
+    struct Clunky_Texture *buttonTCW = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/CW.bmp", buttonTCW, c->window);
+    struct Clunky_Sprite *buttonCW  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(1, 2, buttonTCW, buttonCW);
+    struct Clunky_Event_Element **cw = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *cw = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*cw, buttonCW, 20, 500, 0, "CW\0", 'B', 'N');
+    
+    struct Clunky_Texture *buttonTCCW = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/CCW.bmp", buttonTCCW, c->window);
+    struct Clunky_Sprite *buttonCCW  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(1, 2, buttonTCCW, buttonCCW);
+    struct Clunky_Event_Element **ccw = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *ccw = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*ccw, buttonCCW, 84, 500, 0, "CCW\0", 'B', 'N');
 
     struct Clunky_Texture *buttonAT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
     clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT, c->window);
@@ -258,30 +268,49 @@ int loadMedia(struct BSCore *c){
     c->board_scale = 500. / ((float) water_spr->ap_w *(float) c->board_size);
 
     clunky_sprite_scale(c->board_scale, water_spr);
+    clunky_sprite_scale(c->board_scale, blank_spr);
     //clunky_sprite_scale(board_scale, pp_spr);
 
      struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * c->board_size * c->board_size);
+     struct Clunky_Event_Element **pcells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * c->board_size * c->board_size);
+     struct Clunky_Event_Element **empty_cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * c->board_size * c->board_size);
     int cnt = 0;
+    char name[2] = {'0', '\0'};
     for (int i = 0; i < c->board_size; i++){
         for (int j = 0; j < c->board_size; j++){
 //            printf("<%d, %d>\n", i, j);
+            name[0] = '0' + cnt;
             cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+            empty_cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
 
             clunky_element_init(cells[cnt], water_spr, BOARD_OFFSET_W+water_spr->ap_w*i, BOARD_OFFSET_H+water_spr->ap_h*j, c->color_theme, "water\n", 'S', 'A');
+            clunky_element_init(empty_cells[cnt], blank_spr, BOARD_OFFSET_W+water_spr->ap_w*i, BOARD_OFFSET_H+water_spr->ap_h*j, 0, name, 'B', 'N');
+
+            pcells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
+              clunky_element_init(pcells[cnt], water_spr, BOARD_OFFSET_W+water_spr->ap_w*i+525, BOARD_OFFSET_H+water_spr->ap_h*j, 0, name, 'B', 'A');
+              pcells[cnt]->z = 1;
+              pcells[cnt]->ignore = 1;
 
             cells[cnt]->z = 1;
+            empty_cells[cnt]->z = 1;
 
             cnt++;
         }
     }
 
     clunky_eec_add_elements(c->eec, cells, c->board_size * c->board_size);
+    clunky_eec_add_elements(c->eec, pcells, c->board_size * c->board_size);
+    clunky_eec_add_elements(c->selector, empty_cells, c->board_size * c->board_size);
     clunky_eec_add_elements(c->eec, spawn, 1);
     clunky_eec_add_elements(c->eec, aim, 1);
     clunky_eec_add_elements(c->eec, deletePlan, 1);
+    clunky_eec_add_elements(c->eec, cw, 1);
+    clunky_eec_add_elements(c->eec, ccw, 1);
+    clunky_eec_add_elements(c->selector, cw, 1);
+    clunky_eec_add_elements(c->selector, ccw, 1);
 //    clunky_eec_add_elements(c->eec, fire, 1);
-//    clunky_eec_add_elements(c->eec, frame, 1);
-  //  clunky_event_element_update_z(*frame, -5, c->eec);
+    clunky_eec_add_elements(c->eec, frame, 1);
+    clunky_event_element_update_z(*frame, -5, c->eec);
     clunky_eec_add_elements(c->eec, frameP, 1);
     clunky_event_element_update_z(*frameP, -1, c->eec);
 
@@ -307,6 +336,37 @@ int loadMedia(struct BSCore *c){
     clunky_init_sprite(10, 1, st, c->ship_spr);
     clunky_sprite_scale(c->board_scale,c->ship_spr);
 
+    //the aim cursor
+      struct Clunky_Texture *cur_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+      clunky_load_texture("./clunky_assets/Crosshairs.bmp", cur_tex, c->window);
+      c->cur = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+      clunky_init_sprite(1, 1, cur_tex, c->cur);
+
+//     struct Clunky_Texture *buttonFT = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+  //    clunky_load_texture("./clunky_assets/FireButton.bmp", buttonFT, c->window);
+    //  struct Clunky_Sprite *buttonF = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));;
+      clunky_init_sprite(2, 2, buttonFT, buttonF);
+      c->fire = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+      clunky_element_init(c->fire, buttonF, 20, 436, 1, "fire\0", 'B', 'N');
+        clunky_eec_add_elements(c->selector, &(c->fire), 1);
+    //need to create the selector sprite sheets
+      struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+      clunky_load_texture("./clunky_assets/Selector.bmp", sel_tex, c->window);
+     c->cell= (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+      clunky_init_sprite(3, 2, sel_tex, c->cell);
+      clunky_sprite_scale(c->board_scale, c->cell);
+      c->cell->sprite_column = -1;
+
+      //aim button element
+      struct Clunky_Texture *buttonAT2 = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+      clunky_load_texture("./clunky_assets/AimButton.bmp", buttonAT2, c->window);
+      struct Clunky_Sprite *buttonA2  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+      clunky_init_sprite(2, 2, buttonAT2, buttonA2);
+      struct Clunky_Event_Element **aim2 = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+      *aim2 = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+      clunky_element_init(*aim2, buttonA2, 144, 436, 1, "aim\0", 'B', 'N');
+      (*aim2)->misc = 1;
+        clunky_eec_add_elements(c->selector, aim2, 1);
 
 
     return 0;
@@ -340,12 +400,14 @@ int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BS
         }
     }
 
-    c->player_board[0][0] = 0;
+//    c->player_board[0][0] = 0;
 //    c->player_board[4][4] = 0;
 
-    //init the EEC
+    //init the EECs
     c->eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
     clunky_eec_init(c->eec);
+    c->selector = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
+    clunky_eec_init(c->selector);
 
     //load the media
     loadMedia(c);
@@ -703,6 +765,125 @@ int bsLayout(struct BSCore *c){
     return 0;
 }
 
+int cell_selector(struct BSCore *c){
+
+  int cont = 1;
+  int sel_indx = -1;
+  int ready = 0;
+  while(cont){
+      //====================================
+      //Aim Selector Screen
+      //====================================
+      //
+      
+
+      //if a cell is selected, animate the fire button
+      if (ready) c->fire->effect = 'A';
+      else c->fire->effect = 'N';
+
+        //render the normal board and elements
+      for (int i = 0; i < c->eec->num_ele; i++){
+          //now render the element to the window
+          clunky_element_render(c->eec->elements[i], c->window);
+      }
+      render(c);
+      clunky_event(c->event);
+      clunky_eec_update(c->selector, c->event, c->window);
+
+      //render the curser
+      clunky_render_sprite(c->event->mx - c->cur->ap_w/2, c->event->my - c->cur->ap_h/2, 0, 0, c->cur, c->window);
+
+      if (c->event->num_input != 0){
+          //print any keypresses and check for any SDL specific events
+          //(such as SDL_QUIT)
+          for(int k = 0; k < c->event->num_input; k++){
+              printf(">>%c\n", c->event->input[k]);
+
+              //all user keypressed are represented by either a number or
+              //a capital letter. lowercase letters I've reserved for
+              //SDL events
+              //'q' -> SDL_QUIT
+              if (c->event->input[k] == 'q') cont = 0;
+              }
+      }
+
+
+      if (c->selector->sum.event_type != 'N'){
+          //check for a button click
+          if (c->selector->sum.event_type == 'C'){
+//                        indx = clunky_indx_from_eid(move_eec->sum.eid_one, move_eec);
+              if (c->selector->sum.eid_one == clunky_hash_gen("aim\0")){
+                  break;
+              }
+              else if (c->selector->sum.eid_one == clunky_hash_gen("fire\0")){
+                  if (ready){
+                      printf("FIRE!\n");
+                      //set the ignore flag and change the row
+                      //get the row & col
+                      int row = sel_indx% c->board_size;
+                      int col = sel_indx / c->board_size;
+
+                        //attack the ai
+                        move(col, row,c);
+
+                      printf("R:%d, C:%d\n", row, col);
+
+
+                      //break
+                      break;
+                  }
+              }
+              else if (c->selector->sum.eid_one == clunky_hash_gen("CW\0")){
+                    rotate(c, 1);
+              }
+              else if (c->selector->sum.eid_one == clunky_hash_gen("CCW\0")){
+                    rotate(c, -1);
+              }
+              else{
+                  //this should be a selection cell
+                  //set all cells that have been revliusly selected, back to unselected
+                  //for (int j = 0; j < c->board_size * c->board_size; j++){
+                  //    if (cells[j]->row == 1) cells[j]->row = 0;
+                 // }
+                  //get the index
+                  sel_indx = c->selector->elements[clunky_indx_from_uid(c->selector->sum.uid_one, c->selector)]->name[0] - '0';
+              }
+          }
+      }
+        ready = 0;
+      //render the selection grid
+      int cell_cnt = 0;
+      for (int i = 0; i < c->board_size; i++){
+        for (int j = 0; j < c->board_size; j++){
+            //if sel_indx == -1, dont render anything special
+            //if ai_pins != -1 render the NULL (row = 2)
+            //if ai_pins == -1: render flash
+            if(c->ai_pins[i][j] != -1){
+                clunky_render_sprite(BOARD_OFFSET_W + i * c->cell->ap_w, BOARD_OFFSET_H + j * c->cell->ap_h, 2, 0, c->cell, c->window);
+            }
+            else{
+                if (cell_cnt == sel_indx){
+                    clunky_render_sprite(BOARD_OFFSET_W + i * c->cell->ap_w, BOARD_OFFSET_H + j * c->cell->ap_h, 1, c->window->animation_counter % 2, c->cell, c->window);
+                    ready = 1;
+                }
+                else{
+                    clunky_render_sprite(BOARD_OFFSET_W + i * c->cell->ap_w, BOARD_OFFSET_H + j * c->cell->ap_h, 0, c->window->animation_counter % 2, c->cell, c->window);
+                }
+            }
+            cell_cnt++;
+        }
+    }
+            
+
+
+      //Update the window!
+      clunky_present_window(c->window);
+  }
+
+  return 0;
+
+}
+
 int bsRun(struct BSCore *c){
 
       struct Clunky_Texture *pp_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -717,10 +898,6 @@ int bsRun(struct BSCore *c){
       struct Clunky_Sprite *mp_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
       clunky_init_sprite(2, 1, mp_tex, mp_spr);
       clunky_sprite_scale(c->board_scale, mp_spr);
-
-      //setup the EEC user move colector overlay
-      struct Clunky_Event_Element_Container *move_eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
-      clunky_eec_init(move_eec);
 
       //need to create the selector sprite sheets
       struct Clunky_Texture *sel_tex = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
@@ -755,25 +932,6 @@ int bsRun(struct BSCore *c){
       struct Clunky_Sprite *cur_spr = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
       clunky_init_sprite(1, 1, cur_tex, cur_spr);
 
-      clunky_eec_add_elements(move_eec, aim, 1);
-      clunky_eec_add_elements(move_eec, fire, 1);
-
-      struct Clunky_Event_Element **cells = (struct Clunky_Event_Element **) malloc(sizeof(struct Clunky_Event_Element *) * c->board_size * c->board_size);
-      int cnt = 0;
-      char name[2] = {'0', '\0'};
-      for (int i = 0; i < c->board_size; i++){
-          for (int j = 0; j < c->board_size; j++){
-              name[0] = '0' + cnt;
-              cells[cnt] = (struct Clunky_Event_Element *) malloc(sizeof(struct Clunky_Event_Element));
-              clunky_element_init(cells[cnt], sel_spr, BOARD_OFFSET_W+sel_spr->ap_w*i, BOARD_OFFSET_H+sel_spr->ap_h*j, 0, name, 'B', 'A');
-              cells[cnt]->z = 1;
-              cnt++;
-          }
-      }
-
-      //============
-      //Add the elements to the EEC
-      clunky_eec_add_elements(move_eec, cells,c->board_size * c->board_size);
 
       //create our text elements
       struct Clunky_Text *plyr_txt = clunky_get_text((WINDOW_WIDTH - 550)/2 + 700, 10, 200, 100, 1., c->window);
@@ -806,8 +964,6 @@ int bsRun(struct BSCore *c){
                       //SDL events
                       //'q' -> SDL_QUIT
                       if (c->event->input[k] == 'q') cont = 0;
-                      if (c->event->input[k] == 'A') rotate(c, 1);
-                      if (c->event->input[k] == 'D') rotate(c, -1);
                   }
               }
 
@@ -827,99 +983,13 @@ int bsRun(struct BSCore *c){
                           clunky_eec_add_elements(c->eec, pin, 1);
                       }
                       else if (c->eec->sum.eid_one == clunky_hash_gen("aim\0")){
-                          while(cont){
-                              //====================================
-                              //Aim Selector Screen
-                              //====================================
-                              //
-
-                              //if a cell is selected, animate the fire button
-                              if (sel_indx != -1) (*fire)->effect = 'A';
-                              else (*fire)->effect = 'N';
-
-
-                              for (int i = 0; i < c->eec->num_ele; i++){
-                                  //now render the element to the window
-                                  clunky_element_render(c->eec->elements[i], c->window);
-                              }
-                              clunky_event(c->event);
-                              clunky_eec_update(move_eec, c->event, c->window);
-
-                              //render the courser
-                              clunky_render_sprite(c->event->mx - cur_spr->ap_w/2, c->event->my - cur_spr->ap_h/2, 0, 0, cur_spr, c->window);
-
-                              if (c->event->num_input != 0){
-                                  //print any keypresses and check for any SDL specific events
-                                  //(such as SDL_QUIT)
-                                  for(k = 0; k < c->event->num_input; k++){
-                                      printf(">>%c\n", c->event->input[k]);
-
-                                      //all user keypressed are represented by either a number or
-                                      //a capital letter. lowercase letters I've reserved for
-                                      //SDL events
-                                      //'q' -> SDL_QUIT
-                                      if (c->event->input[k] == 'q') cont = 0;
-                                      if (c->event->input[k] == 'A') rotate(c, 1);
-                                      if (c->event->input[k] == 'D') rotate(c, -1);
-                                      }
-                              }
-
-
-                              if (move_eec->sum.event_type != 'N'){
-                                  //check for a button click
-                                  if (move_eec->sum.event_type == 'C'){
-              //                        indx = clunky_indx_from_eid(move_eec->sum.eid_one, move_eec);
-                                      if (move_eec->sum.eid_one == clunky_hash_gen("aim\0")){
-                                          //set all cells that have been revliusly selected, back to unselected
-                                          for (int j = 0; j < c->board_size * c->board_size; j++){
-                                              if (cells[j]->row == 1) cells[j]->row = 0;
-                                          }
-                                          sel_indx = -1;
-                                          break;
-                                      }
-                                      else if (move_eec->sum.eid_one == clunky_hash_gen("fire\0")){
-                                          if (sel_indx != -1){
-                                              printf("FIRE!\n");
-                                              //set the ignore flag and change the row
-                                              move_eec->elements[sel_indx]->row = 2;
-                                              move_eec->elements[sel_indx]->ignore = 1;
-
-                                              int cell_num = move_eec->elements[sel_indx]->name[0] - '0';
-
-                                              //get the row & col
-                                              int row = cell_num % c->board_size;
-                                              int col = cell_num / c->board_size;
-
-                                                //attack the ai
-                                                move(col, row,c);
-
-                                              printf("R:%d, C:%d\n", row, col);
-
-
-                                              //break
-                                              break;
-                                          }
-                                      }
-                                      else{
-                                          //this should be a selection cell
-                                          //set all cells that have been revliusly selected, back to unselected
-                                          for (int j = 0; j < c->board_size * c->board_size; j++){
-                                              if (cells[j]->row == 1) cells[j]->row = 0;
-                                          }
-                                          //get the index
-                                          sel_indx = clunky_indx_from_uid(move_eec->sum.uid_one, move_eec);
-                                          printf("SELECTED CELL #%d\n", move_eec->elements[sel_indx]->name[0] - '0');
-
-                                          //set the row to select
-                                          move_eec->elements[sel_indx]->row = 1;
-                                      }
-                                  }
-                              }
-
-
-                              //Update the window!
-                              clunky_present_window(c->window);
-                          }
+                            cell_selector(c);
+                      }
+                      else if (c->eec->sum.eid_one == clunky_hash_gen("CW\0")){
+                            rotate(c, 1);
+                      }
+                      else if (c->eec->sum.eid_one == clunky_hash_gen("CCW\0")){
+                            rotate(c, -1);
                       }
                   }
                   else if (c->eec->sum.event_type == 'S'){
