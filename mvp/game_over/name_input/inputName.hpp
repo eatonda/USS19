@@ -11,7 +11,7 @@
 #include "./clunky_gl/clunkyHash.h"
 #include "./clunky_gl/clunkyEventElements.h"
 
-String inputName(struct Clunky_Window* window, struct Clunky_Event* event);
+char* inputName(struct Clunky_Window* window, struct Clunky_Event* event);
 
 #endif
 

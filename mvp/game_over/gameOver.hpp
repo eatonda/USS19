@@ -12,9 +12,10 @@
 #include <cassert>
 
 #include "../menu_functions/menu.hpp"
-#include "/data_functions/getHighScores.hpp"
-#include "/data_functions/writeScores.hpp"
-#include "/data_functions/enterScore.hpp"
+#include "data_functions/getHighScores.hpp"
+#include "data_functions/writeScores.hpp"
+#include "data_functions/enterScore.hpp"
+#include "name_input/inputName.cpp"
 
 
 void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dimensions, int numOfRounds, int winnerFlag); //Runs game over protocols, such as displaying game over and saving high score.
