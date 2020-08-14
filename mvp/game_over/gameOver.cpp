@@ -1,4 +1,5 @@
 #include "gameOver.hpp"
+#include <SDL2/SDL.h>
 #include "../name_input/inputName.cpp"
 
 const int LEADERBOARD_MENU_NUM_OF_BUTTONS = 1;
@@ -121,10 +122,7 @@ void winnerScreen(struct Clunky_Window* window) {
     clunky_add_text(winnerText, "WINNER");
     clunky_render_text(winnerText, window);
     
-    for (int i = 0; i < 500; i++) {
-        //Pause screen to show text
-    }
-    
+    SDL_Delay(10000);
 }
 
 void loserScreen(struct Clunky_Window* window) {
@@ -135,8 +133,5 @@ void loserScreen(struct Clunky_Window* window) {
     clunky_add_text(winnerText, "YOU LOSE");
     clunky_render_text(winnerText, window);
     
-    for (int i = 0; i < 500; i++) {
-        //Pause screen to show text
-    }
-    
+    SDL_Delay(10000);
 }
