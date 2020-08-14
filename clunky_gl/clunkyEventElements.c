@@ -182,7 +182,7 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     eec->uid_mstr = 0;
    
     //we want to capture text
-    eec->sum.collect_string = 1;
+    eec->sum.collect_string = 0;
     eec->sum.str = (char *) malloc(sizeof(char) * 32);
     eec->sum.str_used = 0;
     eec->sum.str_len = 32;
@@ -751,7 +751,7 @@ int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e
     if (e->num_input){
         for ( int i = 0; i < e->num_input; i++){
             //check to see if we need to grow the array
-            if (sum->str_used >= sum->str_len) helper_eec_text_grow(sum);
+            if (sum->str_used >= sum->str_len + 1) helper_eec_text_grow(sum);
 
             //check to see if its a valid character A-Z, ' ', 0-9
             if (e->input[i] >= 48 && e->input[i] <= 57){
