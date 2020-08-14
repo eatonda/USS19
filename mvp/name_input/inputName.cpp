@@ -1,4 +1,4 @@
-
+#include "inputName.hpp"
 
 char* inputName(struct Clunky_Window* window, struct Clunky_Event* event){
 
