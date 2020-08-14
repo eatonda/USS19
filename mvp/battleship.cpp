@@ -65,7 +65,7 @@ int main(int argc, char *argv[]) {
 			rounds = bsc->turnCnter;
 			isWinner = bsc->winnerFlag;
 			printf("Winner FLag %s", isWinner);
-			gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
+			//gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
 			gameRunning = false;
 		}
 	
