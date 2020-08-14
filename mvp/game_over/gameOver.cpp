@@ -10,13 +10,19 @@ int gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dime
     
     // WINNER
     if (winnerFlag) {
-        winnerScreen(window);
+        winnerScreen(window);   // Display Winner on Screen
         
         // Get score
+        int score = calcScore(numOfRounds, dimensions, dimensions);
         
         // Check if high score
-        if(1) {
-            // Save high score to score.txt
+        if(isHighScore(score)) {
+            
+            // Get Name
+            std::string name = std:string(inputName(window, event));
+            
+            // Save Score
+            enterScore(score, name);
             
             
                                  /* CREATE LEADERBOARD MENU */
@@ -87,6 +93,8 @@ int gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dime
         
     } else {
         //Loser
+        loserScreen(window);    // Display you lose
+        
         
     }
 }
@@ -97,6 +105,20 @@ void winnerScreen(struct Clunky_Window* window) {
     
     struct Clunky_Text* winnerText = clunky_get_text(CENTER_x, CENTER_y, 64, 1.,window);
     clunky_add_text(winnerText, "WINNER");
+    clunky_render_text(winnerText, window);
+    
+    for (int i = 0; i < 500; i++) {
+        //Pause screen to show text
+    }
+    
+}
+
+void loserScreen(struct Clunky_Window* window) {
+    int CENTER_x = window->width * 0.5;
+    int CENTER_y = window->height * 0.5;
+    
+    struct Clunky_Text* winnerText = clunky_get_text(CENTER_x, CENTER_y, 64, 1.,window);
+    clunky_add_text(winnerText, "YOU LOSE");
     clunky_render_text(winnerText, window);
     
     for (int i = 0; i < 500; i++) {
