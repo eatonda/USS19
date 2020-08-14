@@ -1,4 +1,4 @@
-#include gameOver.hpp
+#include "gameOver.hpp"
 
 const int WINDOW_WIDTH = 1350;
 const int WINDOW_HEIGHT = 700;
@@ -13,7 +13,7 @@ int main() {
     
     int rounds = 12;
     int size = 10;
-    isWinner = 1;
+    int isWinner = 1;
     
     gameOver(&window, &event, boardSize, rounds, isWinner);
 }
