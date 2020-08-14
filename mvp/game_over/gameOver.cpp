@@ -1,4 +1,5 @@
 #include "gameOver.hpp"
+#include "../name_input/inputName.cpp"
 
 const int LEADERBOARD_MENU_NUM_OF_BUTTONS = 1;
 
@@ -27,7 +28,7 @@ void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dim
         if(isHighScore(score)) {
             
             // Get Name
-            std::string name = std::string(inputName(window, event));
+            std::string name = (std::string) inputNameT(window, event);
             
             // Save Score
             enterScore(score, name);
@@ -98,7 +99,7 @@ void gameOver( struct Clunky_Window* window, struct Clunky_Event* event, int dim
             // Display Leaderboard
             if (scoreMenu->run(event, &tempValue) == -1) {
                 delete scoreMenu;
-                SDL_QUIT();
+//                SDL_QUIT();
             }
             
         }

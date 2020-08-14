@@ -10,12 +10,13 @@
 #include <string>
 #include <iostream>
 #include <cassert>
+#include <SDL2/SDL.h>
 
 #include "../menu_functions/menu.hpp"
 #include "../data_functions/getHighScores.hpp"
 #include "../data_functions/writeScores.hpp"
 #include "../data_functions/enterScore.hpp"
-#include "../name_input/inputName.cpp"
+//#include "../name_input/inputName.cpp"
 #include "../../clunky_gl/clunkyCore.h"
 #include "../../clunky_gl/clunkyHash.h"
 #include "../../clunky_gl/clunkyEventElements.h"

@@ -1,6 +1,6 @@
 #include "inputName.hpp"
 
-char* inputName(struct Clunky_Window* window, struct Clunky_Event* event){
+inline char* inputNameT(struct Clunky_Window* window, struct Clunky_Event* event){
 
     //dec common use variables
     int i, j, k;
