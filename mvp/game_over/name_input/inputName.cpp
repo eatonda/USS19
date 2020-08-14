@@ -8,7 +8,7 @@
 #include "../clunky_gl/clunkyHash.h"
 #include "../clunky_gl/clunkyEventElements.h"
 
-void inputName(){
+String inputName(){
 
     //dec common use variables
     int i, j, k;
@@ -38,7 +38,13 @@ void inputName(){
     cont = 1;
     unsigned long bid;
 
-
+    //Title
+    struct Clunky_Text *text1 = clunky_get_text(225, 25, 512, 64, 1., &window);
+    clunky_replace_text(text1, "New High Score!\0");
+      for (int i = 0; i < text1->str_used; i++){
+          printf("%c, (%d, %d)\n", text1->str[i], text1->str_row[i], text1->str_col[i]);
+      }
+    
     struct Clunky_Text *text2 = clunky_get_text(130, 125, 512, 64, 1., &window);
     clunky_replace_text(text2, "PLEASE ENTER YOUR NAME\0");
     for (int i = 0; i < text2->str_used; i++){
@@ -73,6 +79,13 @@ void inputName(){
 
                 // Prints input into console
                 if (event.input[k] == '`') printf("Name: %s\n", eec->sum.str);
+                
+                // Enter key pressed
+                if (event.input[k] == ) {
+                    printf("Enter was Pressed, returning name");
+                    cont = 0;   // Break main loop
+                    break;
+                }
             }
         }
 
