@@ -5,6 +5,7 @@ char* inputName(struct Clunky_Window* window, struct Clunky_Event* event){
     //dec common use variables
     int i, j, k;
     int cont;
+    char* name = NULL;
 
     
     //now we will init the window, this will set the width and height of the
@@ -45,29 +46,29 @@ char* inputName(struct Clunky_Window* window, struct Clunky_Event* event){
 
     while(cont){
         //first thing: check to see if there have been any new events!
-        clunky_event(&event);
+        clunky_event(event);
         clunky_eec_update(eec, event, window);
         clunky_render_text(text1, window);
         clunky_render_text(text2, window);
         clunky_render_text(text3, window);
 
-        if (event.num_input != 0){
+        if (event->num_input != 0){
             //print any keypresses and check for any SDL specific events 
             //(such as SDL_QUIT)
-            for(k = 0; k < event.num_input; k++){
-                printf(">>%c\n", event.input[k]);
+            for(k = 0; k < event->num_input; k++){
+                printf(">>%c\n", event->input[k]);
 
                 //all user keypressed are represented by either a number or
                 //a capital letter. lowercase letters I've reserved for
                 //SDL events
                 //'q' -> SDL_QUIT
-                if (event.input[k] == 'q') cont = 0;
+                if (event->input[k] == 'q') cont = 0;
 
                 // Prints input into console
-                if (event.input[k] == '`') printf("Name: %s\n", eec->sum.str);
+                if (event->input[k] == '`') printf("Name: %s\n", eec->sum.str);
                 
                 // Enter key pressed
-                if (event.input[k] == 'r' ) {
+                if (event->input[k] == 'r' ) {
                     printf("Enter was Pressed, returning name");
                     cont = 0;   // Break main loop
                     break;
@@ -75,17 +76,17 @@ char* inputName(struct Clunky_Window* window, struct Clunky_Event* event){
             }
         }
 
-        char* name = eec->sum.str;
+        name = eec->sum.str;
 
         // Create text
-        struct Clunky_Text *text4 = clunky_get_text(225, 200, 512, 64, 1., &window);
+        struct Clunky_Text *text4 = clunky_get_text(225, 200, 512, 64, 1., window);
         clunky_replace_text(text4, name);
 
         // Render name to window
-        clunky_render_text(text4, &window);
+        clunky_render_text(text4, window);
 
         //Update the window!
-        clunky_present_window(&window);
+        clunky_present_window(window);
     }
 
     //Quit SDL subsystems
