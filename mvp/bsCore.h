@@ -37,6 +37,9 @@ struct BSCore{
     int player_hits;
     int hits_to_win;
 
+    int winnerFlag;
+    int turnCnter;
+
 };
 
 int bsInit(int size, int color, int ships, struct Clunky_Event *event,  struct BSCore *c, struct Clunky_Window* window);
