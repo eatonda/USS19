@@ -9,11 +9,11 @@ const int BOARD_OFFSET_H = 100;
 int checkForWin(struct BSCore *c){
     if ( c->ai_hits >= c->hits_to_win){
         c->winnerFlag = -1;
-        return -1;
+        return 1;
     }
     else if ( c->player_hits >= c->hits_to_win){
         c->winnerFlag = 1;
-        return 1;
+        return -1;
     }
     return 0;
 }
