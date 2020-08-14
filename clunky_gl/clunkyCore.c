@@ -28,6 +28,10 @@ int clunky_event(struct Clunky_Event *event){
             if (SDL_GetKeyName(event->e.key.keysym.sym)[1] == '\0'){
                 event->input[event->num_input++] = SDL_GetKeyName(event->e.key.keysym.sym)[0];
             }
+
+            //check for backspace and enter
+            if (event->e.key.keysym.sym == SDLK_BACKSPACE) event->input[event->num_input++] = 'b';
+            if (event->e.key.keysym.sym == SDLK_RETURN) event->input[event->num_input++] = 'r';
         }
         else if (event->e.type == SDL_MOUSEMOTION){
             //get the new mouse position
