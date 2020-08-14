@@ -183,7 +183,7 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
    
     //we want to capture text
     eec->sum.collect_string = 1;
-    eec->sum.str = (char *) malloc(sizeof(char) * 32);
+    //eec->sum.str = (char *) malloc(sizeof(char) * 32);
     eec->sum.str_used = 0;
     eec->sum.str_len = 32;
 
@@ -729,14 +729,14 @@ int helper_eec_text_grow(struct Clunky_Event_Summary *sum){
     sum->str_len *= 2;
 
     //reallocate the mem
-    sum->str = (char *)malloc(sizeof(char) * sum->str_len);
+   // sum->str = (char *)malloc(sizeof(char) * sum->str_len);
 
     //copy over the old data
     for (int i = 0; i < sum->str_used; i++) sum->str[i] = hold[i];
 
     //free the hold array
     printf("GROWING TEXT\n");
-    free(hold);
+//    free(hold);
     printf("TEXT IS BIG NOW\n");
 
     return 0;
@@ -745,13 +745,13 @@ int helper_eec_text_grow(struct Clunky_Event_Summary *sum){
 
 int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e){
     //first, make sure that we WANT to capture text
-    if (!sum->collect_string) return 0;
+    if (!sum->collect_string || sum->str_used >= 255) return 0;
 
     //check to see if there was a keydown event
     if (e->num_input){
         for ( int i = 0; i < e->num_input; i++){
             //check to see if we need to grow the array
-            if (sum->str_used >= sum->str_len + 1) helper_eec_text_grow(sum);
+//            if (sum->str_used >= sum->str_len + 2) helper_eec_text_grow(sum);
 
             //check to see if its a valid character A-Z, ' ', 0-9
             if (e->input[i] >= 48 && e->input[i] <= 57){

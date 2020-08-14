@@ -12,7 +12,7 @@ struct Clunky_Movement_Group{
 
 struct Clunky_Event_Summary{
 
-    char *str;
+    char str[256];
     int str_len;
     int str_used;
     int collect_string;
