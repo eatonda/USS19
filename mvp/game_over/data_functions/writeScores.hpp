@@ -14,6 +14,6 @@
 //	- the scores.txt file is in the following relative path:
 //		"../data/high_scores/scores.txt"
 
-void writeScores(std::vector<std::vector<std::string>> scores);
+void writeScores(std::vector<std::vector<std::string> > scores);
 
 #endif
