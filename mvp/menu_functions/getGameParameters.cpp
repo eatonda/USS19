@@ -26,12 +26,15 @@ const int SHIP_MENU_NUM_OF_BUTTONS = 4;
     
 /* Constants for Board MENU */
 const int BOARD_MENU_NUM_OF_BUTTONS = 4;
+
+/* Constants for the Alternate Board MENU */
+const int ALT_BOARD_MENU_NUM_OF_BUTTONS = 3;
     
 /* Constants for Help MENU */
 const int HELP_MENU_NUM_OF_BUTTONS = 3;
     
 /* Constant for menus array */
-const int NUM_OF_MENUS = 6;
+const int NUM_OF_MENUS = 7;
    
     std::string title;  // String used to initialize each menu clunky_text object
     
@@ -158,7 +161,31 @@ const int NUM_OF_MENUS = 6;
     
     /* Initialize a Menu object for the boardMenu*/
     Menu* boardMenu =  new Menu(window, board_menu, BOARD_MENU_NUM_OF_BUTTONS, BOARD_MENU_VALUES, boardMenuDescriptions, boardMenuTitle);
+
+	/* CREATE ALTERNATE BOARD MENU - USED IN THE CASE 10 SHIPS ARE SELECTED */
+	title = "BOARD SIZE";
+
+	std::string altBoardMenuDescriptions[ALT_BOARD_MENU_NUM_OF_BUTTONS] = {"7", "10", "BACK"};	
+   
+	int ALT_BOARD_MENU_VALUES [ALT_BOARD_MENU_NUM_OF_BUTTONS - 1] = {7, 10};     // Values for numOfShips
     
+    struct Clunky_Texture alt_board_menu_texture;
+    clunky_load_texture(toC_String("./menu_functions/menu_assets/altBoardMenuButtons.bmp"), &alt_board_menu_texture, window);  // Initialize texture for board menu
+    
+    
+    struct Clunky_Sprite abmb;   //stores sprite image of board menu buttons
+    clunky_init_sprite(ALT_BOARD_MENU_NUM_OF_BUTTONS, NUM_OF_SPRITE_COLS, &alt_board_menu_texture, &abmb); // Initialize sprite
+
+    struct Clunky_Event_Element_Container* alt_board_menu = buttonSetup(ALT_BOARD_MENU_NUM_OF_BUTTONS, altBoardMenuDescriptions, &abmb, xCoordinates, yCoordinates);  // store buttons as an array of Clunky_Button
+    
+    struct Clunky_Text* altBoardMenuTitle = clunky_get_text(x, window->height * 0.15, window->width * 0.50, window->height * 0.10, 1.0, window);    // Get Clunky_Text instance for alt board menu title
+    
+    clunky_add_text(altBoardMenuTitle, toC_String(title));   // Add text to clunky_text
+    
+    /* Initialize a Menu object for the boardMenu*/
+    Menu* altBoardMenu =  new Menu(window, alt_board_menu, ALT_BOARD_MENU_NUM_OF_BUTTONS, ALT_BOARD_MENU_VALUES, altBoardMenuDescriptions, altBoardMenuTitle);
+
+ 
     
                     /* CREATE HELP MENU */
     title = "USER MANUAL";
@@ -282,7 +309,7 @@ const int NUM_OF_MENUS = 6;
     Menu* scoreMenu = new Menu(window, score_menu, HELP_MENU_NUM_OF_BUTTONS, scoreMenuDescriptions, scoreMenuTitle, score_content, 1, linesPerPage);
     
     
-    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu, scoreMenu}; // Holds all menus for easy indexing
+    Menu* menus[NUM_OF_MENUS] = {mainMenu, colorMenu, shipMenu, boardMenu, helpMenu, scoreMenu, altBoardMenu}; // Holds all menus for easy indexing
                          
                     
     //Flag that determines whether or not to go to next menu or to go back
@@ -321,7 +348,14 @@ const int NUM_OF_MENUS = 6;
                                 if (menuFlag > 0){
                                     i++;
                                     while (boardCont) {
-                                        menuFlag = menus[i]->run(event, dimensions);    // Run board menu
+										// run the alternate board menu if 10 ships are selected
+										if ((*numOfShips) == 10) {
+											menuFlag = menus[6]->run(event, dimensions);
+										}
+										// run the standard board menu
+										else {
+											menuFlag = menus[i]->run(event, dimensions);    // Run board menu
+										}
                                         if (menuFlag > 0) {
                                             for (i = 0; i < NUM_OF_MENUS; i++) {
                                                 free(menus[i]);  // Free menus memory
