@@ -5,6 +5,49 @@ const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 100;
 
+int attack_ai(int row, int col, struct BSCore *c){
+    //check to see if there is a pin there
+    if(c->ai_pins[row][col] == -1){
+        //check to see if its a hit
+        if(c->ai_board[row][col] != -1){
+            //its a hit!
+            c->pins[row][col] = 1;
+        }
+        else{
+            c->pins[row][col] = 0;
+        }
+    }
+
+    return 0;
+}
+
+int move(int row, int col, struct BSCore *c){
+    //this is to attack the AI
+    //we will be placing pins...
+
+    //If rotation == 0 we dont need to map
+    //1: CW, 3: CCW
+    //2: 180 flip
+    if (c->rotation == 0){
+        //Direct map
+        attack_ai(row, col, c);
+    }
+    else if (c->rotation == 1){
+        //CW
+        attack_ai(c->board_size - 1 - col, row, c); 
+    } 
+    else if (c->rotation == 2){
+        //180
+        attack_ai(c->board_size - 1 - col, c->board_size - 1 - row, c);
+    }
+    else if (c->rotation == 3){
+        //CCW
+        attack_ai(col, c->board_size - 1 - row, c);
+    }
+
+
+    return 0;
+}
 
 int render(struct BSCore *c){
     //render the ships, then the pins, to the screen
@@ -99,6 +142,8 @@ int rotate(struct BSCore *c, int dir){
     
     if( dir > 0){
         //CW
+        if (c->rotation >= 3) c->rotation = 0;
+        else c->rotation++;
             //Even
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
@@ -113,6 +158,8 @@ int rotate(struct BSCore *c, int dir){
     }
     else{
         //CCW
+        if (c->rotation <= 0) c->rotation = 3;
+        else c->rotation--;
             //Even
             for (int k = 0; k < c->board_size; k++){
                 for (int j = 0; j < c->board_size; j++){
@@ -318,7 +365,7 @@ int bsLayout(struct BSCore *c){
     init_ship(c->board_scale, &s, c->window);
 
     //Ship sizes
-    int shipSizes [] = {5, 4, 3, 2, 2, 3, 4};
+    int shipSizes [] = {5, 4, 3, 2, 2, 3, 4, 2, 2, 2};
 
     struct Clunky_Event_Element **ships = NULL;
 
@@ -609,9 +656,8 @@ int bsRun(struct BSCore *c){
                                               int row = cell_num % c->board_size;
                                               int col = cell_num / c->board_size;
 
-                                              //add a miss pin
-                                              c->pins[row][col] = 0;
-
+                                                //attack the ai
+                                                move(col, row,c);
 
                                               printf("R:%d, C:%d\n", row, col);
 

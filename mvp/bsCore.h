@@ -29,6 +29,9 @@ struct BSCore{
     int **player_board;
     int **ai_board;
 
+    int ai_hits;
+    int player_hits;
+
 };
 
 int bsInit(int size, int color, int ships, struct Clunky_Event *event, struct BSCore *c, struct Clunky_Window* window);
