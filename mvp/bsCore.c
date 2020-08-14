@@ -8,7 +8,22 @@ const int BOARD_OFFSET_H = 100;
 
 
 int attack_ai(int row, int col, struct BSCore *c){
-    //check to see if there is a pin there
+    //Find a spot randomly in the players board that hasnt been selected yet
+    while(1){
+                        q = rand() % 5;
+                        w = rand() % 5;
+                        if (ai[q][w] == 0){
+                            ai_print[q][w] = 'M';
+                            ai[q][w] = 1;
+                            break;
+                        }
+                        else if (ai[q][w] == 4){
+                            ai_print[q][w] = 'H';
+                            ai[q][w] = 1;
+                            ai_hits--;
+                            break;
+                        }
+                    }
 
     return 0;
 }
