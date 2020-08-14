@@ -232,7 +232,7 @@ const int NUM_OF_MENUS = 7;
     struct Clunky_Text* help_content[manualStrings.size()];
     int lineOffset = window->height * 0.05;
     int lineY = window->height * 0.3;
-    int linesPerPage = 2;   //To show multipage functionality
+    int linesPerPage = 10;   //To show multipage functionality
     int count = 0;
     for(int i = 0; i < manualStrings.size(); i++) {
         if (count >= linesPerPage) {
@@ -249,7 +249,7 @@ const int NUM_OF_MENUS = 7;
         lineY+= lineOffset;
     }
     
-    Menu* helpMenu = new Menu(window, help_menu, HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, helpMenuTitle, help_content, 4, linesPerPage);
+    Menu* helpMenu = new Menu(window, help_menu, HELP_MENU_NUM_OF_BUTTONS, helpMenuDescriptions, helpMenuTitle, help_content, 6, linesPerPage);
     
                                 /* CREATE LEADERBOARD MENU */
         title = "LEADERBOARD";

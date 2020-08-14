@@ -1,8 +1,27 @@
-1. Select Start to initiate setup menu.
-2. Select color theme to choose game color theme
-3. Select number of ships to play with.
-4. Select board size
-5. Place ships on board to initiate battle.
-6. When it is your turn select a position on the board to attack.
-7. Player with no ships remaining loses.
-8. Have fun.
+I) Start Up
+  1. Select Start to initiate setup menu.
+  2. Select color theme to choose game color theme
+  3. Select number of ships to play with.
+  4. Select board size
+  5. Place ships on board to initiate battle.
+  6. When it is your turn select a position on the board to attack.
+  7. Player with no ships remaining loses.
+  8. Have fun.
+II) Game Play
+  1. Each ship occupies a number of squares on the grid, and all ships must occupy distinct squares (i.e. no two ships can occupy the same square). 
+  2. Once all of your ships have been placed on the grid, the game begins and progresses in a series of rounds.
+  3.  The game interface presents you both with a view of your own grid (i.e. the grid on which you placed your ships) and a tracking grid. 
+  4. The tracking grid will track which squares you have attacked on the opponent's grid. 
+  5. You are not able to directly view the grid on which your opponent has placed their ships (and likewise your opponent cannot see your grid).
+  6. In each round the following takes place:
+    a) you select a square on your tracking grid that you have not previously selected to attack.
+    b) your AI opponent likewise selects a square to attack on your grid.
+    c) the square you targeted on your tracking grid is updated. 
+    d) If the square attacked contained a ship, the square is updated to be colored red. Otherwise, the square is updated to be colored white. 
+    e) The square that was targeted by your opponent is likewise updated on your grid. 
+    f) If the square contained a ship, that square is updated to be colored red. 
+    g) Otherwise the square is updated to be colored white.
+    h) If all of the squares occupied by a ship are attacked, then the ship sinks (and the sinking of the ship is announced to both players).
+    i) Once all ships of either or both players are sunk, the game ends.
+    j) The player whose ships have sunk loses and the other player wins.
+    k) If both players lose all of their ships in the same round, then the game is a draw. 
