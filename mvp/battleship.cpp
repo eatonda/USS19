@@ -49,10 +49,11 @@ int main(int argc, char *argv[]) {
         bsLayout(bsc); 
 
         int runVal = bsRun(bsc);
-		
-		// a runVal of 2 indicates the game has been exited from the pause menu, return to
-		// the start screen
-		if (runVal == 2) {
+
+		// return to the start menu	
+		// runVal of 0 indicates the game exited normally	
+		// a runVal of 2 indicates the game has been exited from the pause menu
+		if (runVal == 0 || runVal == 2) {
 			if (!getGameParameters(&window, &event, &boardSize, &numOfShips, &colorScheme)) {
 				gameRunning = false;
 			}				
