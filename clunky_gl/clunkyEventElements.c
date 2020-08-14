@@ -184,6 +184,7 @@ int clunky_eec_init(struct Clunky_Event_Element_Container *eec){
     //we want to capture text
     eec->sum.collect_string = 1;
     //eec->sum.str = (char *) malloc(sizeof(char) * 32);
+    eec->sum.str[0] = '\0';
     eec->sum.str_used = 0;
     eec->sum.str_len = 32;
 
@@ -772,6 +773,10 @@ int clunky_capture_text(struct Clunky_Event_Summary *sum, struct Clunky_Event *e
             else if (e->input[i] == ' '){
                 //space
                 sum->str[sum->str_used++] = e->input[i];
+            }
+            else if (e->input[i] == 'b' && sum->str_used > 0){
+                //backspace
+                sum->str_used--;
             }
         }
         sum->str[sum->str_used] = '\0';
