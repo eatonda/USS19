@@ -1,10 +1,85 @@
 #include "bsCore.h"
 #include "aiBoards.h"
+#include "name_input/inputName.hpp"
+#include "data_functions/enterScore.hpp"
 
 const int WINDOW_WIDTH = 1000;
 const int WINDOW_HEIGHT = 700;
 const int BOARD_OFFSET_W = 250;
 const int BOARD_OFFSET_H = 100;
+
+int endCard(struct BSCore *c){
+    int CENTER_x = c->window->width * 0.5;
+    int CENTER_y = c->window->height * 0.225;
+
+    struct Clunky_Event_Element_Container * eec = (struct Clunky_Event_Element_Container *) malloc(sizeof(struct Clunky_Event_Element_Container));
+    clunky_eec_init(eec);
+
+    struct Clunky_Text* txt = clunky_get_text(CENTER_x, CENTER_y, 512, 64, 1.,c->window);
+
+    if (c->winnerFlag > 0){
+        clunky_add_text(txt, "YOU WON!");
+    }
+    else{
+        clunky_add_text(txt, "YOU LOST!");
+    }
+
+    struct Clunky_Texture *buttonAT2 = (struct Clunky_Texture *) malloc(sizeof(struct Clunky_Texture));
+    clunky_load_texture("./clunky_assets/OK.bmp", buttonAT2, c->window);
+    struct Clunky_Sprite *buttonA2  = (struct Clunky_Sprite *) malloc(sizeof(struct Clunky_Sprite));
+    clunky_init_sprite(1, 2, buttonAT2, buttonA2);
+    struct Clunky_Event_Element **aim2 = (struct Clunky_Event_Element **) malloc (sizeof(struct Clunky_Event_Element *));
+    *aim2 = (struct Clunky_Event_Element *) malloc (sizeof(struct Clunky_Event_Element));
+    clunky_element_init(*aim2, buttonA2, CENTER_x, CENTER_y*3, 0, "aim\0", 'B', 'N');
+    
+    clunky_eec_add_elements(eec, aim2, 1);
+
+    int cont = 1, k;
+    int sel_indx = -1;
+    while(cont){
+        //first thing: check to see if there have been any new events!
+        clunky_event(c->event);
+        clunky_eec_update(eec, c->event, c->window);
+
+        clunky_render_text(txt, c->window);
+
+
+        if (c->event->num_input != 0){
+            //print any keypresses and check for any SDL specific events
+            //(such as SDL_QUIT)
+            for(k = 0; k < c->event->num_input; k++){
+            printf(">>%c\n", c->event->input[k]);
+
+            //all user keypressed are represented by either a number or
+            //a capital letter. lowercase letters I've reserved for
+            //SDL events
+            //'q' -> SDL_QUIT
+            if (c->event->input[k] == 'q') cont = 0;
+            }
+        }
+
+       //check for any eec events
+       if (eec->sum.event_type == 'C'){
+            //printf("CLICKED!\n");
+            if (c->winnerFlag > 0){
+                int score = calcScore(c->turnCnter, c->board_size, c->board_size);
+                if (isHighScore(score)){
+                    std::string name = inputNameT(c->window, c->event);
+                    enterScore(score, name);
+                }
+
+            }
+
+            cont = 0;
+       }
+
+        clunky_present_window(c->window);
+   }
+
+   return 0;
+}
+
+
 
 int checkForWin(struct BSCore *c){
     if ( c->ai_hits >= c->hits_to_win){
@@ -1101,5 +1176,6 @@ int bsRun(struct BSCore *c){
               //Update the window!
               clunky_present_window(c->window);
           }
+          endCard(c);
     return 0;
 }

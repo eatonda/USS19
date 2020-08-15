@@ -11,7 +11,7 @@ inline char* inputNameT(struct Clunky_Window* window, struct Clunky_Event* event
     //now we will init the window, this will set the width and height of the
     //window, as well as call the nessisary SDL2 function calls for us
     //this has to be done first, as it inits SDL2 functions
-    clunky_init(window, event, 640, 480);
+//    clunky_init(window, event, 640, 480);
 
 
     //now lets declare our Event Element Container (EEC)

@@ -32,8 +32,6 @@ int main(int argc, char *argv[]) {
     int colorScheme = -1;   // Color scheme is either 0(light) or 1(dark)
 
 
-    int isWinner = -1;
-    int rounds = -5;
 
 	bool gameRunning = false;
    
@@ -62,10 +60,6 @@ int main(int argc, char *argv[]) {
 	
 		// the game exited normally, display the end game screen, then start a new game	
 		if (runVal == 0) {
-			rounds = bsc->turnCnter;
-			isWinner = bsc->winnerFlag;
-			printf("Winner FLag %s", isWinner);
-			//gameOver(&window, &event, boardSize, rounds, isWinner); // Run game over protocols
 			gameRunning = false;
 		}
 	
