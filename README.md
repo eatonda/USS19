@@ -10,5 +10,5 @@ Repository for group project for CS361
 
 ![](img/Battleship_Architecture.png)
 
-To make: ./mvp/make
+To make: make ./mvp/Makefile
 to run: ./mvp/battleship_ex
