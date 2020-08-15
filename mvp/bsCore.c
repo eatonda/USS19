@@ -1177,5 +1177,5 @@ int bsRun(struct BSCore *c){
               clunky_present_window(c->window);
           }
           endCard(c);
-    return 0;
+    return 2;
 }
