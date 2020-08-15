@@ -27,7 +27,7 @@ inline char* inputNameT(struct Clunky_Window* window, struct Clunky_Event* event
 
     //Title
     struct Clunky_Text *text1 = clunky_get_text(225, 25, 512, 64, 1., window);
-    clunky_replace_text(text1, "New High Score!\0");
+    clunky_replace_text(text1, "NEW HIGH SCORE!\0");
       for (int i = 0; i < text1->str_used; i++){
           printf("%c, (%d, %d)\n", text1->str[i], text1->str_row[i], text1->str_col[i]);
       }
