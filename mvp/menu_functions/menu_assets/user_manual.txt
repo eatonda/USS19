@@ -50,11 +50,11 @@ II) Game Play
     g) Otherwise the square is updated to be colored white.
 
     h) If all of the squares occupied by a ship are attacked, then the 
-       ship sinks (and the sinking of the ship is announced to both players).
+       ship sinks (and the sinking of the ship is not shown to the players).
 
     i) Once all ships of either or both players are sunk, the game ends.
 
     j) The player whose ships have sunk loses and the other player wins.
 
-    k) If both players lose all of their ships in the same round, then the 
-       game is a draw. 
+    k) There will be no draws. 
+       You either win or lose.

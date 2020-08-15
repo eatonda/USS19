@@ -1,5 +1,5 @@
-ASS	11
-FARTS	10
+Botong	11
+Test	10
 bill	0
 asdf	0
 jack	0
