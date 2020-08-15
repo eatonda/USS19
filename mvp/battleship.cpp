@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
 	
 		// the game exited normally, display the end game screen, then start a new game	
 		if (runVal == 0) {
-			gameRunning = false;
+			gameRunning = true;
 		}
 	
 		if (runVal == 2) {

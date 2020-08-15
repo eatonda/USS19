@@ -1,3 +1,5 @@
+ASS	11
+FARTS	10
 bill	0
 asdf	0
 jack	0
@@ -6,5 +8,3 @@ EMily	0
 player624	0
 aaaaa	0
 0rangE	0
-NAte43	0
-sharkGirl	0

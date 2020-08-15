@@ -88,7 +88,7 @@ int checkForWin(struct BSCore *c){
     }
     else if ( c->player_hits >= c->hits_to_win){
         c->winnerFlag = 1;
-        return -1;
+        return 1;
     }
     return 0;
 }
