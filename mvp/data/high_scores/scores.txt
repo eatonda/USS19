@@ -1,4 +1,5 @@
 Botong	11
+DAVID	10
 Test	10
 bill	0
 asdf	0
@@ -7,4 +8,3 @@ cow	0
 EMily	0
 player624	0
 aaaaa	0
-0rangE	0
